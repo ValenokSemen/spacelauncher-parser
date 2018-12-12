@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  spacelouncher:
+    image: spacelouncher
+    build:
+      context: .
+      target: runner
+    command: >
+      python debug.py debug
+    volumes:
+      - /c/Users/root/Documents/project/spacelouncher/app:/app
+    ports:
+      - 5678:5678
