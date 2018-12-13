@@ -6,7 +6,7 @@
         {
             "label": "Enable_remote_debug",
             "type": "shell",
-            "command": "docker start spacelouncher_spacelouncher_1"
+            "command": "docker start 960b2834a5c86e9e50dd7f69b55ca4447c775dff0243c3660cecd81b9407c172"
         }
     ]
 }

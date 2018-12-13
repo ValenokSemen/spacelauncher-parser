@@ -4,6 +4,7 @@
 # See https://hub.docker.com/r/library/python/ for all supported Python
 # tags from Docker Hub.
 FROM python:alpine as base
+RUN apk add --update --no-cache g++ gcc libxslt-dev
 
 # If you prefer miniconda:
 #FROM continuumio/miniconda3

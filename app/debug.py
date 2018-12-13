@@ -5,6 +5,19 @@ from requests import get
 from requests.exceptions import RequestException
 from bs4 import BeautifulSoup
 
+html_test = '''
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <title>Contrived Example</title>
+        </head>
+        <body>
+            <p id="eggman">I am the egg man</p>
+            <p id="walrus">I am the walrus</p>
+        </body>
+    </html>
+'''
+
 if ((len(sys.argv) > 1) and (sys.argv[1] == 'debug')):
     try:
         import ptvsd
@@ -36,7 +49,11 @@ def simple_get_url(url):
         log_error('Error during requests to {0}: {1}'.format(url, str(identifier)))
 
 
-
 if __name__ == "__main__":
     no_html = simple_get_url('https://realpython.com/blog/nope-not-gonna-find-it')
     print(no_html is None)
+    
+    bs_html = BeautifulSoup(html_test, "lxml")
+    for target_list in bs_html.select("body p"):
+        if target_list['id'] == "eggman":
+            print(target_list.string)
