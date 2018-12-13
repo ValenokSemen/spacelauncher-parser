@@ -9,6 +9,7 @@ services:
     command: >
       python debug.py debug
     volumes:
-      - /c/Users/root/Documents/project/spacelouncher/app:/app
+      - /c/Users/root/Documents/GitHub/spacelauncher-parser/app:/app
     ports:
       - 5678:5678
+      

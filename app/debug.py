@@ -3,6 +3,7 @@ from contextlib import closing
 
 from requests import get
 from requests.exceptions import RequestException
+from bs4 import BeautifulSoup
 
 if ((len(sys.argv) > 1) and (sys.argv[1] == 'debug')):
     try:
@@ -15,6 +16,7 @@ if ((len(sys.argv) > 1) and (sys.argv[1] == 'debug')):
 
 
 def is_response(resp):
+    # Returns True if the response seems to be HTML, False otherwise.
     content_type = resp.headers['Content-Type'].lower()
     return (resp.status_code == 200
             and content_type is not None
