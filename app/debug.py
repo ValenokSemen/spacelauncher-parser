@@ -1,10 +1,10 @@
+import json
 import sys
 from contextlib import closing
 
+from bs4 import BeautifulSoup
 from requests import get
 from requests.exceptions import RequestException
-from bs4 import BeautifulSoup
-
 
 if ((len(sys.argv) > 1) and (sys.argv[1] == 'debug')):
     try:
@@ -18,13 +18,7 @@ if ((len(sys.argv) > 1) and (sys.argv[1] == 'debug')):
 html_test = '''
     <!DOCTYPE html>
     <html>
-        <head>
-            <title>Contrived Example</title>
-        </head>
-        <body>
-            <p id="eggman">I am the egg man</p>
-            <p id="walrus">I am the walrus</p>
-        </body>
+        <p>test</p>
     </html>
 '''
 
@@ -33,16 +27,17 @@ def is_response(resp):
     content_type = resp.headers['Content-Type'].lower()
     return (resp.status_code == 200
             and content_type is not None
-            and content_type.find('text/html') > -1)
+            and content_type.find('application/json') > -1)
 
 def log_error(str):
     print(str)
 
+
 def simple_get_url(url):
     try:
-        with closing(get(url, stream=True)) as resp:
+        with closing(get(url)) as resp:
             if is_response(resp):
-                return resp
+                return resp.json()
             else:
                 return None
     except RequestException as e:
@@ -50,10 +45,17 @@ def simple_get_url(url):
 
 
 if __name__ == "__main__":
-    no_html = simple_get_url('https://realpython.com/blog/nope-not-gonna-find-it')
-    # print(no_html is None)
+    my_json = simple_get_url('https://apps.juniper.net/cli-explorer/commands/list?sw=Junos%20OS')
+    if (my_json is None):
+        log_error('The request failed')
+    else:
+        with open('juniper-command.json', 'w', encoding='utf-8') as outfile:
+            json.dump(my_json, outfile, indent=4, separators=(',', ': '), sort_keys=True)
+            #add trailing newline for POSIX compatibility
+            outfile.write('\n')
     
-    bs_html = BeautifulSoup(html_test, "lxml")
-    for index, value in enumerate(bs_html.select('body p'), 1):
-        if value['id'] == "eggman":
-            print(value.text)
+    
+    # bs_html = BeautifulSoup(html_test, "lxml")
+    # for index, value in enumerate(bs_html.select('body p'), 1):
+    #     if value['id'] == "eggman":
+    #         print(value.text)
