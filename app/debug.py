@@ -37,23 +37,30 @@ def simple_get_url(url):
     try:
         with closing(get(url)) as resp:
             if is_response(resp):
-                return resp.json()
+                return resp
             else:
                 return None
     except RequestException as e:
         log_error('Error during requests to {0}: {1}'.format(url, str(e)))
 
-
-if __name__ == "__main__":
-    my_json = simple_get_url('https://apps.juniper.net/cli-explorer/commands/list?sw=Junos%20OS')
-    if (my_json is None):
+def create_jsonfile(resp):
+    if (resp is None):
         log_error('The request failed')
     else:
         with open('juniper-command.json', 'w', encoding='utf-8') as outfile:
-            json.dump(my_json, outfile, indent=4, separators=(',', ': '), sort_keys=True)
+            json.dump(resp.json, outfile, indent=4, separators=(',', ': '), sort_keys=True)
             #add trailing newline for POSIX compatibility
             outfile.write('\n')
+
+if __name__ == "__main__":
+    # my_json = simple_get_url('https://apps.juniper.net/cli-explorer/commands/list?sw=Junos%20OS')
+    # create_jsonfile(my_json)
+    temp_url = 'https://www.juniper.net/documentation/en_US/junos/topics/reference/configuration-statement/accounting-edit-system.html'
+    resp = simple_get_url(temp_url)
     
+    if resp is not None:
+         html = BeautifulSoup(resp, 'lxml')
+   
     
     # bs_html = BeautifulSoup(html_test, "lxml")
     # for index, value in enumerate(bs_html.select('body p'), 1):
