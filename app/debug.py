@@ -27,7 +27,8 @@ def is_response(resp):
     content_type = resp.headers['Content-Type'].lower()
     return (resp.status_code == 200
             and content_type is not None
-            and content_type.find('application/json') > -1)
+            # and content_type.find('application/json') > -1)
+            and content_type.find('text/html') > -1)
 
 def log_error(str):
     print(str)
@@ -55,11 +56,23 @@ def create_jsonfile(resp):
 if __name__ == "__main__":
     # my_json = simple_get_url('https://apps.juniper.net/cli-explorer/commands/list?sw=Junos%20OS')
     # create_jsonfile(my_json)
-    temp_url = 'https://www.juniper.net/documentation/en_US/junos/topics/reference/configuration-statement/accounting-edit-system.html'
-    resp = simple_get_url(temp_url)
+    url = 'https://www.juniper.net/documentation/en_US/junos/topics/reference/configuration-statement/accounting-edit-system.html'
+    resp = simple_get_url(url)
     
     if resp is not None:
-         html = BeautifulSoup(resp, 'lxml')
+         html = BeautifulSoup(resp.content, 'lxml')
+         get_syntax = html.select("sw-code div")
+         count_element_indices = [len(list(a.parents)) for a in get_syntax]
+         absolute_roots_index = min(
+            (index for index, element in enumerate(count_element_indices)
+                if element == max(count_element_indices)
+            )
+         )
+
+         print(get_syntax[absolute_roots_index:])
+
+
+         
    
     
     # bs_html = BeautifulSoup(html_test, "lxml")

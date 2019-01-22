@@ -7,7 +7,7 @@ services:
       context: .
       target: runner
     command: >
-      python debug.py debug
+      python tmp.py
     volumes:
       - /c/Users/root/Documents/GitHub/spacelauncher-parser/app:/app
     ports:

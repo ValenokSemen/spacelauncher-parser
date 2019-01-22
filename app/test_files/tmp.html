@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml"
+    xmlns:doceng="com.juniper.doceng.util.XSLTExtentions">
+
+<head>
+    <meta charset="utf-8">
+    </meta>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    </meta>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+    </meta>
+    <title>accounting - TechLibrary - Juniper Networks</title>
+    <meta name="subject" content="hardwareplatforms,switches,exseries,hardwareplatforms,routers,mxseries,hardwareplatforms,firewalls,srxseries,hardwareplatforms,routers,mseries,hardwareplatforms,routers,tseries,hardwareplatforms,routers,ptxseries,software,operatingsystems,junossoftware">
+    </meta>
+    <meta name="description" content="CLI Statement. EX Series,MX Series,SRX Series,M Series,T Series,PTX Series. Configure audit of TACACS+ or RADIUS authentication events, configuration changes, and interactive commands. Auditing these factors helps you track network usage for auditing and billing purposes.">
+    </meta>
+    <meta name="feature" content="[]">
+    </meta>
+    <meta name="branchId" content="1406">
+    </meta>
+    <meta name="topicid" content="31531">
+    </meta>
+    <meta name="relatedtopics" content="31585,31575,31675,31693,31532,31682,122804,31691,31703,31722,31714,31694,31671,31700,85907,31713,31492,31494,;">
+    </meta>
+    <meta name="platform" content="Hardware Platforms:Switches:EX-series,Hardware Platforms:Routers:MX-series,Hardware Platforms:Firewalls:SRX-series,Hardware Platforms:Routers:M-series,Hardware Platforms:Routers:T-series,Hardware Platforms:Routers:PTX Series">
+    </meta>
+    <meta name="software" content="Software:Operating Systems:JUNOS Software">
+    </meta>
+    <meta name="supportedlist" content="true">
+    </meta>
+    <meta name="release" content="junos 18.4">
+    </meta>
+    <link href="/documentation/webstatic/css/topic.c8f023a3e00728835fab879f8b58be11.css" rel="stylesheet">
+    <script src="https://assets.adobedtm.com/998b2d6d4944658536fe36266a249b07e626b86d/satelliteLib-6d05b7c7a99e1cbbdcac4fcfe7005e6bee80a0e9.js"></script>
+</head>
+
+<body style="visibility:hidden;">
+    <!--[if lte IE 9]>
+	<div class="message-warning"> You are using unsupported version of Internet Explorer. Please upgrade your browser to latest version.</div>
+<![endif]-->
+    <!-- Google Tag Manager -->
+    <noscript><iframe style="display:none;visibility:hidden" width="0" height="0" src="https://www.googletagmanager.com/ns.html?id=GTM-MHNPL3"></iframe></noscript>
+    <script>
+        (function (w, d, s, l, i) {
+        w[l] = w[l] || []; w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        }); var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-MHNPL3');
+    </script>
+    <!-- End Google Tag Manager -->
+
+    <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Organization",
+      "url": "http://www.juniper.net",
+       "logo": "http://www.juniper.net"
+    }                       
+  </script>
+    <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "WebSite",
+      "name" : "Juniper Networks",
+      "alternateName" : "Juniper",
+      "url" : "https://www.juniper.net/us/en/"
+    }
+  </script>
+    <div id="app">
+        <sw-app inline-template="">
+            <div v-bind:class="{_fixed: isfixed}">
+                <sw-header></sw-header>
+                <sw-change-widget v-bind:scroll="fixcw"></sw-change-widget>
+                <section class="main wrapper">
+                    <sw-leftnav v-bind:data-height="leftnavheight" v-bind:data-top="leftnavtop" v-on:menucollapse="menucollapse"></sw-leftnav>
+                    <sw-rightnav>&nbsp;</sw-rightnav>
+                    <div class="l-body" v-bind:style="{'min-height':bodyheight+'px'}" v-bind:class="{'collapsed':isleftnavcollapsed}">
+                        <nav class="page-options clearfix">
+                            <sw-breadcrumb>&nbsp;</sw-breadcrumb>
+                        </nav>
+                        <div class="topicBody">
+                            <div id="topic-content">
+                                <h1 id="jd0e3">accounting</h1>
+                                <sw-topic-details date="2018-03-20">&nbsp;</sw-topic-details>
+                                <h4 id="jd0e33">Syntax</h4>
+                                <div dir="ltr" id="jd0e34" class="example">
+                                    <sw-code><template v-pre="">
+                                            <div class="complex-statement" style="">
+                                                <div class="statement" style="display:block;">accounting {</div>
+                                                <div class="statement ind-statement" style=""><a href="events-edit-system.html">events</a>
+                                                    [login change-log interactive-commands];</div>
+                                                <div class="complex-statement ind-statement" style="">
+                                                    <div class="statement" style="display:block;"><a href="destination-edit-system.html">destination</a>
+                                                        {</div>
+                                                    <div class="complex-statement ind-statement" style="">
+                                                        <div class="statement" style="display:block;"><a href="radius-edit-system.html">radius</a>
+                                                            {</div>
+                                                        <div class="complex-statement ind-statement" style="">
+                                                            <div class="statement" style="display:block;"><a href="server-edit-system-accounting-radius.html">server</a>
+                                                                {</div>
+                                                            <div class="complex-statement ind-statement" style="">
+                                                                <div class="statement" style="display:block;"><var
+                                                                        v-pre="">server-address</var> {</div>
+                                                                <div class="statement ind-statement" style=""><a href="accounting-port-edit-system.html">accounting-port</a>
+                                                                    <var v-pre="">port-number</var>;</div>
+                                                                <div class="statement ind-statement" style=""><a href="retry-edit-system-accounting-edit-system-radius-server.html">retry</a>
+                                                                    <var v-pre="">number</var>;</div>
+                                                                <div class="statement ind-statement" style=""> <a href="routing-instance-edit-system-accounting.html">routing-instance</a>
+                                                                    <var v-pre="">routing-instance</var>;</div>
+                                                                <div class="statement ind-statement" style=""><a href="secret-edit-system-accounting-edit-system-radius-server-edit-system-tacplus-server.html">secret</a>
+                                                                    <var v-pre="">password</var>;</div>
+                                                                <div class="statement ind-statement" style=""><a href="source-address-edit-system-ntp-radius-syslog-tacacs.html">source-address</a>
+                                                                    <var v-pre="">address</var>;</div>
+                                                                <div class="statement ind-statement" style=""><a href="timeout-edit-system-accounting-edit-system-radius-server-edit-system-tacplus-server.html">timeout</a>
+                                                                    <var v-pre="">seconds</var>;</div>
+                                                                <div class="statement" style="display:block;">}</div>
+                                                            </div>
+                                                            <div class="statement" style="display:block;">}</div>
+                                                        </div>
+                                                        <div class="statement" style="display:block;">}</div>
+                                                    </div>
+                                                    <div class="complex-statement ind-statement" style="">
+                                                        <div class="statement" style="display:block;"><a href="tacplus-edit-system.html">tacplus</a>
+                                                            {</div>
+                                                        <div class="complex-statement ind-statement" style="">
+                                                            <div class="statement" style="display:block;"><a href="server-edit-system-accounting-tacplus.html">server</a>
+                                                                {</div>
+                                                            <div class="complex-statement ind-statement" style="">
+                                                                <div class="statement" style="display:block;"><var
+                                                                        v-pre="">server-address</var> {</div>
+                                                                <div class="statement ind-statement" style=""><a href="port-edit-system-accounting.html">port</a>
+                                                                    <var v-pre="">port-number</var>;</div>
+                                                                <div class="statement ind-statement" style=""> <a href="routing-instance-edit-system-accounting.html">routing-instance</a>
+                                                                    <var v-pre="">routing-instance</var>;</div>
+                                                                <div class="statement ind-statement" style=""><a href="secret-edit-system-accounting-edit-system-radius-server-edit-system-tacplus-server.html">secret</a>
+                                                                    <var v-pre="">password</var>;</div>
+                                                                <div class="statement ind-statement" style=""><a href="single-connection-edit-system.html">single-connection</a>;</div>
+                                                                <div class="statement ind-statement" style=""><a href="timeout-edit-system-accounting-edit-system-radius-server-edit-system-tacplus-server.html">timeout</a>
+                                                                    <var v-pre="">seconds</var>;</div>
+                                                                <div class="statement" style="display:block;">}</div>
+                                                            </div>
+                                                            <div class="statement" style="display:block;">}</div>
+                                                        </div>
+                                                        <div class="statement" style="display:block;">}</div>
+                                                    </div>
+                                                    <div class="statement" style="display:block;">}</div>
+                                                </div>
+                                                <div class="statement ind-statement" style=""><a href="enhanced-avs-max.html">enhanced-avs-max</a>
+                                                    <var v-pre="">&lt;number&gt;</var>;</div>
+                                                <div class="statement" style="display:block;">}</div>
+                                            </div>
+                                        </template></sw-code>
+                                </div>
+                                <h4>Hierarchy Level</h4>
+                                <div dir="ltr" id="jd0e159" class="example">
+                                    <sw-code><template v-pre="">
+                                            <div class="statement" style="display:block;">[edit <a href="system-edit.html">system</a>]
+                                            </div>
+                                        </template></sw-code>
+                                </div>
+                                <h4>Release Information</h4>
+                                <p formatting-option="none" id="jd0e165">Statement introduced before
+                                    Junos OS Release 7.4.</p>
+                                <p formatting-option="none" id="jd0e167">Statement introduced in Junos OS Release 9.0
+                                    for EX Series switches.</p>
+                                <p formatting-option="none" id="jd0e169"><span class="cli" v-pre="">enhanced-avs-max</span>
+                                    statement introduced in Junos OS
+                                    Release 14.1.</p>
+                                <p formatting-option="none" id="jd0e173">Support for the <span class="cli" v-pre="">source-address-inet6</span>
+                                    statement introduced
+                                    in Junos OS Release 14.1X53-D10 for EX Series switches.</p>
+                                <h4>Description</h4>
+                                <p>Configure audit of TACACS+ or RADIUS
+                                    authentication events, configuration changes, and interactive commands.
+                                    Auditing these factors helps you track network usage for auditing
+                                    and billing purposes. </p>
+                                <p>The remaining statements are explained separately.</p>
+                                <h4>Required Privilege Level</h4>
+                                <p>admin&#8212;To view this statement
+                                    in the configuration.</p>
+                                <p>admin-control&#8212;To add this statement to the
+                                    configuration.</p>
+                                <div class="l-aside-box">
+                                    <h3>Related Documentation</h3>
+                                    <ul>
+                                        <li style="">
+                                            <p><a href="../../task/configuration/radius-accounting-configuring.html">Configuring
+                                                    RADIUS System Accounting</a></p>
+                                        </li>
+                                        <li style="">
+                                            <p><a href="../../task/configuration/tacacs-accounting-configuring.html">Configuring
+                                                    TACACS+ System Accounting</a></p>
+                                        </li>
+                                        <li style="">
+                                            <p><a href="enhanced-avs-max.html">enhanced-avs-max</a></p>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <sw-prev-next>&nbsp;</sw-prev-next>
+                            </div>
+                            <sw-comments>&nbsp;</sw-comments>
+                        </div>
+                    </div>
+                </section>
+                <sw-pop-over v-bind:head="gterm.head" v-bind:body="gterm.body" v-bind:left="gterm.pos.left" v-bind:top="gterm.pos.top"
+                    v-bind:visible="gterm.visible" v-on:close-popover="closegterm()"></sw-pop-over>
+                <sw-footer></sw-footer>
+            </div>
+        </sw-app>
+    </div>
+    <script type="text/javascript" src="/documentation/webstatic/js/manifest.50e86ea5df8473df84b0.js"></script>
+    <script type="text/javascript" src="/documentation/webstatic/js/vendor.29b76e2559726abccb26.js"></script>
+    <script type="text/javascript" src="/documentation/webstatic/js/topic.7369156cdd249fd2db1c.js"></script>
+    <script type="text/javascript">_satellite.pageBottom();</script>
+</body>
+
+</html>
