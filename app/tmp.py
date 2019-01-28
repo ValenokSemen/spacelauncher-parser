@@ -16,6 +16,29 @@ try:
 except:
     print('ptvsd not working')
 
+class Rematcher(object):
+
+    def __init__(self, matchstring):
+         self.matchstring = matchstring.replace(';', '')
+         self.is_header = None
+
+    def get_header(self):
+        return self.is_header    
+    
+    def is_match(self, regexp):
+        self.rematch = re.search(regexp, self.matchstring)
+        return bool(self.rematch)
+    
+    def group(self, regexp):
+        self.rematch = re.match(regexp, self.matchstring) 
+        if self.rematch:
+            self.is_header = True
+
+    def split(self):
+        split_data =  re.split('\s+|\[|\]', self.matchstring)
+        self.mylist = [i for i in split_data if i]
+
+
 def get_depth(element):
     depth = 0
     if ("ind-statement" in element.get('class')):
@@ -32,14 +55,17 @@ def clean_data(param):
     return pattern.sub(' ', param).replace(' {', '')
 
 def is_split_data(value):
-    # ^(\w[0-9a-zA-Z-_]+)|(\[.*?\])
-    match = re.search(r'\[.*?\]', value) 
-    return(True if match else False)
+    match = re.search(r'(\(|\||\[)', value) 
+    return bool(match)
 
 def set_split_data(value):
-    match = re.search(r'\[.*?\]', value) 
-    if match:
-        return re.split('\s+|\[|\]', match[0])     
+    match = re.search(r'^(\w[0-9a-zA-Z-_]+)|(\[.*?\])|(\(.*?\))', value) 
+
+    if match.group(0):
+        pass
+
+    # if match:
+    #     return re.split('\s+|\[|\]', match[0])     
 
 if __name__ == "__main__":
     rel_path = os.path.abspath(os.path.dirname(__file__))
@@ -53,8 +79,23 @@ if __name__ == "__main__":
             depth = get_depth(value)
             value = clean_data(value.text)
             
-            if is_split_data(value):
-                split_array = [i for i in set_split_data(value) if i]
+            m = Rematcher(value)
+            if m.is_match(r'(\(|\||\[)'):
+               m.group(r'^(\w[0-9a-zA-Z-_]+)')
+               m.split()
+               if m.get_header:
+                   for i, v in enumerate(m.mylist, 1):
+                       if (i == 2):
+                           depth += 1
+                       elem_crumbs[depth] = v
+                       elem_crumbs[depth+1:] = ['']*(20-depth-1)
+                       crumbs.append('/'.join([e for e in elem_crumbs if e])) 
+               else:
+                   for i, arg in enumerate(m.mylist, 1):
+                       elem_crumbs[depth] = arg
+                       elem_crumbs[depth+1:] = ['']*(20-depth-1)
+                       crumbs.append('/'.join([e for e in elem_crumbs if e]))
+               continue
             
             if re.match(r'^}', value) is None:
                 elem_crumbs[depth] = value
