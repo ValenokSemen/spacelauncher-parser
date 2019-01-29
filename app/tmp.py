@@ -35,8 +35,47 @@ class Rematcher(object):
             self.is_header = True
 
     def split(self):
-        split_data =  re.split('\s+|\[|\]', self.matchstring)
+        split_data =  re.split(r'\s+|\[|\]', self.matchstring)
         self.mylist = [i for i in split_data if i]
+
+class Breadcrumbs(object):
+
+    __depth = 0
+
+    def __init__(self, statement):
+        self.statement = statement
+    
+    @property
+    def statement(self):
+        # statement getter
+        return self.__statement
+    
+    @statement.setter
+    def statement(self, statement):
+        # statement setter
+        self.__statement = statement
+
+    @property
+    def depth(self):
+        # statement getter
+        return self.__depth
+    
+    @depth.setter
+    def depth(self, depth):
+        # statement setter
+        self.__depth = depth
+
+    def set_statement_depth(self):
+        if ("ind-statement" in self.statement.get('class')):
+            self.depth += 1 
+        upper_parent = self.__statement.parent
+        while (upper_parent.name != 'sw-code'):
+            self.depth += 1      
+            upper_parent = upper_parent.parent
+
+    def clean_statement(self):
+        pattern = re.compile(r'(\n\s+|\n)')
+        return pattern.sub(' ', self.statement.text).replace(' {', '')
 
 
 def get_depth(element):
