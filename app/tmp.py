@@ -42,8 +42,8 @@ class Breadcrumbs(object):
 
     __depth = 0
 
-    def __init__(self, statement):
-        self.statement = statement
+    def __init__(self, html):
+        self.statement = html
     
     @property
     def statement(self):
@@ -77,6 +77,10 @@ class Breadcrumbs(object):
         pattern = re.compile(r'(\n\s+|\n)')
         return pattern.sub(' ', self.statement.text).replace(' {', '')
 
+    def get_breadcrumbs(self, parameter_list):
+        for index, value in enumerate():
+            pass
+
 
 def get_depth(element):
     depth = 0
@@ -105,6 +109,8 @@ def set_split_data(value):
 
     # if match:
     #     return re.split('\s+|\[|\]', match[0])     
+
+# https://github.com/pkolt/design_patterns/blob/master/generating/factory_method.py
 
 if __name__ == "__main__":
     rel_path = os.path.abspath(os.path.dirname(__file__))
