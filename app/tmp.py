@@ -45,18 +45,29 @@ class Breadcrumbs(object):
     __crumbs = []
     __elem_crumbs = ['']*20
 
-    def __init__(self, html):
-        self.statement = html.select_one("sw-code").select(".statement")
+    def __init__(self, syntax_list, hierarchy_list):
+        self.syntax = syntax_list
+        self.hierarchy = hierarchy_list
     
     @property
-    def statement(self):
+    def syntax(self):
         # statement getter
-        return self.__statement
+        return self.__syntax
     
-    @statement.setter
-    def statement(self, statement):
+    @syntax.setter
+    def syntax(self, syntax):
         # statement setter
-        self.__statement = statement
+        self.__syntax = syntax
+    
+    @property
+    def hierarchy(self):
+        # statement getter
+        return self.__hierarchy
+    
+    @hierarchy.setter
+    def hierarchy(self, hierarchy):
+        # statement setter
+        self.__hierarchy = hierarchy
 
     @property
     def depth(self):
@@ -82,7 +93,7 @@ class Breadcrumbs(object):
         return pattern.sub(' ', statement_element.text).replace(' {', '')
 
     def get_breadcrumbs(self):
-        for statement_el in self.statement:
+        for statement_el in self.syntax:
             self.set_statement_depth(statement_el)
             clean_statement_el = self.clean_statement(statement_el)
             m = Rematcher(clean_statement_el)
@@ -101,8 +112,15 @@ class Breadcrumbs(object):
                 continue
             if re.match(r'^}', clean_statement_el) is None:
                 self.set_breadcrumbs(clean_statement_el)
-        return self.__crumbs
+        return self.__crumbs 
 
+    def add_hierarchy(self, tmp_list):
+        tmp = None
+        for hierarchy_el in self.hierarchy:
+            content = hierarchy_el.text + '/'
+            tmp = [content+i for i in tmp_list]
+        return tmp    
+        
     
     def set_breadcrumbs(self, value):
         self.__elem_crumbs[self.depth] = value
@@ -114,10 +132,23 @@ def main():
     abs_path = os.path.join(rel_path, "test_files/tmp.html")
     with open(abs_path, 'r') as f:
         html = BeautifulSoup(f, 'lxml')
-        breadcrumbs = Breadcrumbs(html)
+
+        hierarchy_statement = None
+        syntax_statement = None
+        for e in html.find_all('div', class_='example'):
+            for i in e.find_previous_siblings("h4", limit=1):
+                if i.text.find('Hierarchy Level') > -1:
+                    hierarchy_statement = [i for i in e.select('.statement')]
+                if i.text.find('Syntax') > -1:
+                    syntax_statement = [i for i in e.select('.statement')]
+                
+           
+        breadcrumbs = Breadcrumbs(syntax_statement, hierarchy_statement)
         breadcrumbs_list = breadcrumbs.get_breadcrumbs()
-        print(breadcrumbs_list)
+        full_list = breadcrumbs.add_hierarchy(breadcrumbs_list)
+        print(full_list)
 
 if __name__ == "__main__":
     main()
+    
     # print('{} is depth {}'.format(value, depth))
