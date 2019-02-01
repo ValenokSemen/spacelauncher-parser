@@ -132,16 +132,18 @@ def main():
     abs_path = os.path.join(rel_path, "test_files/tmp.html")
     with open(abs_path, 'r') as f:
         html = BeautifulSoup(f, 'lxml')
-
+        
         hierarchy_statement = None
         syntax_statement = None
-        for e in html.find_all('div', class_='example'):
-            for i in e.find_previous_siblings("h4", limit=1):
-                if i.text.find('Hierarchy Level') > -1:
-                    hierarchy_statement = [i for i in e.select('.statement')]
-                if i.text.find('Syntax') > -1:
-                    syntax_statement = [i for i in e.select('.statement')]
-                
+        if html.select_one("body > #app") is not None:
+            for e in html.find_all('div', class_='example'):
+                for i in e.find_previous_siblings("h4", limit=1):
+                    if i.text.find('Hierarchy Level') > -1:
+                        hierarchy_statement = [i for i in e.select('.statement')]
+                    if i.text.find('Syntax') > -1:
+                        syntax_statement = [i for i in e.select('.statement')] 
+        
+
            
         breadcrumbs = Breadcrumbs(syntax_statement, hierarchy_statement)
         breadcrumbs_list = breadcrumbs.get_breadcrumbs()
