@@ -8,6 +8,8 @@ from bs4 import BeautifulSoup
 from requests import get
 from requests.exceptions import RequestException
 
+from JuniperBreadcrumbs import NewJuniperBreadcrumbs
+
 # https://github.com/pkolt/design_patterns/blob/master/generating/builder.py
 
 try:
@@ -127,28 +129,28 @@ class Breadcrumbs(object):
         self.__elem_crumbs[self.depth+1:] = ['']*(20-self.depth-1)
         self.__crumbs.append('/'.join([e for e in self.__elem_crumbs if e]))
 
+
+
 def main():
     rel_path = os.path.abspath(os.path.dirname(__file__))
     abs_path = os.path.join(rel_path, "test_files/tmp.html")
     with open(abs_path, 'r') as f:
         html = BeautifulSoup(f, 'lxml')
         
-        hierarchy_statement = None
-        syntax_statement = None
+        hierarchy_statement = []
+        syntax_statement = []
         if html.select_one("body > #app") is not None:
-            for e in html.find_all('div', class_='example'):
-                for i in e.find_previous_siblings("h4", limit=1):
-                    if i.text.find('Hierarchy Level') > -1:
-                        hierarchy_statement = [i for i in e.select('.statement')]
-                    if i.text.find('Syntax') > -1:
-                        syntax_statement = [i for i in e.select('.statement')] 
+            new_breadcrumbs = NewJuniperBreadcrumbs(html)
+            new_breadcrumbs.create()
+        else:
+            pass
         
 
            
-        breadcrumbs = Breadcrumbs(syntax_statement, hierarchy_statement)
-        breadcrumbs_list = breadcrumbs.get_breadcrumbs()
-        full_list = breadcrumbs.add_hierarchy(breadcrumbs_list)
-        print(full_list)
+        # breadcrumbs = Breadcrumbs(syntax_statement, hierarchy_statement)
+        # breadcrumbs_list = breadcrumbs.get_breadcrumbs()
+        # full_list = breadcrumbs.add_hierarchy(breadcrumbs_list)
+        # print(full_list)
 
 if __name__ == "__main__":
     main()
