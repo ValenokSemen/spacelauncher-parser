@@ -11,6 +11,7 @@ from requests.exceptions import RequestException
 from JuniperBreadcrumbs import NewJuniperBreadcrumbs
 
 # https://github.com/pkolt/design_patterns/blob/master/generating/builder.py
+# https://www.giacomodebidda.com/factory-method-and-abstract-factory-in-python/
 
 try:
     import ptvsd
