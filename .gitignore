@@ -1,2 +1,6 @@
 
 python-debug
+.vscode/launch.json
+.vscode/settings.json
+.vscode/tasks.json
+docker-compose.yml
