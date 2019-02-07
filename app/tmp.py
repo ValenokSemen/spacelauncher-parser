@@ -8,10 +8,11 @@ from bs4 import BeautifulSoup
 from requests import get
 from requests.exceptions import RequestException
 
-from juniperbreadcrumbs import NewJuniperBreadcrumbs
+from juniperbreadcrumbs import NewJuniperBreadcrumbs, OldJuniperBreadcrumbs
 
 # https://github.com/pkolt/design_patterns/blob/master/generating/builder.py
 # https://www.giacomodebidda.com/factory-method-and-abstract-factory-in-python/
+# https://www.juniper.net/documentation/en_US/junos/topics/reference/configuration-statement/aggregated-ether-options-interfaces-ex-series.html
 
 try:
     import ptvsd
@@ -21,28 +22,20 @@ try:
 except:
     print('ptvsd not working')
 
-
-    def add_hierarchy(self, tmp_list):
-        tmp = None
-        for hierarchy_el in self.hierarchy:
-            content = hierarchy_el.text + '/'
-            tmp = [content+i for i in tmp_list]
-        return tmp    
-        
+      
 def main():
     rel_path = os.path.abspath(os.path.dirname(__file__))
-    abs_path = os.path.join(rel_path, "test_files/tmp.html")
+    abs_path = os.path.join(rel_path, "test_files/old_tmp.html")
     with open(abs_path, 'r') as f:
-        html = BeautifulSoup(f, 'lxml')
-        
-        hierarchy_statement = []
-        syntax_statement = []
+        html = BeautifulSoup(f, 'lxml')        
         if html.select_one("body > #app") is not None:
             new_breadcrumbs = NewJuniperBreadcrumbs(html)
+            new_breadcrumbs.createSyntaxStatement().get_breadcrumbs()
             new_breadcrumbs.createHierarhyStatement().get_breadcrumbs()
+            tmp = new_breadcrumbs.merge()
         else:
-            pass
-        
+            new_breadcrumbs = OldJuniperBreadcrumbs(html)
+            new_breadcrumbs.createSyntaxStatement().get_breadcrumbs()
           
         # breadcrumbs = Breadcrumbs(syntax_statement, hierarchy_statement)
             # breadcrumbs_list = breadcrumbs.get_breadcrumbs()
