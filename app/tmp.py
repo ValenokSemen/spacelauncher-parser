@@ -13,6 +13,7 @@ from juniperbreadcrumbs import NewJuniperBreadcrumbs, OldJuniperBreadcrumbs
 # https://github.com/pkolt/design_patterns/blob/master/generating/builder.py
 # https://www.giacomodebidda.com/factory-method-and-abstract-factory-in-python/
 # https://www.juniper.net/documentation/en_US/junos/topics/reference/configuration-statement/aggregated-ether-options-interfaces-ex-series.html
+# https://github.com/Patreon/patreon-python/blob/master/patreon/jsonapi/parser.py
 
 try:
     import ptvsd
@@ -35,12 +36,8 @@ def main():
             tmp = new_breadcrumbs.merge()
         else:
             new_breadcrumbs = OldJuniperBreadcrumbs(html)
-            new_breadcrumbs.createSyntaxStatement().get_breadcrumbs()
-          
-        # breadcrumbs = Breadcrumbs(syntax_statement, hierarchy_statement)
-            # breadcrumbs_list = breadcrumbs.get_breadcrumbs()
-            # full_list = breadcrumbs.add_hierarchy(breadcrumbs_list)
-            # print(full_list)
+            tmp = new_breadcrumbs.createHierarhyStatement().get_breadcrumbs()
+            print('\n'.join(tmp))
 
 if __name__ == "__main__":
     main()

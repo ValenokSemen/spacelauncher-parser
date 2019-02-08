@@ -4,17 +4,15 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="subject" content="hardwareplatforms,switches,exseries,software,operatingsystems,junossoftware" />
-    <meta name="description" content="CLI Statement. EX Series. Configure the aggregated Ethernet properties of a specific aggregated Ethernet interface." />
-    <meta name="keywords" content="Interfaces" />
+    <meta name="subject" content="hardwareplatforms,routers,tseries,hardwareplatforms,routers,ptxseries,hardwareplatforms,routers,mxseries" />
+    <meta name="description" content="CLI Statement. T Series,PTX Series,MX Series. Configure the Link Aggregation Control Protocol (LACP) for aggregated Ethernet interfaces only." />
     <meta name="branchId" content="100" />
-    <meta name="topicid" content="10709" />
-    <meta name="relatedtopics" content="25900,25975,26122,38300,25991,25992,26010,26034,26243,10706,10393,10392,11280,11281,73119,10389,;" />
-    <meta name="platform" content="Hardware Platforms:Switches:EX-series" />
-    <meta name="software" content="Software:Operating Systems:JUNOS Software" />
+    <meta name="topicid" content="25975" />
+    <meta name="relatedtopics" content="25991,25859,26185,26073,26122,70263,26243,25755,25641,;" />
+    <meta name="platform" content="Hardware Platforms:Routers:T-series,Hardware Platforms:Routers:PTX Series,Hardware Platforms:Routers:MX-series" />
     <meta name="supportedlist" content="true" />
     <meta name="release" content="junos current" />
-    <title>aggregated-ether-options - Technical Documentation - Support - Juniper Networks</title>
+    <title>lacp (Aggregated Ethernet) - Technical Documentation - Support - Juniper Networks</title>
     <meta content="width=device-width, initial-scale=1, minimum-scale=1" name="viewport">
     <meta http-equiv="cache-control" content="NO-CACHE" />
     <script type="text/javascript">
@@ -813,10 +811,9 @@
                         </div>
 
                         <div id="breadcrumb"><a href="https://www.juniper.net/">Home</a> &gt; <a href="https://www.juniper.net/support/">Support</a>
-                            &gt; <a href="/documentation/">Technical Documentation</a> &gt; <a href="/documentation/en_US/release-independent/junos/information-products/pathway-pages/ex-series/product/index.html">EX
-                                Series</a>
+                            &gt; <a href="/documentation/">Technical Documentation</a>
                             &gt;
-                            aggregated-ether-options</div>
+                            lacp (Aggregated Ethernet)</div>
                         <div class="sharing">
 
                             <!--div class="addthis_sharing_toolbox clean-table-mobile-hide"></div>
@@ -965,35 +962,18 @@
                                 <div class="scmDefault clear">
                                     <h2>Related Documentation</h2>
                                     <ul>
-                                        <li class="heading">EX Series</li>
-                                        <li> <a href="../../example/interfaces-aggregated-ethernet-virtual-chassis-uplinks.html">Example:
-                                                Configuring Aggregated Ethernet High-Speed Uplinks Between an EX4200
-                                                Virtual Chassis Access Switch and an EX4200 Virtual Chassis
-                                                Distribution Switch</a> </li>
-                                        <li> <a href="../../example/interfaces-aggregated-ethernet-plus-lacp-virtual-chassis-uplinks.html">Example:
-                                                Configuring Aggregated Ethernet High-Speed Uplinks with LACP Between an
-                                                EX4200 Virtual Chassis Access Switch and an EX4200 Virtual Chassis
-                                                Distribution Switch</a> </li>
-                                        <li> <a href="../../task/configuration/link-aggregation-cli.html">Configuring
-                                                Aggregated Ethernet Links (CLI Procedure)</a>
-                                        </li>
-                                        <li> <a href="../../task/configuration/lacp-cli.html">Configuring Aggregated
-                                                Ethernet LACP (CLI Procedure)</a>
-                                        </li>
-                                        <li><a href="../../task/configuration/lacp-link-protection-cli.html">Configuring
-                                                LACP Link Protection of Aggregated Ethernet Interfaces (CLI Procedure)</a></li>
-                                        <li> <a href="../../concept/interfaces-lag-overview.html">Understanding
-                                                Aggregated Ethernet Interfaces and LACP</a>
-                                        </li>
+                                        <li class="heading">M Series</li>
+                                        <li><a href="../../task/configuration/interfaces-configuring-aggregated-ethernet-lacp.html">Configuring
+                                                LACP for Aggregated Ethernet Interfaces</a></li>
                                         <li class="heading">MX Series</li>
-                                        <li> <a href="../../concept/interfaces-lag-overview.html">Understanding
-                                                Aggregated Ethernet Interfaces and LACP</a>
-                                        </li>
-                                    </ul>
-                                    <ul>
-                                        <li class="heading">Additional Information</li>
-                                        <li> <a href="https://www.juniper.net/documentation/en_US/release-independent/junos/information-products/pathway-pages/junos/product/index.html"><i>Junos
-                                                    OS Ethernet Interfaces Configuration Guide</i></a> </li>
+                                        <li><a href="../../task/configuration/interfaces-configuring-aggregated-ethernet-lacp.html">Configuring
+                                                LACP for Aggregated Ethernet Interfaces</a></li>
+                                        <li class="heading">PTX Series</li>
+                                        <li><a href="../../task/configuration/interfaces-configuring-aggregated-ethernet-lacp.html">Configuring
+                                                LACP for Aggregated Ethernet Interfaces</a></li>
+                                        <li class="heading">T Series</li>
+                                        <li><a href="../../task/configuration/interfaces-configuring-aggregated-ethernet-lacp.html">Configuring
+                                                LACP for Aggregated Ethernet Interfaces</a></li>
                                     </ul>
                                 </div>
                                 <div class="moduleRightBottom"> </div>
@@ -1002,159 +982,179 @@
                         </div>
                         <div class="topicBody">
                             <div id="topic-content">
-                                <h1 class="Title" id="statement-name-statement">aggregated-ether-options</h1>
-                                <h4 class="Head4" id="jd0e22">Syntax</h4>
-                                <div dir="ltr" id="jd0e23">
+                                <h1 class="Title" id="jd0e2">lacp (Aggregated Ethernet)</h1>
+                                <h4 class="Head4" id="jd0e27">Syntax (EX, T, PTX, MX Series)</h4>
+                                <div dir="ltr" id="jd0e30">
                                     <div class="example">
                                         <div style="">
-                                            <div class="ExampleInline" style="display:block;">aggregated-ether-options
-                                                {</div>
-                                            <div class="ExampleInline" style="margin-left: 30pt; display:block;">(<a
-                                                    href="flow-control-edit-interfaces.html">flow-control</a> |
-                                                no-flow-control);</div>
+                                            <div class="ExampleInline" style="display:block;">lacp {</div>
+                                            <div class="ExampleInline" style="margin-left: 30pt; display:block;">(active
+                                                | passive);</div>
+                                            <div class="ExampleInline" style="margin-left: 30pt; display:block;">admin-key
+                                                <i>key</i>;</div>
+                                            <div class="ExampleInline" style="margin-left: 30pt; display:block;">accept-data;</div>
+                                            <div class="ExampleInline" style="margin-left: 30pt; display:block;">fast-failover;</div>
                                             <div class="ExampleInline" style="margin-left: 30pt; display:block;">
-                                                <div class="ExampleInline" style="display:block;"><a href="lacp-edit-interfaces-aggregated-ether-options.html">lacp</a>
+                                                <div class="ExampleInline" style="display:block;"><a href="link-protection-edit-interfaces.html">link-protection</a>
                                                     {</div>
-                                                <div class="ExampleInline" style="margin-left: 30pt; display:block;">(active
-                                                    | passive);</div>
-                                                <div class="ExampleInline" style="margin-left: 30pt; display:block;">admin-key
-                                                    <i>key</i>;</div>
                                                 <div class="ExampleInline" style="margin-left: 30pt; display:block;"><a
-                                                        href="periodic-edit-interfaces.html">periodic</a> <i>interval</i>;</div>
-                                                <div class="ExampleInline" style="margin-left: 30pt; display:block;"><a
-                                                        href="system-id-edit-protocols-xstp.html">system-id</a> <i>mac-address</i>;</div>
-                                                <div class="ExampleInline" style="display:block;">}</div>
-                                            </div>
-                                            <div class="ExampleInline" style="margin-left: 30pt; display:block;">(<a
-                                                    href="link-protection-edit-interfaces.html">link-protection</a> |
-                                                no-link-protection);</div>
-                                            <div class="ExampleInline" style="margin-left: 30pt; display:block;">
-                                                <div class="ExampleInline" style="display:block;">link-protection-sub-group
-                                                    <i>group-name</i> {</div>
-                                                <div class="ExampleInline" style="margin-left: 30pt; display:block;">[primary
-                                                    | backup);</div>
+                                                        href="disable-edit-interfaces-aggregated-ether-options.html">disable</a>;</div>
+                                                <div class="ExampleInline" style="margin-left: 30pt; display:block;">(<a
+                                                        href="revertive-edit-interfaces.html">revertive</a> |<a href="non-revertive-edit-interfaces.html">non-revertive</a>);</div>
                                                 <div class="ExampleInline" style="display:block;">}</div>
                                             </div>
                                             <div class="ExampleInline" style="margin-left: 30pt; display:block;"><a
-                                                    href="link-speed-edit-interfaces-ae.html">link-speed</a> <i>speed</i>;</div>
-                                            <div class="ExampleInline" style="margin-left: 30pt; display:block;">(<a
-                                                    href="loopback-edit-interfaces-ethernet.html">loopback</a> |
-                                                no-loopback);</div>
+                                                    href="periodic-edit-interfaces.html">periodic</a> <i>interval</i>;</div>
                                             <div class="ExampleInline" style="margin-left: 30pt; display:block;"><a
-                                                    href="minimum-links-edit-interfaces.html">minimum-links</a> <i>number</i>;</div>
+                                                    href="system-id-edit-interfaces.html">system-id</a> <i>mac-address</i>;</div>
                                             <div class="ExampleInline" style="margin-left: 30pt; display:block;"><a
-                                                    href="system-priority-edit-interfaces.html">system-priority</a></div>
+                                                    href="system-priority-edit-interfaces.html">system-priority</a> <i>priority</i>;</div>
                                             <div class="ExampleInline" style="display:block;">}</div>
                                         </div>
                                     </div>
                                 </div>
-                                <div dir="ltr" id="jd0e23">
+                                <h4 class="Head4">Hierarchy Level (EX, T, PTX, MX Series)</h4>
+                                <div dir="ltr" id="jd0e84">
                                     <div class="example">
-                                        <div style="">
-                                            <div class="ExampleInline" style="display:block;">aggregated-ether-options
-                                                {</div>
-                                            <div class="ExampleInline" style="margin-left: 30pt; display:block;">(<a
-                                                    href="flow-control-edit-interfaces.html">flow-control</a> |
-                                                no-flow-control);</div>
-                                            <div class="ExampleInline" style="margin-left: 30pt; display:block;">
-                                                <div class="ExampleInline" style="display:block;"><a href="lacp-edit-interfaces-aggregated-ether-options.html">lacp</a>
-                                                    {</div>
-                                                <div class="ExampleInline" style="margin-left: 30pt; display:block;">(active
-                                                    | passive);</div>
-                                                <div class="ExampleInline" style="margin-left: 30pt; display:block;">admin-key
-                                                    <i>key</i>;</div>
-                                                <div class="ExampleInline" style="margin-left: 30pt; display:block;"><a
-                                                        href="periodic-edit-interfaces.html">periodic</a> <i>interval</i>;</div>
-                                                <div class="ExampleInline" style="margin-left: 30pt; display:block;"><a
-                                                        href="system-id-edit-protocols-xstp.html">system-id</a> <i>mac-address</i>;</div>
-                                                <div class="ExampleInline" style="display:block;">}</div>
-                                            </div>
-                                            <div class="ExampleInline" style="margin-left: 30pt; display:block;">(<a
-                                                    href="link-protection-edit-interfaces.html">link-protection</a> |
-                                                no-link-protection);</div>
-                                            <div class="ExampleInline" style="margin-left: 30pt; display:block;">
-                                                <div class="ExampleInline" style="display:block;">link-protection-sub-group
-                                                    <i>group-name</i> {</div>
-                                                <div class="ExampleInline" style="margin-left: 30pt; display:block;">[primary
-                                                    | backup);</div>
-                                                <div class="ExampleInline" style="display:block;">}</div>
-                                            </div>
-                                            <div class="ExampleInline" style="margin-left: 30pt; display:block;"><a
-                                                    href="link-speed-edit-interfaces-ae.html">link-speed</a> <i>speed</i>;</div>
-                                            <div class="ExampleInline" style="margin-left: 30pt; display:block;">(<a
-                                                    href="loopback-edit-interfaces-ethernet.html">loopback</a> |
-                                                no-loopback);</div>
-                                            <div class="ExampleInline" style="margin-left: 30pt; display:block;"><a
-                                                    href="minimum-links-edit-interfaces.html">minimum-links</a> <i>number</i>;</div>
-                                            <div class="ExampleInline" style="margin-left: 30pt; display:block;"><a
-                                                    href="system-priority-edit-interfaces.html">system-priority</a></div>
-                                            <div class="ExampleInline" style="display:block;">}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <h4 class="Head4">Hierarchy Level</h4>
-                                <div dir="ltr" id="jd0e91">
-                                    <div class="example">
-                                        <div class="ExampleInline" style="display:block;">[edit <a href="interfaces-interfaces-ex-series.html">interfaces</a>
-                                            ae<i>x</i>]</div>
+                                        <div class="ExampleInline" style="display:block;">[edit interfaces ae<i>x</i>
+                                            <a href="aggregated-ether-options-edit-interfaces.html">aggregated-ether-options</a>]</div>
+                                        <div class="ExampleInline" style="display:block;">[edit logical-systems <i>logical-system-name</i>
+                                            interfaces ae<i>X</i> aggregated-ether-options]</div>
                                     </div>
                                 </div>
                                 <h4 class="Head4">Release Information</h4>
-                                <p class="Para1" formatting-option="none" id="jd0e100">Statement introduced in Junos OS
-                                    Release
-                                    9.0 for EX Series switches.</p>
+                                <p class="Para1" formatting-option="none" id="jd0e101">Statement introduced before
+                                    Junos OS Release
+                                    7.4.</p>
+                                <p class="Para1" formatting-option="none" id="jd0e103">Statement introduced in Junos OS
+                                    Release 15.1F4 for PTX Series
+                                    routers.</p>
+                                <p class="Para1" formatting-option="none" id="jd0e105"><span class="ExampleInline">fast-failover</span>
+                                    option introduced in Junos OS Release
+                                    12.2.</p>
+                                <p class="Para1" formatting-option="none" id="jd0e109">Support for logical systems
+                                    introduced in Junos OS Release 14.1.</p>
                                 <h4 class="Head4">Description</h4>
-                                <p class="Para1">Configure the aggregated Ethernet properties of
-                                    a specific aggregated Ethernet interface.</p>
+                                <p class="Para1">Configure the Link Aggregation Control Protocol
+                                    (LACP) for aggregated Ethernet interfaces only.</p>
+                                <p class="Para1">When you configure the <span class="ExampleInline">accept-data</span>
+                                    statement at the <span class="ExampleInline">[edit interfaces ae<i>X</i>
+                                        aggregated-ether-options
+                                        lacp]</span> hierarchy level, the router processes packets received
+                                    on a member link irrespective of the LACP state if the aggregated
+                                    Ethernet bundle is up.</p>
+                                <div class="admonDiv" style="">
+                                    <table border="1" cellpadding="5" cellspacing="0" class="admonTable">
+                                        <tr>
+                                            <td style="text-align: center;"><img src="/techpubs/images/note.gif" alt="" /></td>
+                                            <td>
+                                                <p class="Para1"><b>Note:
+                                                    </b>When you configure the <span class="ExampleInline">accept-data</span>
+                                                    statement
+                                                    at the <span class="ExampleInline">[edit interfaces ae<i>X</i>
+                                                        aggregated-ether-options
+                                                        lacp]</span> hierarchy level, this behavior occurs:</p>
+                                                <ul>
+                                                    <li style="">
+                                                        <p class="Para1">By default, the <span class="ExampleInline">accept-data</span>
+                                                            statement is not
+                                                            configured when LACP is enabled. </p>
+                                                    </li>
+                                                    <li style="">
+                                                        <p class="Para1">You can configure the <span class="ExampleInline">accept-data</span>
+                                                            statement
+                                                            to improve convergence and reduce the number of dropped
+                                                            packets when
+                                                            member links in the bundle are enabled or disabled.</p>
+                                                    </li>
+                                                    <li style="">
+                                                        <p class="Para1">When LACP is down and a member link receives
+                                                            packets,
+                                                            the router or switch does not process packets as defined in
+                                                            the IEEE
+                                                            802.1ax standard. According to this standard, the packets
+                                                            should
+                                                            be dropped, but they are processed instead because the
+                                                            <span class="ExampleInline">accept-data</span> statement is
+                                                            configured.</p>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <h4 class="Head4">Default</h4>
+                                <p class="Para1">If you do not specify LACP as either <span class="ExampleInline">active</span>
+                                    or <span class="ExampleInline">passive</span>, LACP remains passive.</p>
+                                <h4 class="Head4">Options</h4>
+                                <div class="definitionList">
+                                    <div class="defEntryDiv" style="">
+                                        <div><span class="ExampleInline defTerm" style="">active</span><span class="defSep">—</span><span
+                                                class="defItem" style="">Initiate transmission
+                                                of LACP packets.</span></div>
+                                    </div>
+                                    <div class="defEntryDiv" style="">
+                                        <div><span class="ExampleInline defTerm" style="">admin-key <i>number</i></span><span
+                                                class="defSep">—</span><span class="defItem" style="">Specify an
+                                                administrative key for the router or switch.</span></div>
+                                        <div class="admonDiv" style="">
+                                            <table border="1" cellpadding="5" cellspacing="0" class="admonTable">
+                                                <tr>
+                                                    <td style="text-align: center;"><img src="/techpubs/images/note.gif"
+                                                            alt="" /></td>
+                                                    <td>
+                                                        <p class="Para1"><b>Note:
+                                                            </b>You must also configure multichassis link aggregation
+                                                            (MC-LAG) when you configure the <span class="ExampleInline">admin-key</span>.</p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="defEntryDiv" style="">
+                                        <div><span class="ExampleInline defTerm" style="">fast-failover</span><span
+                                                class="defSep">—</span><span class="defItem" style="">Specify
+                                                to override the IEEE 802.3ad standard and allow the standby link to
+                                                receive traffic. Overriding the default behavior facilitates subsecond
+                                                failover.</span></div>
+                                    </div>
+                                    <div class="defEntryDiv" style="">
+                                        <div><span class="ExampleInline defTerm" style="">passive</span><span class="defSep">—</span><span
+                                                class="defItem" style="">Respond to
+                                                LACP packets.</span></div>
+                                    </div>
+                                </div>
                                 <p class="Para1">The remaining statements are explained separately. See <a href="https://apps.juniper.net/cli-explorer/">CLI
                                         Explorer</a>.</p>
                                 <h4 class="Head4">Required Privilege Level</h4>
                                 <p class="Para1">interface—To view this statement in the
-                                    configuration.<br />interface-control—To add this
-                                    statement to the configuration.</p>
+                                    configuration.</p>
+                                <p class="Para1">interface-control—To add this statement to the configuration.</p>
                                 <div class="printonly">
                                     <div class="gradientContainer" style="margin-top: 10px;">
                                         <div class="moduleRightTop"> </div>
                                         <div class="scmDefault clear">
                                             <h2>Related Documentation</h2>
                                             <ul>
-                                                <li class="heading">EX Series</li>
-                                                <li> <a href="../../example/interfaces-aggregated-ethernet-virtual-chassis-uplinks.html">Example:
-                                                        Configuring Aggregated Ethernet High-Speed Uplinks Between an
-                                                        EX4200 Virtual Chassis Access Switch and an EX4200 Virtual
-                                                        Chassis Distribution Switch</a> </li>
-                                                <li> <a href="../../example/interfaces-aggregated-ethernet-plus-lacp-virtual-chassis-uplinks.html">Example:
-                                                        Configuring Aggregated Ethernet High-Speed Uplinks with LACP
-                                                        Between an EX4200 Virtual Chassis Access Switch and an EX4200
-                                                        Virtual Chassis Distribution Switch</a> </li>
-                                                <li> <a href="../../task/configuration/link-aggregation-cli.html">Configuring
-                                                        Aggregated Ethernet Links (CLI Procedure)</a>
-                                                </li>
-                                                <li> <a href="../../task/configuration/lacp-cli.html">Configuring
-                                                        Aggregated Ethernet LACP (CLI Procedure)</a>
-                                                </li>
-                                                <li><a href="../../task/configuration/lacp-link-protection-cli.html">Configuring
-                                                        LACP Link Protection of Aggregated Ethernet Interfaces (CLI
-                                                        Procedure)</a></li>
-                                                <li> <a href="../../concept/interfaces-lag-overview.html">Understanding
-                                                        Aggregated Ethernet Interfaces and LACP</a>
-                                                </li>
+                                                <li class="heading">M Series</li>
+                                                <li><a href="../../task/configuration/interfaces-configuring-aggregated-ethernet-lacp.html">Configuring
+                                                        LACP for Aggregated Ethernet Interfaces</a></li>
                                                 <li class="heading">MX Series</li>
-                                                <li> <a href="../../concept/interfaces-lag-overview.html">Understanding
-                                                        Aggregated Ethernet Interfaces and LACP</a>
-                                                </li>
-                                            </ul>
-                                            <ul>
-                                                <li class="heading">Additional Information</li>
-                                                <li> <a href="https://www.juniper.net/documentation/en_US/release-independent/junos/information-products/pathway-pages/junos/product/index.html"><i>Junos
-                                                            OS Ethernet Interfaces Configuration Guide</i></a> </li>
+                                                <li><a href="../../task/configuration/interfaces-configuring-aggregated-ethernet-lacp.html">Configuring
+                                                        LACP for Aggregated Ethernet Interfaces</a></li>
+                                                <li class="heading">PTX Series</li>
+                                                <li><a href="../../task/configuration/interfaces-configuring-aggregated-ethernet-lacp.html">Configuring
+                                                        LACP for Aggregated Ethernet Interfaces</a></li>
+                                                <li class="heading">T Series</li>
+                                                <li><a href="../../task/configuration/interfaces-configuring-aggregated-ethernet-lacp.html">Configuring
+                                                        LACP for Aggregated Ethernet Interfaces</a></li>
                                             </ul>
                                         </div>
                                         <div class="moduleRightBottom"> </div>
                                     </div>
                                 </div>
                                 <div id="date" style="margin:20px 0 0 0;" class="default">
-                                    <h4>Modified: 2018-01-29</h4>
+                                    <h4>Modified: 2018-06-09</h4>
                                 </div>
                             </div>
                         </div>
