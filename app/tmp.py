@@ -18,6 +18,9 @@ from sqlalchemy.ext.mutable import Mutable
 # https://www.juniper.net/documentation/en_US/junos/topics/reference/configuration-statement/aggregated-ether-options-interfaces-ex-series.html
 # https://github.com/Patreon/patreon-python/blob/master/patreon/jsonapi/parser.py
 # https://www.dev2qa.com/python-json-dump-to-or-load-from-file-example/
+# https://github.com/rchristilaw/nhlapi/blob/develop/nhlapi/data_source/api.py
+# https://github.com/jinchuuriki91/challenge-json-restructure/blob/master/script.py
+# https://github.com/ctaylr13/shoppingCartJson
 
 
 try:
