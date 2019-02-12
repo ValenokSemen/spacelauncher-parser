@@ -1,0 +1,1 @@
+BASE_JSON_FULL = 'https://apps.juniper.net/cli-explorer/commands/list?sw=Junos%20OS'
