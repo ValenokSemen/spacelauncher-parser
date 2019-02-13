@@ -108,6 +108,9 @@ class StatementList(object):
 
     def __init__(self, statementlist):
         self.__statementlist = statementlist
+        self.__syntax_pathlist = []
+        self.__hierarhy_pathlist = []
+
 
 
     def get_breadcrumbs(self):
@@ -196,11 +199,14 @@ class newSyntaxStatement(StatementList):
         self.syntax_pathlist.append('/'.join([e for e in self.__elem_crumbs if e]))
 
     def is_header(self, statement):
-        header = re.match(r'^(\w[0-9a-zA-Z-_]+)', statement)
-        return bool(header)
+        if re.match(r'^(\w[0-9a-zA-Z-_]+)', statement):
+            if re.search(r'(\(|\[)', statement):
+                return True
+            else:
+                return False
 
     def split(self, statement):
-        splitlist = [i for i in re.split(r'\s+|\[|\]', statement) if i]
+        splitlist = [i for i in re.split(r'\s+|\[|\]|\||\(|\)', statement) if i]
         return splitlist
 
     def is_match(self, statement):
@@ -257,8 +263,11 @@ class oldSyntaxStatement(StatementList):
         return bool(rematch)
 
     def is_header(self, statement):
-        header = re.match(r'^(\w[0-9a-zA-Z-_]+)', statement)
-        return bool(header)
+        if re.match(r'^(\w[0-9a-zA-Z-_]+)', statement):
+            if re.search(r'(\(|\[)', statement):
+                return True
+            else:
+                return False
             
     def get_breadcrumbs(self):
         for element in self.statementlist:

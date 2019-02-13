@@ -1,0 +1,76 @@
+[
+    {
+        "id": 86180,
+        "metadata": "MX Series",
+        "path": "https://www.juniper.net/documentation/en_US/junos/topics/reference/configuration-statement/3gpp-imsi-id-edit-unified-edge-tdf-domain-selection.html",
+        "software": "Junos OS",
+        "title": "3gpp-imsi",
+        "commandPath": [
+            "edit/unified-edge/gateways/tdf gateway-name/domain-selection/term term-name/from/3gpp-imsi",
+            "edit/unified-edge/gateways/tdf gateway-name/domain-selection/term term-name/from/3gpp-imsi/equals value",
+            "edit/unified-edge/gateways/tdf gateway-name/domain-selection/term term-name/from/3gpp-imsi/has-prefix value",
+            "edit/unified-edge/gateways/tdf gateway-name/domain-selection/term term-name/from/3gpp-imsi/has-suffix value",
+            "edit/unified-edge/gateways/tdf gateway-name/domain-selection/term term-name/from/3gpp-imsi/matches value"
+        ]
+    },
+    {
+        "id": 10713,
+        "metadata": "EX Series|QFX Series|QFabric|EX4600|OCX1100|NFX Series",
+        "path": "https://www.juniper.net/documentation/en_US/junos/topics/reference/configuration-statement/8023ad-interfaces-ex-series.html",
+        "software": "Junos OS",
+        "title": "802.3ad",
+        "commandPath": [
+            "edit/interfaces interface-name/ether-options/802.3ad",
+            "edit/interfaces interface-name/ether-options/802.3ad/aex",
+            "edit/interfaces interface-name/ether-options/802.3ad/backup",
+            "edit/interfaces interface-name/ether-options/802.3ad/primary",
+            "edit/interfaces interface-name/ether-options/802.3ad/lacp",
+            "edit/interfaces interface-name/ether-options/802.3ad/lacp/force-up",
+            "edit/interfaces interface-name/ether-options/802.3ad/lacp/port-priority",
+            "edit/interfaces interface-name/ether-options/802.3ad ae{x",
+            "edit/interfaces interface-name/ether-options/802.3ad ae{x/lacp",
+            "edit/interfaces interface-name/ether-options/802.3ad ae{x/lacp/force-up",
+            "edit/interfaces interface-name/ether-options/802.3ad ae{x/lacp/primary",
+            "edit/interfaces interface-name/ether-options/802.3ad ae{x/lacp/backup",
+            "edit/interfaces interface-name/ether-options/802.3ad ae{x/port-priority",
+            "edit/interfaces interface-name/ether-options/802.3ad",
+            "edit/interfaces interface-name/ether-options/802.3ad/aex",
+            "edit/interfaces interface-name/ether-options/802.3ad/backup",
+            "edit/interfaces interface-name/ether-options/802.3ad/primary",
+            "edit/interfaces interface-name/ether-options/802.3ad/lacp",
+            "edit/interfaces interface-name/ether-options/802.3ad/lacp/force-up",
+            "edit/interfaces interface-name/ether-options/802.3ad/lacp/port-priority",
+            "edit/interfaces interface-name/ether-options/802.3ad ae{x",
+            "edit/interfaces interface-name/ether-options/802.3ad ae{x/lacp",
+            "edit/interfaces interface-name/ether-options/802.3ad ae{x/lacp/force-up",
+            "edit/interfaces interface-name/ether-options/802.3ad ae{x/lacp/primary",
+            "edit/interfaces interface-name/ether-options/802.3ad ae{x/lacp/backup",
+            "edit/interfaces interface-name/ether-options/802.3ad ae{x/port-priority"
+        ]
+    },
+    {
+        "id": 25729,
+        "metadata": "M Series|T Series|MX Series|SRX Series|PTX Series",
+        "path": "https://www.juniper.net/documentation/en_US/junos/topics/reference/configuration-statement/802.3ad-edit-interfaces.html",
+        "software": "Junos OS",
+        "title": "802.3ad",
+        "commandPath": [
+            "edit/interfaces interface-name/fastether-options/802.3ad",
+            "edit/interfaces interface-name/fastether-options/802.3ad/primary",
+            "edit/interfaces interface-name/fastether-options/802.3ad/backup",
+            "edit/interfaces interface-name/fastether-options/802.3ad/ae interface-number ",
+            "edit/interfaces interface-name/fastether-options/802.3ad/lacp",
+            "edit/interfaces interface-name/fastether-options/802.3ad/lacp/port-priority priority-number",
+            "edit/interfaces interface-name/fastether-options/802.3ad/link-index index-number",
+            "edit/interfaces interface-name/fastether-options/802.3ad/distribution-list distribution-list-number",
+            "edit/interfaces interface-name/gigether-options/802.3ad",
+            "edit/interfaces interface-name/gigether-options/802.3ad/primary",
+            "edit/interfaces interface-name/gigether-options/802.3ad/backup",
+            "edit/interfaces interface-name/gigether-options/802.3ad/ae interface-number ",
+            "edit/interfaces interface-name/gigether-options/802.3ad/lacp",
+            "edit/interfaces interface-name/gigether-options/802.3ad/lacp/port-priority priority-number",
+            "edit/interfaces interface-name/gigether-options/802.3ad/link-index index-number",
+            "edit/interfaces interface-name/gigether-options/802.3ad/distribution-list distribution-list-number"
+        ]
+    }
+]

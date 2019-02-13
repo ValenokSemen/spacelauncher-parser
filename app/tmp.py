@@ -30,6 +30,21 @@ try:
 except:
     print('ptvsd not working')
 
+class GenericJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        try:
+            return super().default(obj)
+        except TypeError:
+            pass
+        cls = type(obj)
+        result = {
+            '__custom__': True,
+            '__module__': cls.__module__,
+            '__name__': cls.__name__,
+            'data': obj.__dict__ if not hasattr(cls, '__json_encode__') else obj.__json_encode__
+        }
+        return result
+
 class Request(object):
 
     def getHtmlFromUrl(self, link):
@@ -65,14 +80,104 @@ class Request(object):
 
 class JuniperCommand(object):
     def __init__(self):
-        dataSet = Request()
+        self.datasource = Request()
+        self.command_obj_list = self.initCommandList()
 
+    def initCommandList(self):
+        raise NotImplementedError
+
+class JuniperService(JuniperCommand):
+    
+    def initCommandList(self):
+        commandList = self.datasource.getJsonFromUrl()
+        command_obj_list = []
+        if isinstance(commandList, list):
+             for index, commanditems in enumerate(commandList, start=1):
+                if isinstance(commanditems, dict):
+                     for target_list in commanditems['cl']:
+                         command_obj_list.append(Command(target_list ,self))
+                if index == 2:
+                    break
+        return command_obj_list
+
+    def getCommandList(self):
+        return self.command_obj_list
+        
+    def pretty_print(self, indent=4):
+        schema = list()
+        for target_list in self.getCommandList():
+            schema.append(dict(
+                id=target_list.id,
+                metadata=target_list.metadata,
+                path=target_list.path,
+                software=target_list.software,
+                title=target_list.title,
+                commandPath=target_list.commandPath,
+            ))
+        return json.dumps(schema, cls=GenericJSONEncoder, indent=indent)
+
+
+class Command(object):
+    def __init__(self, target, document):
+        self.document = document
+        self.id = target['id']
+        self.metadata = target['metadata']
+        self.path = target['path']
+        self.software = target['software']
+        self.title = target['title']
+        self.commandPath = self.getCommandPath().getPathList()
+
+
+    def getPath(self):
+        return self.path
+
+    def getMetadata(self):
+        return self.metadata
+
+    def getId(self):
+        return self.id
+
+    def getSoftware(self):
+        return self.software
+    
+    def getTitle(self):
+        return self.title
+
+    def getCommandPath(self):
+        html = self.document.datasource.getHtmlFromUrl(self.getPath())
+        return myCommandPath(html)
+
+
+class myCommandPath(object):
+    def __init__(self, html):
+        if html is not None:
+            self.pathList = self.setPathList(BeautifulSoup(html.content, 'lxml'))
+        
+    def getPathList(self):
+        return self.pathList
+
+    def setPathList(self, htmlData):
+        breadcrumbs = None
+        if htmlData.select_one("body > #app") is not None:
+            breadcrumbs = NewJuniperBreadcrumbs(htmlData)
+        else:
+            breadcrumbs = OldJuniperBreadcrumbs(htmlData)
+        breadcrumbs.createSyntaxStatement().get_breadcrumbs()
+        breadcrumbs.createHierarhyStatement().get_breadcrumbs()
+        return breadcrumbs.merge()
 
 def main():
-    rel_path = os.path.abspath(os.path.dirname(__file__))
-    abs_path = os.path.join(rel_path, "test_files/old_tmp.html")
-    with open(abs_path, 'r') as html_file:
-        html = BeautifulSoup(html_file, 'lxml')
+    command = JuniperService()   
+    with open('juniper-command-plus.json', 'w', encoding='utf-8') as outfile:
+        outfile.write(command.pretty_print())
+        #add trailing newline for POSIX compatibility
+        outfile.write('\n')
+
+    # rel_path = os.path.abspath(os.path.dirname(__file__))
+    # abs_path = os.path.join(rel_path, "test_files/old_tmp.html")
+
+    # with open(abs_path, 'r') as html_file:
+    #     html = BeautifulSoup(html_file, 'lxml')
 
         # with open('/app/juniper-command.json', 'r') as file:
                 
