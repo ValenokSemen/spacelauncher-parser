@@ -6,7 +6,7 @@
         {
             "label": "Enable_remote_debug",
             "type": "shell",
-            "command": "docker start 4d2fd04980d5b4a98dd19a8d1b4e49c19185bea02f2bd59ccd149b52a825c2c2"
+            "command": "docker start d9285aa301be32f5d4f4e46233ca5891e87710d8c53d80084654e9accc30a271"
         }
     ]
 }

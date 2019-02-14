@@ -153,7 +153,11 @@ class newHierarhyStatement(StatementList):
     def clean(self, param):
         result = re.sub(r'(\xa0|\n)', ' ', param.text)
         match =  re.search(r'(?<=\[)(.*)(?=\])', result)
-        return match.group(0)
+        if match is not None:
+            return match.group(0)
+        else:
+            match = re.search(r'(?<=\[)(.*)(?=,)', result)
+            return match.group(0)
 
         
 class newSyntaxStatement(StatementList):

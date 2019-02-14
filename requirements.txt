@@ -2,3 +2,5 @@ requests
 BeautifulSoup4
 lxml
 ptvsd
+tqdm
+aiohttp

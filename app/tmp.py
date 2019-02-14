@@ -3,6 +3,9 @@ import os.path
 import re
 import sys
 from contextlib import closing
+import tqdm
+import aiohttp
+import asyncio
 
 
 from bs4 import BeautifulSoup
@@ -29,6 +32,7 @@ try:
     print('ptvsd is started')
 except:
     print('ptvsd not working')
+
 
 class GenericJSONEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -88,6 +92,9 @@ class JuniperCommand(object):
 
 class JuniperService(JuniperCommand):
     
+    def getCommandList(self):
+        return self.command_obj_list
+    
     def initCommandList(self):
         commandList = self.datasource.getJsonFromUrl()
         command_obj_list = []
@@ -96,13 +103,37 @@ class JuniperService(JuniperCommand):
                 if isinstance(commanditems, dict):
                      for target_list in commanditems['cl']:
                          command_obj_list.append(Command(target_list ,self))
-                if index == 2:
+                if index == 4:
                     break
         return command_obj_list
 
-    def getCommandList(self):
-        return self.command_obj_list
-        
+    @staticmethod
+    async def get(*args, **kwargs):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(*args, **kwargs) as resp:
+                return await resp.text()
+
+
+    def add_cl(self, query, page):
+        query.setCommandPath(page)
+
+
+    async def commandlist(self, query, sem):
+        url = query.path
+        with await sem:
+            page = await self.get(url, compress=True)
+        self.add_cl(query, page)
+
+    async def wait_with_progress(self, coros):
+        for f in tqdm.tqdm(asyncio.as_completed(coros), total=len(coros)):
+            await f
+
+    def addCommandList(self):
+        sem = asyncio.Semaphore(5)
+        loop = asyncio.get_event_loop()
+        f = [self.commandlist(cl, sem) for cl in self.getCommandList()]
+        loop.run_until_complete(self.wait_with_progress(f))
+
     def pretty_print(self, indent=4):
         schema = list()
         for target_list in self.getCommandList():
@@ -125,7 +156,7 @@ class Command(object):
         self.path = target['path']
         self.software = target['software']
         self.title = target['title']
-        self.commandPath = self.getCommandPath().getPathList()
+        self.commandPath = []
 
 
     def getPath(self):
@@ -143,15 +174,15 @@ class Command(object):
     def getTitle(self):
         return self.title
 
-    def getCommandPath(self):
-        html = self.document.datasource.getHtmlFromUrl(self.getPath())
-        return myCommandPath(html)
+    def setCommandPath(self, html):
+        self.commandPath = myCommandPath(html).getPathList()
+        
 
 
 class myCommandPath(object):
     def __init__(self, html):
         if html is not None:
-            self.pathList = self.setPathList(BeautifulSoup(html.content, 'lxml'))
+            self.pathList = self.setPathList(BeautifulSoup(html, 'lxml'))
         
     def getPathList(self):
         return self.pathList
@@ -167,7 +198,8 @@ class myCommandPath(object):
         return breadcrumbs.merge()
 
 def main():
-    command = JuniperService()   
+    command = JuniperService()
+    command.addCommandList()   
     with open('juniper-command-plus.json', 'w', encoding='utf-8') as outfile:
         outfile.write(command.pretty_print())
         #add trailing newline for POSIX compatibility
