@@ -24,8 +24,9 @@ class JuniperBreadcrumbs(object):
         self.__hierarchy_statement = hierarchy
 
     def __init__(self, html):
-        self.syntax_list = self.find_all_statement('Syntax', html)
-        self.hierarchy_list = self.find_all_statement('Hierarchy Level', html)
+        self.test_method(html)
+        self.syntax_list = []
+        self.hierarchy_list = []
 
     def merge(self):
         merge_list = list()
@@ -35,7 +36,7 @@ class JuniperBreadcrumbs(object):
         return merge_list
 
 
-    def find_all_statement(self, parameter, html):
+    def test_method(self, html):
         return AttributeError('Not Implemented')
     
     def createSyntaxStatement(self):
@@ -43,10 +44,15 @@ class JuniperBreadcrumbs(object):
         Фабричный Метод
         """
         raise AttributeError('Not Implemented')
+    
+    def createHierarhyStatement(self):
+        """
+        Фабричный Метод
+        """
+        raise AttributeError('Not Implemented')
 
 class NewJuniperBreadcrumbs(JuniperBreadcrumbs):
-       
-    def find_all_statement(self, parameter, html):
+    def find_all_div_example(self, parameter, html):
         target_list = []
         for e in html.find_all('div', class_='example'):
             for i in e.find_previous_siblings("h4", limit=1):
@@ -56,7 +62,20 @@ class NewJuniperBreadcrumbs(JuniperBreadcrumbs):
                     else:
                         target_list = [i for i in e.select('.statement')]
         return target_list
-    
+
+    def test_method(self, html):
+        for h4 in html.select('#topic-content h4'):
+            if h4.text.find('Syntax') > -1:
+                if h4.find_next_sibling().name == 'p':
+                    self.syntax_list = [h4.find_next_sibling()]
+                elif h4.find_next_sibling().name == 'div':
+                    self.syntax_list = self.find_all_div_example(h4.text, html)
+            elif h4.text.find('Hierarchy Level') > -1:
+                if h4.find_next_sibling().name == 'p':
+                    self.hierarchy_list = [h4.find_next_sibling()]
+                elif h4.find_next_sibling().name == 'div':
+                    self.hierarchy_list = self.find_all_div_example(h4.text, html)
+
     def createSyntaxStatement(self):
         self.syntax =  newSyntaxStatement(self.syntax_list)
         return self.syntax
@@ -69,12 +88,13 @@ class OldJuniperBreadcrumbs(JuniperBreadcrumbs):
     
     def find_all_statement(self, parameter, html):
         target_list = []
-        for target in html.find_all('div', class_='example'):
-           if target.parent.find_previous_sibling("h4").text.find(parameter) > -1:
+        for target in html.find_all('div', id='topic-content'):
+            after_h4_links = [i.find_next_sibling() for i in target.select('h4') if i.text.find(parameter) > -1]
+            for example_div in after_h4_links:
                 if len(target_list) > 0:
-                    target_list.extend([i for i in target.select('div.ExampleInline') if len(list(i.select('div'))) == 0])
+                    target_list.extend([i for i in example_div.select('.ExampleInline') if len(list(i.select(i.name))) == 0])
                 else:
-                    target_list = [i for i in target.select('div.ExampleInline') if len(list(i.select('div'))) == 0]
+                    target_list = [i for i in example_div.select('.ExampleInline') if len(list(i.select(i.name))) == 0]
         return target_list
 
     def createSyntaxStatement(self):
@@ -118,7 +138,8 @@ class StatementList(object):
 
     def clean(self, param):
         pattern = re.compile(r'(\n\s+|\n)')
-        string = pattern.sub(' ', param.text)
+        #add delete whitespace from start and end
+        string = pattern.sub(' ', param.text).strip()
         substitutions = {' {': '', ';': ''}
         return self.replace(string, substitutions)
 
@@ -156,8 +177,8 @@ class newHierarhyStatement(StatementList):
         if match is not None:
             return match.group(0)
         else:
-            match = re.search(r'(?<=\[)(.*)(?=,)', result)
-            return match.group(0)
+            substitutions = {'[': '', ',': '', ']': '',}
+            return self.replace(result, substitutions)
 
         
 class newSyntaxStatement(StatementList):
@@ -326,5 +347,9 @@ class oldHierarhyStatement(StatementList):
     def clean(self, param):
         result = re.sub(r'(\xa0|\n)', ' ', param.text)
         match =  re.search(r'(?<=\[)(.*)(?=\])', result)
-        return match.group(0)
+        if match is not None:
+            return match.group(0)
+        else:
+            substitutions = {'[': '', ',': '', ']': '',}
+            return self.replace(result, substitutions)
 

@@ -107,33 +107,6 @@ class JuniperService(JuniperCommand):
                     break
         return command_obj_list
 
-    @staticmethod
-    async def get(*args, **kwargs):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(*args, **kwargs) as resp:
-                return await resp.text()
-
-
-    def add_cl(self, query, page):
-        query.setCommandPath(page)
-
-
-    async def commandlist(self, query, sem):
-        url = query.path
-        with await sem:
-            page = await self.get(url, compress=True)
-        self.add_cl(query, page)
-
-    async def wait_with_progress(self, coros):
-        for f in tqdm.tqdm(asyncio.as_completed(coros), total=len(coros)):
-            await f
-
-    def addCommandList(self):
-        sem = asyncio.Semaphore(5)
-        loop = asyncio.get_event_loop()
-        f = [self.commandlist(cl, sem) for cl in self.getCommandList()]
-        loop.run_until_complete(self.wait_with_progress(f))
-
     def pretty_print(self, indent=4):
         schema = list()
         for target_list in self.getCommandList():
@@ -197,31 +170,56 @@ class myCommandPath(object):
         breadcrumbs.createHierarhyStatement().get_breadcrumbs()
         return breadcrumbs.merge()
 
+
+async def get_url(*args, **kwargs):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(*args, **kwargs) as resp:
+            return await resp.text()
+
+
+def add_cl(query, page):
+    query.setCommandPath(page)
+
+
+async def commandlist(query, sem):
+    url = query.path
+    with await sem:
+        page = await get_url(url, compress=True)
+    add_cl(query, page)
+
+async def wait_with_progress(coros):
+    for f in tqdm.tqdm(asyncio.as_completed(coros), total=len(coros)):
+        await f
+ 
+
+
 def main():
-    command = JuniperService()
-    command.addCommandList()   
-    with open('juniper-command-plus.json', 'w', encoding='utf-8') as outfile:
-        outfile.write(command.pretty_print())
-        #add trailing newline for POSIX compatibility
-        outfile.write('\n')
+    # command = JuniperService()
+    # sem = asyncio.Semaphore(6)
+    # loop = asyncio.get_event_loop()
+    # f = [commandlist(cl, sem) for cl in command.getCommandList()]
+    # loop.run_until_complete(wait_with_progress(f))
+    # with open('juniper-command-plus.json', 'w', encoding='utf-8') as outfile:
+    #     outfile.write(command.pretty_print())
+    #     #add trailing newline for POSIX compatibility
+    #     outfile.write('\n')
 
-    # rel_path = os.path.abspath(os.path.dirname(__file__))
-    # abs_path = os.path.join(rel_path, "test_files/old_tmp.html")
+    rel_path = os.path.abspath(os.path.dirname(__file__))
+    abs_path = os.path.join(rel_path, "test_files/tmp.html")
 
-    # with open(abs_path, 'r') as html_file:
-    #     html = BeautifulSoup(html_file, 'lxml')
-
-        # with open('/app/juniper-command.json', 'r') as file:
-                
-        # if html.select_one("body > #app") is not None:
-        #     new_breadcrumbs = NewJuniperBreadcrumbs(html)
-        #     new_breadcrumbs.createSyntaxStatement().get_breadcrumbs()
-        #     new_breadcrumbs.createHierarhyStatement().get_breadcrumbs()
-        #     tmp = new_breadcrumbs.merge()
-        # else:
-        #     new_breadcrumbs = OldJuniperBreadcrumbs(html)
-        #     tmp = new_breadcrumbs.createHierarhyStatement().get_breadcrumbs()
-        #     print('\n'.join(tmp))
+    with open(abs_path, 'r') as html_file:
+        html = BeautifulSoup(html_file, 'lxml')               
+        if html.select_one("body > #app") is not None:
+            new_breadcrumbs = NewJuniperBreadcrumbs(html)
+            new_breadcrumbs.createSyntaxStatement().get_breadcrumbs()
+            new_breadcrumbs.createHierarhyStatement().get_breadcrumbs()
+            tmp = new_breadcrumbs.merge()
+        else:
+            new_breadcrumbs = OldJuniperBreadcrumbs(html)
+            new_breadcrumbs.createSyntaxStatement().get_breadcrumbs()
+            new_breadcrumbs.createHierarhyStatement().get_breadcrumbs()
+            tmp = new_breadcrumbs.merge()
+            print('\n'.join(tmp))
 
 if __name__ == "__main__":
     main()
