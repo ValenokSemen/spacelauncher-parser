@@ -11,20 +11,20 @@
     </meta>
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
     </meta>
-    <title>accounting - TechLibrary - Juniper Networks</title>
-    <meta name="subject" content="hardwareplatforms,switches,exseries,hardwareplatforms,routers,mxseries,hardwareplatforms,firewalls,srxseries,hardwareplatforms,routers,mseries,hardwareplatforms,routers,tseries,hardwareplatforms,routers,ptxseries,software,operatingsystems,junossoftware">
+    <title>bandwidth (MPC Bandwidth) - TechLibrary - Juniper Networks</title>
+    <meta name="subject" content="hardwareplatforms,routers,mxseries,mx2020,hardwareplatforms,routers,mxseries,mx2010,software,operatingsystems,junossoftware">
     </meta>
-    <meta name="description" content="CLI Statement. EX Series,MX Series,SRX Series,M Series,T Series,PTX Series. Configure audit of TACACS+ or RADIUS authentication events, configuration changes, and interactive commands. Auditing these factors helps you track network usage for auditing and billing purposes.">
+    <meta name="description" content="CLI Statement. MX2020,MX2010. Configure the MPC bandwidth.">
     </meta>
     <meta name="feature" content="[]">
     </meta>
     <meta name="branchId" content="1406">
     </meta>
-    <meta name="topicid" content="31531">
+    <meta name="topicid" content="106092">
     </meta>
-    <meta name="relatedtopics" content="31585,31575,31675,31693,31532,31682,122804,31691,31703,31722,31714,31694,31671,31700,85907,31713,31492,31494,;">
+    <meta name="relatedtopics" content="105287,105331;">
     </meta>
-    <meta name="platform" content="Hardware Platforms:Switches:EX-series,Hardware Platforms:Routers:MX-series,Hardware Platforms:Firewalls:SRX-series,Hardware Platforms:Routers:M-series,Hardware Platforms:Routers:T-series,Hardware Platforms:Routers:PTX Series">
+    <meta name="platform" content="Hardware Platforms:Routers:MX-series:MX2020,Hardware Platforms:Routers:MX-series:MX2010">
     </meta>
     <meta name="software" content="Software:Operating Systems:JUNOS Software">
     </meta>
@@ -32,7 +32,13 @@
     </meta>
     <meta name="release" content="junos 18.4">
     </meta>
-    <link href="/documentation/webstatic/css/topic.c8f023a3e00728835fab879f8b58be11.css" rel="stylesheet">
+    <link rel="preload" href="https://www.juniper.net/assets/styles/global-nav.css" as="style">
+    <link rel="preload" href="https://www.juniper.net/assets/scripts/global-nav.js" as="script">
+    <link rel="preload" href="/documentation/webstatic/fonts/swmaterialicon.woff" as="font" crossorigin="anonymous">
+    <link href="/documentation/webstatic/css/topic.6c81f650385f2a77454f996cdf811d6f.css" rel="stylesheet">
+    <link rel="preload" as="script" href="/documentation/webstatic/js/manifest.62d07183115fc2b12f82.js">
+    <link rel="preload" as="script" href="/documentation/webstatic/js/vendor.91a9c548f48da22bd953.js">
+    <link rel="preload" as="script" href="/documentation/webstatic/js/topic.7ab877d18ba8073a267e.js">
     <script src="https://assets.adobedtm.com/998b2d6d4944658536fe36266a249b07e626b86d/satelliteLib-6d05b7c7a99e1cbbdcac4fcfe7005e6bee80a0e9.js"></script>
 </head>
 
@@ -85,142 +91,66 @@
                         </nav>
                         <div class="topicBody">
                             <div id="topic-content">
-                                <h1 id="jd0e3">accounting</h1>
-                                <sw-topic-details date="2018-03-20">&nbsp;</sw-topic-details>
-                                <h4 id="jd0e33">Syntax</h4>
-                                <div dir="ltr" id="jd0e34" class="example">
-                                    <sw-code><template v-pre="">
-                                            <div class="complex-statement" style="">
-                                                <div class="statement" style="display:block;">accounting {</div>
-                                                <div class="statement ind-statement" style=""><a href="events-edit-system.html">events</a>
-                                                    [login change-log interactive-commands];</div>
-                                                <div class="complex-statement ind-statement" style="">
-                                                    <div class="statement" style="display:block;"><a href="destination-edit-system.html">destination</a>
-                                                        {</div>
-                                                    <div class="complex-statement ind-statement" style="">
-                                                        <div class="statement" style="display:block;"><a href="radius-edit-system.html">radius</a>
-                                                            {</div>
-                                                        <div class="complex-statement ind-statement" style="">
-                                                            <div class="statement" style="display:block;"><a href="server-edit-system-accounting-radius.html">server</a>
-                                                                {</div>
-                                                            <div class="complex-statement ind-statement" style="">
-                                                                <div class="statement" style="display:block;"><var
-                                                                        v-pre="">server-address</var> {</div>
-                                                                <div class="statement ind-statement" style=""><a href="accounting-port-edit-system.html">accounting-port</a>
-                                                                    <var v-pre="">port-number</var>;</div>
-                                                                <div class="statement ind-statement" style=""><a href="retry-edit-system-accounting-edit-system-radius-server.html">retry</a>
-                                                                    <var v-pre="">number</var>;</div>
-                                                                <div class="statement ind-statement" style=""> <a href="routing-instance-edit-system-accounting.html">routing-instance</a>
-                                                                    <var v-pre="">routing-instance</var>;</div>
-                                                                <div class="statement ind-statement" style=""><a href="secret-edit-system-accounting-edit-system-radius-server-edit-system-tacplus-server.html">secret</a>
-                                                                    <var v-pre="">password</var>;</div>
-                                                                <div class="statement ind-statement" style=""><a href="source-address-edit-system-ntp-radius-syslog-tacacs.html">source-address</a>
-                                                                    <var v-pre="">address</var>;</div>
-                                                                <div class="statement ind-statement" style=""><a href="timeout-edit-system-accounting-edit-system-radius-server-edit-system-tacplus-server.html">timeout</a>
-                                                                    <var v-pre="">seconds</var>;</div>
-                                                                <div class="statement" style="display:block;">}</div>
-                                                            </div>
-                                                            <div class="statement" style="display:block;">}</div>
-                                                        </div>
-                                                        <div class="statement" style="display:block;">}</div>
-                                                    </div>
-                                                    <div class="complex-statement ind-statement" style="">
-                                                        <div class="statement" style="display:block;"><a href="tacplus-edit-system.html">tacplus</a>
-                                                            {</div>
-                                                        <div class="complex-statement ind-statement" style="">
-                                                            <div class="statement" style="display:block;"><a href="server-edit-system-accounting-tacplus.html">server</a>
-                                                                {</div>
-                                                            <div class="complex-statement ind-statement" style="">
-                                                                <div class="statement" style="display:block;"><var
-                                                                        v-pre="">server-address</var> {</div>
-                                                                <div class="statement ind-statement" style=""><a href="port-edit-system-accounting.html">port</a>
-                                                                    <var v-pre="">port-number</var>;</div>
-                                                                <div class="statement ind-statement" style=""> <a href="routing-instance-edit-system-accounting.html">routing-instance</a>
-                                                                    <var v-pre="">routing-instance</var>;</div>
-                                                                <div class="statement ind-statement" style=""><a href="secret-edit-system-accounting-edit-system-radius-server-edit-system-tacplus-server.html">secret</a>
-                                                                    <var v-pre="">password</var>;</div>
-                                                                <div class="statement ind-statement" style=""><a href="single-connection-edit-system.html">single-connection</a>;</div>
-                                                                <div class="statement ind-statement" style=""><a href="timeout-edit-system-accounting-edit-system-radius-server-edit-system-tacplus-server.html">timeout</a>
-                                                                    <var v-pre="">seconds</var>;</div>
-                                                                <div class="statement" style="display:block;">}</div>
-                                                            </div>
-                                                            <div class="statement" style="display:block;">}</div>
-                                                        </div>
-                                                        <div class="statement" style="display:block;">}</div>
-                                                    </div>
-                                                    <div class="statement" style="display:block;">}</div>
-                                                </div>
-                                                <div class="statement ind-statement" style=""><a href="enhanced-avs-max.html">enhanced-avs-max</a>
-                                                    <var v-pre="">&lt;number&gt;</var>;</div>
-                                                <div class="statement" style="display:block;">}</div>
-                                            </div>
-                                        </template></sw-code>
-                                </div>
-                                <div dir="ltr" id="jd0e36" class="example">
-                                    <sw-code><template v-pre="">
-                                            <div class="complex-statement" style="">
-                                                <div class="statement" style="display:block;">accept-source-mac {</div>
-                                                <div class="complex-statement ind-statement" style="">
-                                                    <div class="statement" style="display:block;"><a href="mac-address-edit-interfaces.html">mac-address</a>
-                                                        <var v-pre="">mac-address</var> {</div>
-                                                    <div class="complex-statement ind-statement" style="">
-                                                        <div class="statement" style="display:block;"><a href="policer-edit-interfaces-mac-address.html">policer</a>
-                                                            {</div>
-                                                        <div class="statement ind-statement" style="">input <var v-pre="">cos-policer-name</var>;</div>
-                                                        <div class="statement ind-statement" style="">output <var v-pre="">cos-policer-name</var>;</div>
-                                                        <div class="statement" style="display:block;">}</div>
-                                                    </div>
-                                                    <div class="statement" style="display:block;">}</div>
-                                                </div>
-                                                <div class="statement" style="display:block;">}</div>
-                                            </div>
-                                        </template></sw-code>
-                                </div>
+                                <h1 id="jd0e2">bandwidth (MPC Bandwidth)</h1>
+                                <sw-topic-details date="2017-08-11">&nbsp;</sw-topic-details>
+                                <h4 id="jd0e16">Syntax</h4>
+                                <p><span class="cli" v-pre="">bandwidth <var v-pre="">bandwidth</var>;</span></p>
                                 <h4>Hierarchy Level</h4>
-                                <div dir="ltr" id="jd0e159" class="example">
-                                    <sw-code><template v-pre="">
-                                        <div class="statement" style="display:block;">[edit logical-systems <var
-                                                v-pre="">logical-system-name</var> protocols mpls
-                                            label-switched-path&nbsp;<var v-pre="">lsp-name</var> auto-bandwidth],</div>
-                                        <div class="statement" style="display:block;">[edit protocols mpls
-                                            label-switched-path&nbsp;<var v-pre="">lsp-name</var> auto-bandwidth]</div>
-                                    </template></sw-code>
-                                </div>
+                                <p><span class="cli" v-pre="">[edit chassis fpc <var v-pre="">slot</var>]</span></p>
                                 <h4>Release Information</h4>
-                                <p formatting-option="none" id="jd0e165">Statement introduced before
-                                    Junos OS Release 7.4.</p>
-                                <p formatting-option="none" id="jd0e167">Statement introduced in Junos OS Release 9.0
-                                    for EX Series switches.</p>
-                                <p formatting-option="none" id="jd0e169"><span class="cli" v-pre="">enhanced-avs-max</span>
-                                    statement introduced in Junos OS
-                                    Release 14.1.</p>
-                                <p formatting-option="none" id="jd0e173">Support for the <span class="cli" v-pre="">source-address-inet6</span>
-                                    statement introduced
-                                    in Junos OS Release 14.1X53-D10 for EX Series switches.</p>
+                                <p formatting-option="none" id="jd0e31">Statement introduced in Junos OS Release
+                                    16.1 for MPC8E.</p>
                                 <h4>Description</h4>
-                                <p>Configure audit of TACACS+ or RADIUS
-                                    authentication events, configuration changes, and interactive commands.
-                                    Auditing these factors helps you track network usage for auditing
-                                    and billing purposes. </p>
-                                <p>The remaining statements are explained separately.</p>
+                                <p>Configure the MPC bandwidth. </p>
+                                <p>By default, MPC8E provides a maximum bandwidth of 960 Gbps.
+                                    You can upgrade MPC8E to provide an increased bandwidth of 1600 Gbps
+                                    (1.6 Tbps) by using an add-on license. After you purchase the license
+                                    and configure the <span class="cli" v-pre="">bandwidth 1.6T</span> statement, MPC8E
+                                    provides
+                                    an increased bandwidth of 1.6 Tbps. After you upgrade the MPC, you
+                                    can use the <span class="cli" v-pre="">show chassis fpc <var v-pre="">slot</var>
+                                        detail</span> command to verify the status as shown in the following example:</p>
+                                <div dir="ltr" id="jd0e47" class="example">
+                                    <sw-code><template v-pre="">
+                                            <pre>[edit]
+user@router# run show chassis fpc 3 detail
+Slot 3 information:
+  State                                 Online
+  Temperature                        29
+  Total CPU DRAM                   3200 MB
+...
+
+  Max Power Consumption            1150 Watts
+  Configured Bandwidth            1600 G
+  Operating Bandwidth             1600 G
+
+[edit]
+user@router#</pre></template></sw-code>
+                                </div>
+                                <h4>Options</h4>
+                                <div class="definitionList">
+                                    <div class="defEntryDiv" style="">
+                                        <div><span class="ExampleInline defTerm" style=""><var v-pre="">bandwidth</var></span><span
+                                                class="defSep">&#8212;</span><span class="defItem" style="">Configure
+                                                the MPC to operate at a specified bandwidth. You can
+                                                specify <span class="cli" v-pre="">1.6T</span> as the value to
+                                                configure the MPC to operate
+                                                at a bandwidth of 1.6 Tbps. </span></div>
+                                    </div>
+                                </div>
                                 <h4>Required Privilege Level</h4>
-                                <p>admin&#8212;To view this statement
-                                    in the configuration.</p>
-                                <p>admin-control&#8212;To add this statement to the
+                                <p>interface&#8212;To view this statement in the
                                     configuration.</p>
+                                <p>interface-control&#8212;To add this statement to the configuration.</p>
                                 <div class="l-aside-box">
                                     <h3>Related Documentation</h3>
                                     <ul>
                                         <li style="">
-                                            <p><a href="../../task/configuration/radius-accounting-configuring.html">Configuring
-                                                    RADIUS System Accounting</a></p>
+                                            <p><a href="../../concept/chassis-mpc8e-overview.html">MPC8E on MX Series
+                                                    Routers Overview</a></p>
                                         </li>
                                         <li style="">
-                                            <p><a href="../../task/configuration/tacacs-accounting-configuring.html">Configuring
-                                                    TACACS+ System Accounting</a></p>
-                                        </li>
-                                        <li style="">
-                                            <p><a href="enhanced-avs-max.html">enhanced-avs-max</a></p>
+                                            <p><a href="../../../../release-independent/junos/topics/reference/general/mpc8e.html">MPC8E</a></p>
                                         </li>
                                     </ul>
                                 </div>
@@ -236,9 +166,9 @@
             </div>
         </sw-app>
     </div>
-    <script type="text/javascript" src="/documentation/webstatic/js/manifest.50e86ea5df8473df84b0.js"></script>
-    <script type="text/javascript" src="/documentation/webstatic/js/vendor.29b76e2559726abccb26.js"></script>
-    <script type="text/javascript" src="/documentation/webstatic/js/topic.7369156cdd249fd2db1c.js"></script>
+    <script type="text/javascript" src="/documentation/webstatic/js/manifest.62d07183115fc2b12f82.js"></script>
+    <script type="text/javascript" src="/documentation/webstatic/js/vendor.91a9c548f48da22bd953.js"></script>
+    <script type="text/javascript" src="/documentation/webstatic/js/topic.7ab877d18ba8073a267e.js"></script>
     <script type="text/javascript">_satellite.pageBottom();</script>
 </body>
 

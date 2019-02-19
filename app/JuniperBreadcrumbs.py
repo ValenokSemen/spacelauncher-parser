@@ -1,6 +1,64 @@
 #!/usr/local/bin/python3
 import re
 
+class ListOfStatement(object):
+    __list_name = ''
+    __statementList_statement = list()
+
+   
+    @property
+    def is_tag_p(self):
+        # statement getter
+        return self.__is_tag_p
+
+    @is_tag_p.setter
+    def is_tag_p(self, tag_p=False):
+        # statement setter
+        self.__is_tag_p = tag_p
+    
+    @property
+    def statementList(self):
+        # statement getter
+        return self.__statementList_statement
+    
+    @statementList.setter
+    def statementList(self, statementList):
+        # statement setter
+        self.__statementList_statement = statementList
+
+    def __init__(self, name, html):
+        self.__list_name = name
+        self.is_tag_p = False
+        self.html = html
+        self.statementList = self.find_all_statement()
+
+    def __add_to_statementList(self, e):
+        if len(self.statementList) > 0:
+            self.statementList.extend([i for i in e.select('.statement')])
+        else:
+            self.statementList = [i for i in e.select('.statement')]
+    
+    def find_all_statement(self):
+        for h4 in self.html.select('#topic-content h4'):
+            if h4.text.find(self.__list_name) > -1:                  
+                if (h4.find_next_sibling().name == 'div') and (h4.find_next_sibling()['class'][0] == 'example'):
+                    for e in self.html.find_all('div', class_='example'):
+                        for i in e.find_previous_siblings("h4", limit=1):
+                            if i.text.find(self.__list_name) > -1:
+                                self.__add_to_statementList(e)
+                elif h4.find_next_sibling().select('.example'):
+                    for e in h4.find_next_sibling().select('.example'):
+                        self.__add_to_statementList(e)
+                else:
+                    for siblings in h4.find_next_siblings():
+                        if not re.search(r'h4', siblings.name):
+                            self.statementList.append(siblings)
+                        else:
+                            self.is_tag_p = True
+                            break
+        return self.statementList
+                
+
 class JuniperBreadcrumbs(object):
 
     @property
@@ -24,9 +82,10 @@ class JuniperBreadcrumbs(object):
         self.__hierarchy_statement = hierarchy
 
     def __init__(self, html):
-        self.test_method(html)
-        self.syntax_list = []
-        self.hierarchy_list = []
+        self.html = html
+        self.syntax = self.createSyntaxStatement()
+        self.hierarchy = self.createHierarhyStatement()
+
 
     def merge(self):
         merge_list = list()
@@ -34,55 +93,26 @@ class JuniperBreadcrumbs(object):
            for s in self.syntax.syntax_pathlist:
                merge_list.append("{}/{}".format(h, s))
         return merge_list
-
-
-    def test_method(self, html):
-        return AttributeError('Not Implemented')
-    
+      
     def createSyntaxStatement(self):
         """
         Фабричный Метод
         """
-        raise AttributeError('Not Implemented')
+        raise NotImplementedError
     
     def createHierarhyStatement(self):
         """
         Фабричный Метод
         """
-        raise AttributeError('Not Implemented')
+        raise NotImplementedError
 
 class NewJuniperBreadcrumbs(JuniperBreadcrumbs):
-    def find_all_div_example(self, parameter, html):
-        target_list = []
-        for e in html.find_all('div', class_='example'):
-            for i in e.find_previous_siblings("h4", limit=1):
-                if i.text.find(parameter) > -1:
-                    if len(target_list) > 0:
-                        target_list.extend([i for i in e.select('.statement')])
-                    else:
-                        target_list = [i for i in e.select('.statement')]
-        return target_list
-
-    def test_method(self, html):
-        for h4 in html.select('#topic-content h4'):
-            if h4.text.find('Syntax') > -1:
-                if h4.find_next_sibling().name == 'p':
-                    self.syntax_list = [h4.find_next_sibling()]
-                elif h4.find_next_sibling().name == 'div':
-                    self.syntax_list = self.find_all_div_example(h4.text, html)
-            elif h4.text.find('Hierarchy Level') > -1:
-                if h4.find_next_sibling().name == 'p':
-                    self.hierarchy_list = [h4.find_next_sibling()]
-                elif h4.find_next_sibling().name == 'div':
-                    self.hierarchy_list = self.find_all_div_example(h4.text, html)
-
+    
     def createSyntaxStatement(self):
-        self.syntax =  newSyntaxStatement(self.syntax_list)
-        return self.syntax
+        return newSyntaxStatement(ListOfStatement('Syntax', self.html))
     
     def createHierarhyStatement(self):
-        self.hierarchy =  newHierarhyStatement(self.hierarchy_list)
-        return self.hierarchy
+        return newHierarhyStatement(ListOfStatement('Hierarchy Level', self.html))
         
 class OldJuniperBreadcrumbs(JuniperBreadcrumbs):
     
@@ -126,7 +156,7 @@ class StatementList(object):
     def hierarhy_pathlist(self):
         return self.__hierarhy_pathlist
 
-    def __init__(self, statementlist):
+    def __init__(self, statementlist, is_p_statementlist = False):
         self.__statementlist = statementlist
         self.__syntax_pathlist = []
         self.__hierarhy_pathlist = []

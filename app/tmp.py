@@ -147,28 +147,21 @@ class Command(object):
     def getTitle(self):
         return self.title
 
+    def getCommandPath(self):
+        return self.commandPath
+
     def setCommandPath(self, html):
-        self.commandPath = myCommandPath(html).getPathList()
-        
-
-
-class myCommandPath(object):
-    def __init__(self, html):
-        if html is not None:
-            self.pathList = self.setPathList(BeautifulSoup(html, 'lxml'))
-        
-    def getPathList(self):
-        return self.pathList
-
-    def setPathList(self, htmlData):
         breadcrumbs = None
-        if htmlData.select_one("body > #app") is not None:
-            breadcrumbs = NewJuniperBreadcrumbs(htmlData)
-        else:
-            breadcrumbs = OldJuniperBreadcrumbs(htmlData)
-        breadcrumbs.createSyntaxStatement().get_breadcrumbs()
-        breadcrumbs.createHierarhyStatement().get_breadcrumbs()
-        return breadcrumbs.merge()
+        if html is not None:
+            htmlData = BeautifulSoup(html, 'lxml')
+            if htmlData.select_one("body > #app") is not None:
+                breadcrumbs = NewJuniperBreadcrumbs(htmlData)
+            else:
+                breadcrumbs = OldJuniperBreadcrumbs(htmlData)
+            breadcrumbs.createSyntaxStatement().get_breadcrumbs()
+            breadcrumbs.createHierarhyStatement().get_breadcrumbs()
+        self.commandPath =  breadcrumbs.merge()
+        return self.getCommandPath()
 
 
 async def get_url(*args, **kwargs):
@@ -211,13 +204,14 @@ def main():
         html = BeautifulSoup(html_file, 'lxml')               
         if html.select_one("body > #app") is not None:
             new_breadcrumbs = NewJuniperBreadcrumbs(html)
-            new_breadcrumbs.createSyntaxStatement().get_breadcrumbs()
-            new_breadcrumbs.createHierarhyStatement().get_breadcrumbs()
+            new_breadcrumbs.createSyntaxStatement()
+            new_breadcrumbs.createHierarhyStatement()
             tmp = new_breadcrumbs.merge()
+            print('\n'.join(tmp))
         else:
             new_breadcrumbs = OldJuniperBreadcrumbs(html)
-            new_breadcrumbs.createSyntaxStatement().get_breadcrumbs()
-            new_breadcrumbs.createHierarhyStatement().get_breadcrumbs()
+            new_breadcrumbs.createSyntaxStatement()
+            new_breadcrumbs.createHierarhyStatement()
             tmp = new_breadcrumbs.merge()
             print('\n'.join(tmp))
 
