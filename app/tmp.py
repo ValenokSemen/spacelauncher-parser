@@ -197,25 +197,80 @@ def main():
     #     #add trailing newline for POSIX compatibility
     #     outfile.write('\n')
 
-    rel_path = os.path.abspath(os.path.dirname(__file__))
-    abs_path = os.path.join(rel_path, "test_files/tmp.html")
+    # rel_path = os.path.abspath(os.path.dirname(__file__))
+    # abs_path = os.path.join(rel_path, "test_files/tmp.html")
 
-    with open(abs_path, 'r') as html_file:
-        html = BeautifulSoup(html_file, 'lxml')               
-        if html.select_one("body > #app") is not None:
-            new_breadcrumbs = NewJuniperBreadcrumbs(html)
-            new_breadcrumbs.createSyntaxStatement()
-            new_breadcrumbs.createHierarhyStatement()
-            tmp = new_breadcrumbs.merge()
-            print('\n'.join(tmp))
+    # with open(abs_path, 'r') as html_file:
+    #     html = BeautifulSoup(html_file, 'lxml')               
+    #     if html.select_one("body > #app") is not None:
+    #         new_breadcrumbs = NewJuniperBreadcrumbs(html)
+    #         new_breadcrumbs.createSyntaxStatement()
+    #         new_breadcrumbs.createHierarhyStatement()
+    #         tmp = new_breadcrumbs.merge()
+    #         print('\n'.join(tmp))
+    #     else:
+    #         new_breadcrumbs = OldJuniperBreadcrumbs(html)
+    #         new_breadcrumbs.createSyntaxStatement()
+    #         new_breadcrumbs.createHierarhyStatement()
+    #         tmp = new_breadcrumbs.merge()
+    #         print('\n'.join(tmp))
+    str1 = 'edit protocols vstp (all |vlan--id | vlan--name) interface (all | interface-name)'
+    pattern1 = re.compile(r'\((.*?)\)')    
+    match = pattern1.findall(str1)
+    if match:
+        value = list()
+        str1_new, match_list_new = deleteComment(match, str1)
+        if match_list_new:
+            str2 = re.sub('[(|)]', '',  str1 if str1_new == '' else  str1_new)
+            for v in match_list_new:
+                splitlist = [str(s).strip() for s in re.split(r'\|', v) if s]
+                if not value:
+                    for s in splitlist:
+                        regex = r'|'.join(map(r'(?<=\s)({})(?=\s|$)'.format, [v for i, v in enumerate(splitlist) if v != s]))
+                        st = test_replace_string(str2, regex, len(splitlist))
+                        value.append(re.sub(r'\s{2,}', ' ', st).strip())               
+                        # value.append(re.sub(r'\s{2,}', ' ', re.sub(regex, '', str2)).strip())               
+                else:
+                    tmp = [i for i in value]
+                    for s in splitlist:
+                        regex = r'|'.join(map(r'(?<=\s)({})(?=\s|$)'.format, [v for i, v in enumerate(splitlist) if v != s]))
+                        for target_list in tmp:
+                            value.append(re.sub(r'\s{2,}', ' ', re.sub(regex, ' ', target_list)).strip())
+                    del value[:len(tmp)]
         else:
-            new_breadcrumbs = OldJuniperBreadcrumbs(html)
-            new_breadcrumbs.createSyntaxStatement()
-            new_breadcrumbs.createHierarhyStatement()
-            tmp = new_breadcrumbs.merge()
-            print('\n'.join(tmp))
+            value.append(str1_new)
+        print('\n'.join(value))
+
+def deleteComment(match_list, string):
+    new_str = ''
+    new_matchList = []
+    for match in match_list:
+        split_arr = [str(s).strip() for s in re.split(r'\|', match) if s]
+        if len(split_arr) == 1:
+            if new_str == '':
+                new_str =  re.sub(r'\(({})\)'.format(match), '', string)
+            else:
+                new_str =  re.sub(r'\(({})\)'.format(match), '', new_str)
+        else:
+            new_matchList.append(match)
+    new_str =  re.sub(r'\s{2,}', ' ', new_str).strip()
+    return new_str, new_matchList
+
+
+
+def test_replace_string(string, regex, length):
+    i = length
+    matches = re.finditer(regex, string, re.MULTILINE)
+    for matchNum, match in enumerate(matches, start=1):
+        if matchNum <= i:
+            start = match.start()
+            end = match.end()
+            string = string[:start] + string[end:]
+    return string
+
 
 if __name__ == "__main__":
     main()
+
 
     # print('{} is depth {}'.format(value, depth))
