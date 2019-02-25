@@ -50,11 +50,11 @@ class ListOfStatement(object):
                     for e in h4.find_next_sibling().select('.example'):
                         self.__add_to_statementList(e)
                 else:
+                    self.is_tag_p = True
                     for siblings in h4.find_next_siblings():
                         if not re.search(r'h4', siblings.name):
                             self.statementList.append(siblings)
                         else:
-                            self.is_tag_p = True
                             break
         return self.statementList
                 

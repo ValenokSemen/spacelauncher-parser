@@ -197,49 +197,79 @@ def main():
     #     #add trailing newline for POSIX compatibility
     #     outfile.write('\n')
 
-    # rel_path = os.path.abspath(os.path.dirname(__file__))
-    # abs_path = os.path.join(rel_path, "test_files/tmp.html")
+    rel_path = os.path.abspath(os.path.dirname(__file__))
+    abs_path = os.path.join(rel_path, "test_files/tmp.html")
 
-    # with open(abs_path, 'r') as html_file:
-    #     html = BeautifulSoup(html_file, 'lxml')               
-    #     if html.select_one("body > #app") is not None:
-    #         new_breadcrumbs = NewJuniperBreadcrumbs(html)
-    #         new_breadcrumbs.createSyntaxStatement()
-    #         new_breadcrumbs.createHierarhyStatement()
-    #         tmp = new_breadcrumbs.merge()
-    #         print('\n'.join(tmp))
-    #     else:
-    #         new_breadcrumbs = OldJuniperBreadcrumbs(html)
-    #         new_breadcrumbs.createSyntaxStatement()
-    #         new_breadcrumbs.createHierarhyStatement()
-    #         tmp = new_breadcrumbs.merge()
-    #         print('\n'.join(tmp))
-    str1 = 'edit protocols vstp (all |vlan--id | vlan--name) interface (all | interface-name)'
-    pattern1 = re.compile(r'\((.*?)\)')    
-    match = pattern1.findall(str1)
-    if match:
-        value = list()
-        str1_new, match_list_new = deleteComment(match, str1)
-        if match_list_new:
-            str2 = re.sub('[(|)]', '',  str1 if str1_new == '' else  str1_new)
-            for v in match_list_new:
-                splitlist = [str(s).strip() for s in re.split(r'\|', v) if s]
-                if not value:
-                    for s in splitlist:
-                        regex = r'|'.join(map(r'(?<=\s)({})(?=\s|$)'.format, [v for i, v in enumerate(splitlist) if v != s]))
-                        st = test_replace_string(str2, regex, len(splitlist))
-                        value.append(re.sub(r'\s{2,}', ' ', st).strip())               
-                        # value.append(re.sub(r'\s{2,}', ' ', re.sub(regex, '', str2)).strip())               
-                else:
-                    tmp = [i for i in value]
-                    for s in splitlist:
-                        regex = r'|'.join(map(r'(?<=\s)({})(?=\s|$)'.format, [v for i, v in enumerate(splitlist) if v != s]))
-                        for target_list in tmp:
-                            value.append(re.sub(r'\s{2,}', ' ', re.sub(regex, ' ', target_list)).strip())
-                    del value[:len(tmp)]
+    with open(abs_path, 'r') as html_file:
+        html = BeautifulSoup(html_file, 'lxml')               
+        if html.select_one("body > #app") is not None:
+            new_breadcrumbs = NewJuniperBreadcrumbs(html)
+            new_breadcrumbs.createSyntaxStatement()
+            new_breadcrumbs.createHierarhyStatement()
+            tmp = new_breadcrumbs.merge()
+            print('\n'.join(tmp))
         else:
-            value.append(str1_new)
-        print('\n'.join(value))
+            new_breadcrumbs = OldJuniperBreadcrumbs(html)
+            new_breadcrumbs.createSyntaxStatement()
+            new_breadcrumbs.createHierarhyStatement()
+            tmp = new_breadcrumbs.merge()
+            print('\n'.join(tmp))
+    # start_string = 'edit protocols mstp interface (all | interface-name)'
+    # match = is_match(start_string)
+    # if match:
+    #     hierarhyList = list()
+    #     string_wo_comment, match_wo_comment = deleteComment(match, start_string)
+    #     if match_wo_comment:
+    #         tmp_string = re.sub('[(|)]', '',  start_string if not string_wo_comment else string_wo_comment)
+    #         ttl = 1
+    #         for v in match_wo_comment:
+    #             splitlist = [str(s).strip() for s in re.split(r'\|', v) if s]
+    #             if not hierarhyList:
+    #                 for s in splitlist:
+    #                     # regex = r'|'.join(map(r'(?<=\s)({})(?=\s|$)'.format, [v for i, v in enumerate(splitlist) if v != s]))
+    #                     regex = [r'(?<=\s)({})(?=\s|$)'.format(v) for i, v in enumerate(splitlist) if v != s]
+    #                     hierarhyList.append(re.sub(r'\s{2,}', ' ', createString(regex, tmp_string, ttl).strip()))         
+    #                 ttl = ttl+1            
+    #             else:
+    #                 tmp = [i for i in hierarhyList]
+    #                 for s in splitlist:
+    #                     regex = [r'(?<=\s)({})(?=\s|$)'.format(v) for i, v in enumerate(splitlist) if v != s]
+    #                     for val_el in tmp:
+    #                         hierarhyList.append(re.sub(r'\s{2,}', ' ', createString(regex, val_el, ttl).strip()))
+    #                 del hierarhyList[:len(tmp)]
+    #                 ttl = ttl+1
+    #     else:
+    #         hierarhyList.append(string_wo_comment)
+    #     print('\n'.join(hierarhyList))
+    # else:
+    #     print(start_string)
+
+def is_match(string):
+    pattern1 = re.compile(r'\((.*?)\)')    
+    match = pattern1.findall(string)
+    return match
+
+def createString(regex, init_string, ttl):
+    tmpstr = ''
+    for el in regex:
+        matches = [v for v in re.finditer(el, init_string if not tmpstr else tmpstr , re.MULTILINE)]
+        if tmpstr == '':
+            for matchNum, match in enumerate(matches, start=1):
+                if (len(matches) > 1) and (matchNum == ttl):
+                    tmpstr = init_string[:match.start()] + init_string[match.end():]
+                    break
+                elif (len(matches) == 1):
+                    tmpstr = init_string[:match.start()] + init_string[match.end():]
+                    break
+        else:
+            for matchNum, match in enumerate(matches, start=1):
+                if (len(matches) > 1) and (matchNum == ttl):
+                    tmpstr = tmpstr[:match.start()] + tmpstr[match.end():]
+                    break
+                elif (len(matches) == 1):
+                    tmpstr = tmpstr[:match.start()] + tmpstr[match.end():]
+                    break
+    return tmpstr
 
 def deleteComment(match_list, string):
     new_str = ''
@@ -255,19 +285,6 @@ def deleteComment(match_list, string):
             new_matchList.append(match)
     new_str =  re.sub(r'\s{2,}', ' ', new_str).strip()
     return new_str, new_matchList
-
-
-
-def test_replace_string(string, regex, length):
-    i = length
-    matches = re.finditer(regex, string, re.MULTILINE)
-    for matchNum, match in enumerate(matches, start=1):
-        if matchNum <= i:
-            start = match.start()
-            end = match.end()
-            string = string[:start] + string[end:]
-    return string
-
 
 if __name__ == "__main__":
     main()
