@@ -111,12 +111,13 @@ class JuniperService(JuniperCommand):
         schema = list()
         for target_list in self.getCommandList():
             schema.append(dict(
-                id=target_list.id,
-                metadata=target_list.metadata,
-                path=target_list.path,
-                software=target_list.software,
-                title=target_list.title,
-                commandPath=target_list.commandPath,
+                id=target_list.getId,
+                metadata=target_list.getMetadata,
+                path=target_list.getPath,
+                software=target_list.getSoftware,
+                title=target_list.getTitle,
+                page=target_list.getPage,
+                commandPath=target_list.getCommandPath,
             ))
         return json.dumps(schema, cls=GenericJSONEncoder, indent=indent)
 
@@ -129,11 +130,15 @@ class Command(object):
         self.path = target['path']
         self.software = target['software']
         self.title = target['title']
+        self.page = ''
         self.commandPath = []
 
 
     def getPath(self):
         return self.path
+    
+    def getPage(self):
+        return self.page
 
     def getMetadata(self):
         return self.metadata
@@ -155,8 +160,10 @@ class Command(object):
         if html is not None:
             htmlData = BeautifulSoup(html, 'lxml')
             if htmlData.select_one("body > #app") is not None:
+                self.page = 'new'
                 breadcrumbs = NewJuniperBreadcrumbs(htmlData)
             else:
+                self.page = 'old'
                 breadcrumbs = OldJuniperBreadcrumbs(htmlData)
             breadcrumbs.createSyntaxStatement().get_breadcrumbs()
             breadcrumbs.createHierarhyStatement().get_breadcrumbs()
