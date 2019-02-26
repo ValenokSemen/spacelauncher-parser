@@ -203,88 +203,21 @@ def main():
     with open(abs_path, 'r') as html_file:
         html = BeautifulSoup(html_file, 'lxml')               
         if html.select_one("body > #app") is not None:
-            new_breadcrumbs = NewJuniperBreadcrumbs(html)
-            new_breadcrumbs.createSyntaxStatement()
-            new_breadcrumbs.createHierarhyStatement()
-            tmp = new_breadcrumbs.merge()
+            breadcrumbs = NewJuniperBreadcrumbs(html)
+            Syntax = breadcrumbs.createSyntaxStatement()
+            Hierarhy = breadcrumbs.createHierarhyStatement()
+            if Syntax:
+                Syntax.get_breadcrumbs()
+            if Hierarhy:
+                Hierarhy.get_breadcrumbs()
+            if isinstance(breadcrumbs.merge(), list):
+                print('\n'.join(breadcrumbs.merge_list))     
+        else:
+            breadcrumbs = OldJuniperBreadcrumbs(html)
+            breadcrumbs.createSyntaxStatement()
+            breadcrumbs.createHierarhyStatement()
+            tmp = breadcrumbs.merge()
             print('\n'.join(tmp))
-        else:
-            new_breadcrumbs = OldJuniperBreadcrumbs(html)
-            new_breadcrumbs.createSyntaxStatement()
-            new_breadcrumbs.createHierarhyStatement()
-            tmp = new_breadcrumbs.merge()
-            print('\n'.join(tmp))
-    # start_string = 'edit protocols mstp interface (all | interface-name)'
-    # match = is_match(start_string)
-    # if match:
-    #     hierarhyList = list()
-    #     string_wo_comment, match_wo_comment = deleteComment(match, start_string)
-    #     if match_wo_comment:
-    #         tmp_string = re.sub('[(|)]', '',  start_string if not string_wo_comment else string_wo_comment)
-    #         ttl = 1
-    #         for v in match_wo_comment:
-    #             splitlist = [str(s).strip() for s in re.split(r'\|', v) if s]
-    #             if not hierarhyList:
-    #                 for s in splitlist:
-    #                     # regex = r'|'.join(map(r'(?<=\s)({})(?=\s|$)'.format, [v for i, v in enumerate(splitlist) if v != s]))
-    #                     regex = [r'(?<=\s)({})(?=\s|$)'.format(v) for i, v in enumerate(splitlist) if v != s]
-    #                     hierarhyList.append(re.sub(r'\s{2,}', ' ', createString(regex, tmp_string, ttl).strip()))         
-    #                 ttl = ttl+1            
-    #             else:
-    #                 tmp = [i for i in hierarhyList]
-    #                 for s in splitlist:
-    #                     regex = [r'(?<=\s)({})(?=\s|$)'.format(v) for i, v in enumerate(splitlist) if v != s]
-    #                     for val_el in tmp:
-    #                         hierarhyList.append(re.sub(r'\s{2,}', ' ', createString(regex, val_el, ttl).strip()))
-    #                 del hierarhyList[:len(tmp)]
-    #                 ttl = ttl+1
-    #     else:
-    #         hierarhyList.append(string_wo_comment)
-    #     print('\n'.join(hierarhyList))
-    # else:
-    #     print(start_string)
-
-def is_match(string):
-    pattern1 = re.compile(r'\((.*?)\)')    
-    match = pattern1.findall(string)
-    return match
-
-def createString(regex, init_string, ttl):
-    tmpstr = ''
-    for el in regex:
-        matches = [v for v in re.finditer(el, init_string if not tmpstr else tmpstr , re.MULTILINE)]
-        if tmpstr == '':
-            for matchNum, match in enumerate(matches, start=1):
-                if (len(matches) > 1) and (matchNum == ttl):
-                    tmpstr = init_string[:match.start()] + init_string[match.end():]
-                    break
-                elif (len(matches) == 1):
-                    tmpstr = init_string[:match.start()] + init_string[match.end():]
-                    break
-        else:
-            for matchNum, match in enumerate(matches, start=1):
-                if (len(matches) > 1) and (matchNum == ttl):
-                    tmpstr = tmpstr[:match.start()] + tmpstr[match.end():]
-                    break
-                elif (len(matches) == 1):
-                    tmpstr = tmpstr[:match.start()] + tmpstr[match.end():]
-                    break
-    return tmpstr
-
-def deleteComment(match_list, string):
-    new_str = ''
-    new_matchList = []
-    for match in match_list:
-        split_arr = [str(s).strip() for s in re.split(r'\|', match) if s]
-        if len(split_arr) == 1:
-            if new_str == '':
-                new_str =  re.sub(r'\(({})\)'.format(match), '', string)
-            else:
-                new_str =  re.sub(r'\(({})\)'.format(match), '', new_str)
-        else:
-            new_matchList.append(match)
-    new_str =  re.sub(r'\s{2,}', ' ', new_str).strip()
-    return new_str, new_matchList
 
 if __name__ == "__main__":
     main()

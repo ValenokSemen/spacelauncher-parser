@@ -1,63 +1,6 @@
 #!/usr/local/bin/python3
 import re
-
-class ListOfStatement(object):
-    __list_name = ''
-    __statementList_statement = list()
-
-   
-    @property
-    def is_tag_p(self):
-        # statement getter
-        return self.__is_tag_p
-
-    @is_tag_p.setter
-    def is_tag_p(self, tag_p=False):
-        # statement setter
-        self.__is_tag_p = tag_p
-    
-    @property
-    def statementList(self):
-        # statement getter
-        return self.__statementList_statement
-    
-    @statementList.setter
-    def statementList(self, statementList):
-        # statement setter
-        self.__statementList_statement = statementList
-
-    def __init__(self, name, html):
-        self.__list_name = name
-        self.is_tag_p = False
-        self.html = html
-        self.statementList = self.find_all_statement()
-
-    def __add_to_statementList(self, e):
-        if len(self.statementList) > 0:
-            self.statementList.extend([i for i in e.select('.statement')])
-        else:
-            self.statementList = [i for i in e.select('.statement')]
-    
-    def find_all_statement(self):
-        for h4 in self.html.select('#topic-content h4'):
-            if h4.text.find(self.__list_name) > -1:                  
-                if (h4.find_next_sibling().name == 'div') and (h4.find_next_sibling()['class'][0] == 'example'):
-                    for e in self.html.find_all('div', class_='example'):
-                        for i in e.find_previous_siblings("h4", limit=1):
-                            if i.text.find(self.__list_name) > -1:
-                                self.__add_to_statementList(e)
-                elif h4.find_next_sibling().select('.example'):
-                    for e in h4.find_next_sibling().select('.example'):
-                        self.__add_to_statementList(e)
-                else:
-                    self.is_tag_p = True
-                    for siblings in h4.find_next_siblings():
-                        if not re.search(r'h4', siblings.name):
-                            self.statementList.append(siblings)
-                        else:
-                            break
-        return self.statementList
-                
+          
 
 class JuniperBreadcrumbs(object):
 
@@ -80,19 +23,33 @@ class JuniperBreadcrumbs(object):
     def hierarchy(self, hierarchy):
         # statement setter
         self.__hierarchy_statement = hierarchy
+    
+    @property
+    def merge_list(self):
+        # statement getter
+        return self.__merge_list
+    
+    @merge_list.setter
+    def merge_list(self, merge_list):
+        # statement setter
+        self.__merge_list = merge_list
 
     def __init__(self, html):
         self.html = html
-        self.syntax = self.createSyntaxStatement()
-        self.hierarchy = self.createHierarhyStatement()
-
 
     def merge(self):
-        merge_list = list()
-        for h in self.hierarchy.hierarhy_pathlist:
-           for s in self.syntax.syntax_pathlist:
-               merge_list.append("{}/{}".format(h, s))
-        return merge_list
+        self.merge_list = []
+        if self.hierarchy is not None:
+            if self.hierarchy.hierarhy_pathlist:
+                for h in self.hierarchy.hierarhy_pathlist:
+                    for s in self.syntax.syntax_pathlist:
+                        self.merge_list.append("{}/{}".format(h, s))
+        elif self.syntax is not None:
+            for s in self.syntax.syntax_pathlist:
+                self.merge_list.append(s)
+        else:
+            return None       
+        return self.merge_list
       
     def createSyntaxStatement(self):
         """
@@ -107,13 +64,88 @@ class JuniperBreadcrumbs(object):
         raise NotImplementedError
 
 class NewJuniperBreadcrumbs(JuniperBreadcrumbs):
+
+    @property
+    def tag_p(self):
+        # statement getter
+        return self.__tag_p
+
+    @tag_p.setter
+    def tag_p(self, tag_p):
+        # statement setter
+        self.__tag_p = tag_p
+    
+    @property
+    def syntax_line(self):
+        # statement getter
+        return self.__syntax_line
+    
+    @syntax_line.setter
+    def syntax_line(self, syntax_line):
+        # statement setter
+        self.__syntax_line = syntax_line
+    
+    @property
+    def hierarchy_line(self):
+        # statement getter
+        return self.__hierarchy_line
+
+    @hierarchy_line.setter
+    def hierarchy_line(self, hierarchy_line):
+        # statement setter
+        self.__hierarchy_line = hierarchy_line
+    
+    def __init__(self, html):
+        super().__init__(html)
+        self.tag_p = False
+
+    def __add_to_statementList(self, e, statementList):
+        if statementList:
+            statementList.extend([i for i in e.select('.statement')])
+        else:
+            statementList = [i for i in e.select('.statement')]
+        return statementList
+    
+    def __find_all_statement(self, name):
+        statementList = []
+        for h4 in self.html.select('#topic-content h4'):
+            if h4.text.find(name) > -1:                  
+                if (h4.find_next_sibling().name == 'div') and (h4.find_next_sibling()['class'][0] == 'example'):
+                    for e in self.html.find_all('div', class_='example'):
+                        for i in e.find_previous_siblings("h4", limit=1):
+                            if i.text.find(name) > -1:
+                                statementList = self.__add_to_statementList(e, statementList)
+                elif h4.find_next_sibling().select('.example'):
+                    for e in h4.find_next_sibling().select('.example'):
+                        statementList = self.__add_to_statementList(e, statementList)
+                else:
+                    self.tag_p = True
+                    for siblings in h4.find_next_siblings():
+                        if not re.search(r'h4', siblings.name):
+                            statementList.append(siblings)
+                        else:
+                            break 
+        return statementList
     
     def createSyntaxStatement(self):
-        return newSyntaxStatement(ListOfStatement('Syntax', self.html))
+        self.syntax_line = self.__find_all_statement('Syntax')
+        if self.syntax_line:
+            self.syntax =  newSyntaxStatement(self.syntax_line, self.tag_p)
+            return self.syntax
+        else:
+            self.syntax = None
+            return self.syntax
+        
     
     def createHierarhyStatement(self):
-        return newHierarhyStatement(ListOfStatement('Hierarchy Level', self.html))
-        
+        self.hierarchy_line = self.__find_all_statement('Hierarchy Level')
+        if self.hierarchy_line:
+            self.hierarchy = newHierarhyStatement(self.hierarchy_line)
+            return self.hierarchy
+        else:
+            self.hierarchy = None
+            return self.hierarchy
+            
 class OldJuniperBreadcrumbs(JuniperBreadcrumbs):
     
     def find_all_statement(self, parameter, html):
@@ -135,6 +167,7 @@ class OldJuniperBreadcrumbs(JuniperBreadcrumbs):
         self.hierarchy =  oldHierarhyStatement(self.hierarchy_list)
         return self.hierarchy
 
+
 class StatementList(object):
 
     __syntax_pathlist = list()
@@ -147,7 +180,7 @@ class StatementList(object):
     @statementlist.setter
     def statementlist(self, statementlist):
         self.__statementlist = statementlist
-    
+       
     @property
     def syntax_pathlist(self):
         return self.__syntax_pathlist
@@ -156,12 +189,11 @@ class StatementList(object):
     def hierarhy_pathlist(self):
         return self.__hierarhy_pathlist
 
-    def __init__(self, statementlist, is_p_statementlist = False):
-        self.__statementlist = statementlist
+    def __init__(self, statementlist, tag_p = False):
+        self.statementlist = statementlist
+        self.tag_p = tag_p
         self.__syntax_pathlist = []
         self.__hierarhy_pathlist = []
-
-
 
     def get_breadcrumbs(self):
         raise NotImplementedError
@@ -179,21 +211,106 @@ class StatementList(object):
         return regex.sub(lambda match: substitutions[match.group(0)], string)
 
 class newHierarhyStatement(StatementList):
-    
+  
     def get_breadcrumbs(self):
         for el in self.statementlist:
-            a = list()
-            for val in self.split(self.clean(el)):
-                if self.is_var_list(val, el):
-                    a = a[:-1] + ["{} {}".format(y, val) for x, y in enumerate(a[-1:], start=1)]
-                else:
-                    a.append(val)
-            self.hierarhy_pathlist.append('/'.join([e for e in a]))
+            brackets_match =  self.__get_value_between_brackets(el)
+            if brackets_match is not None:
+                list_attribute = self.__create_list_from_attribute(brackets_match)
+                if isinstance(list_attribute, list):
+                    for attribute in list_attribute:
+                        mygenerator = self.__createGenerator(attribute, el)
+                        self.hierarhy_pathlist.append('/'.join([e for e in mygenerator]))
+                elif isinstance(list_attribute, str):
+                    mygenerator = self.__createGenerator(list_attribute, el)
+                    self.hierarhy_pathlist.append('/'.join([e for e in mygenerator]))
         return self.hierarhy_pathlist
+
+    
+    def __createGenerator(self, string, el):
+        a = list()
+        for val in self.split(string):
+            if self.is_var_list(val, el):
+                a = a[:-1] + ["{} {}".format(y, val) for x, y in enumerate(a[-1:], start=1)]
+            else:
+                a.append(val)
+        return a
+    
+    def __create_list_from_attribute(self, brackets_match):
+        match = self.__get_atribute_value(brackets_match)
+        if match:
+            string_wo_comment, match_wo_comment = self.__deleteComment(match, brackets_match)
+            if match_wo_comment:
+                tmp_string = re.sub('[(|)]', '',  brackets_match if not string_wo_comment else string_wo_comment)
+                ttl = 1
+                hierarhyList = list()
+                for v in match_wo_comment:
+                    splitlist = [str(s).strip() for s in re.split(r'\|', v) if s]
+                    if not hierarhyList:
+                        for s in splitlist:
+                            # regex = r'|'.join(map(r'(?<=\s)({})(?=\s|$)'.format, [v for i, v in enumerate(splitlist) if v != s]))
+                            regex = [r'(?<=\s)({})(?=\s|$)'.format(v) for i, v in enumerate(splitlist) if v != s]
+                            hierarhyList.append(re.sub(r'\s{2,}', ' ', self.__createString(regex, tmp_string, ttl).strip()))         
+                        ttl = ttl+1            
+                    else:
+                        tmp = [i for i in hierarhyList]
+                        for s in splitlist:
+                            regex = [r'(?<=\s)({})(?=\s|$)'.format(v) for i, v in enumerate(splitlist) if v != s]
+                            for val_el in tmp:
+                                hierarhyList.append(re.sub(r'\s{2,}', ' ', self.__createString(regex, val_el, ttl).strip()))
+                        del hierarhyList[:len(tmp)]
+                        ttl = ttl+1
+                return hierarhyList
+            else:
+                return str(string_wo_comment)
+        else:
+            return str(brackets_match)
+
+    def __get_atribute_value(self, string):
+        pattern1 = re.compile(r'\((.*?)\)')    
+        match = pattern1.findall(string)
+        return match
+    
+    def __createString(self, regex, init_string, ttl):
+        tmpstr = ''
+        for el in regex:
+            matches = [v for v in re.finditer(el, init_string if not tmpstr else tmpstr , re.MULTILINE)]
+            if tmpstr == '':
+                for matchNum, match in enumerate(matches, start=1):
+                    if (len(matches) > 1) and (matchNum == ttl):
+                        tmpstr = init_string[:match.start()] + init_string[match.end():]
+                        break
+                    elif (len(matches) == 1):
+                        tmpstr = init_string[:match.start()] + init_string[match.end():]
+                        break
+            else:
+                for matchNum, match in enumerate(matches, start=1):
+                    if (len(matches) > 1) and (matchNum == ttl):
+                        tmpstr = tmpstr[:match.start()] + tmpstr[match.end():]
+                        break
+                    elif (len(matches) == 1):
+                        tmpstr = tmpstr[:match.start()] + tmpstr[match.end():]
+                        break
+        return tmpstr
+
+    def __deleteComment(self, match_list, string):
+        new_str = ''
+        new_matchList = []
+        for match in match_list:
+            split_arr = [str(s).strip() for s in re.split(r'\|', match) if s]
+            if len(split_arr) == 1:
+                if new_str == '':
+                    new_str =  re.sub(r'\(({})\)'.format(match), '', string)
+                else:
+                    new_str =  re.sub(r'\(({})\)'.format(match), '', new_str)
+            else:
+                new_matchList.append(match)
+        new_str =  re.sub(r'\s{2,}', ' ', new_str).strip()
+        return new_str, new_matchList
 
     def is_var_list(self, val, var_list):
         for var in var_list.select('var'):
-            if var.text == val:
+            if var.text.strip() == val:
                 return True
         return False
     
@@ -201,14 +318,16 @@ class newHierarhyStatement(StatementList):
         splitlist = [i for i in re.split(r'\s+', param) if i]
         return splitlist
 
-    def clean(self, param):
+    def __get_value_between_brackets(self, param):
         result = re.sub(r'(\xa0|\n)', ' ', param.text)
         match =  re.search(r'(?<=\[)(.*)(?=\])', result)
         if match is not None:
             return match.group(0)
         else:
-            substitutions = {'[': '', ',': '', ']': '',}
-            return self.replace(result, substitutions)
+            # no value between [ and ] brackets"
+            return None
+            # substitutions = {'[': '', ',': '', ']': '',}
+            # return self.replace(result, substitutions)
 
         
 class newSyntaxStatement(StatementList):
@@ -269,13 +388,16 @@ class newSyntaxStatement(StatementList):
         return bool(rematch)
 
     def set_depth(self, statement_element):
-        self.depth = 0
-        if ("ind-statement" in statement_element.get('class')):
-            self.depth += 1 
-        upper_parent = statement_element.parent
-        while (upper_parent.name != 'sw-code'):
-            self.depth += 1      
-            upper_parent = upper_parent.parent
+        if self.tag_p:
+            self.depth = 1
+        else:
+            self.depth = 0
+            if ("ind-statement" in statement_element.get('class')):
+                self.depth += 1 
+            upper_parent = statement_element.parent
+            while (upper_parent.name != 'sw-code'):
+                self.depth += 1      
+                upper_parent = upper_parent.parent
         return self.depth
     
 
