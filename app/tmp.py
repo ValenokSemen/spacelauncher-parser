@@ -271,16 +271,18 @@ def get_atribute_list(patern, string):
     i = 0
     while i < length:
         if not tmp:
-            for matchNum, match in enumerate(patern.finditer(string), start=1):
-                for s in funcname(match, string):
-                    tmp.append(s)
-                break
+            for matchNum, match in enumerate(patern.finditer(string), start=0):
+                if matchNum == i:
+                    for s in funcname(match, string):
+                        tmp.append(s)
         else:
             hh = []
             for t in tmp:
-                for matchNum, match in enumerate(patern.finditer(t), start=1):
-                    for s in funcname(match, t):
-                        hh.append(s)
+                for matchNum, match in enumerate(patern.finditer(t), start=0):
+                    if matchNum == i:
+                        for s in funcname(match, t):
+                            hh.append(s)
+                   
             tmp = hh
         i += 1
     return tmp
