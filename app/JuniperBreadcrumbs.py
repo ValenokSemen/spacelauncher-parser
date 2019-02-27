@@ -118,11 +118,12 @@ class NewJuniperBreadcrumbs(JuniperBreadcrumbs):
                 elif h4.find_next_sibling().select('.example'):
                     for e in h4.find_next_sibling().select('.example'):
                         statementList = self.__add_to_statementList(e, statementList)
-                else:
+                elif h4.find_next_sibling().name == 'p':
                     self.tag_p = True
                     for siblings in h4.find_next_siblings():
-                        if not re.search(r'h4', siblings.name):
-                            statementList.append(siblings)
+                        if not (siblings.name == 'h4'):
+                            if siblings.name == 'p':
+                                statementList.append(siblings)
                         else:
                             break 
         return statementList
@@ -249,13 +250,13 @@ class newHierarhyStatement(StatementList):
                     if not hierarhyList:
                         for s in splitlist:
                             # regex = r'|'.join(map(r'(?<=\s)({})(?=\s|$)'.format, [v for i, v in enumerate(splitlist) if v != s]))
-                            regex = [r'(?<=\s)({})(?=\s|$)'.format(v) for i, v in enumerate(splitlist) if v != s]
+                            regex = [r'(?<=\s)({})(?=\s|$)'.format(re.escape(v)) for i, v in enumerate(splitlist) if v != s]
                             hierarhyList.append(re.sub(r'\s{2,}', ' ', self.__createString(regex, tmp_string, ttl).strip()))         
                         ttl = ttl+1            
                     else:
                         tmp = [i for i in hierarhyList]
                         for s in splitlist:
-                            regex = [r'(?<=\s)({})(?=\s|$)'.format(v) for i, v in enumerate(splitlist) if v != s]
+                            regex = [r'(?<=\s)({})(?=\s|$)'.format(v) for v in splitlist if v != s]
                             for val_el in tmp:
                                 hierarhyList.append(re.sub(r'\s{2,}', ' ', self.__createString(regex, val_el, ttl).strip()))
                         del hierarhyList[:len(tmp)]
@@ -265,7 +266,7 @@ class newHierarhyStatement(StatementList):
                 return str(string_wo_comment)
         else:
             return str(brackets_match)
-
+    
     def __get_atribute_value(self, string):
         pattern1 = re.compile(r'\((.*?)\)')    
         match = pattern1.findall(string)

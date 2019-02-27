@@ -13,7 +13,7 @@ from requests import get
 from requests.exceptions import RequestException
 
 from juniperbreadcrumbs import NewJuniperBreadcrumbs, OldJuniperBreadcrumbs
-from constant import url_constant
+from constant import url_constant 
 
 # https://github.com/pkolt/design_patterns/blob/master/generating/builder.py
 # https://www.giacomodebidda.com/factory-method-and-abstract-factory-in-python/
@@ -226,8 +226,90 @@ def main():
             tmp = breadcrumbs.merge()
             print('\n'.join(tmp))
 
+
+def run():
+    my_array = ['vlan (vlan-id | vlan-name);',
+                'file filename <files number> <size test> <world-readable | no-world-readable>;',
+                'flag flag <flag-modifier> <disable>',
+                'flag flag <detail | extensive | terse>;',
+                '(no-world-readable | world-readable);',
+                'arp ip-address (mac | multicast-mac) mac-address <publish> file (notice | verbose) filename (no-world-readable  world-readable)',
+                'arp ip-address (mac | multicast-mac) mac-address (publish | unpublish) ',
+                '(vrrp-group | vrrp-inet6-group) group-number {',
+                '(cbr rate |rtvbr peak rate sustained rate burst length |vbr peak rate sustained rate burst length);',
+                'virtual-address [ addresses peak rate sustained];',
+                'flag [rtvbr | peak | rate | sustained rate] vrrp-inet6-group',
+                'level [all | error | info | notice | verbose | warning]',
+                'connect-method https|http;',
+                'connect-method https | http | get | post captive warning-test;',
+                'authentication-order [dot1x | mac-radius | captive-portal];',
+                'tcp [port];',
+                'all <extensive>;'
+    ]
+    
+    cercalBracket = re.compile(r'(?<=\()(.*?)(?=\))')
+    squareBracket = re.compile(r'(?<=\[)(.*?)(?=\])')
+    triangleBracket = re.compile(r'(?<=\<)(.*?)(?=\>)')
+    
+    for target_list in my_array:
+        if cercalBracket.search(target_list):
+            # get_atribute_list(cercalBracket, target_list)
+            pass
+        elif squareBracket.search(target_list):
+            # get_atribute_list(squareBracket, target_list)
+            pass
+        elif triangleBracket.search(target_list):
+            get_atribute_list(triangleBracket, target_list)
+            # pass
+        else:
+            pass
+
+def get_atribute_list(patern, string):
+    matches = patern.finditer(string)
+    length = len(list(matches))  
+    tmp = []
+    i = 0
+    while i < length:
+        if not tmp:
+            for matchNum, match in enumerate(patern.finditer(string), start=1):
+                for s in funcname(match, string):
+                    tmp.append(s)
+                break
+        else:
+            hh = []
+            for t in tmp:
+                for matchNum, match in enumerate(patern.finditer(t), start=1):
+                    for s in funcname(match, t):
+                        hh.append(s)
+            tmp = hh
+        i += 1
+    return tmp
+
+
+# del hierarhyList[:len(tmp)]
+
+def funcname(m, init_string):
+    spaceSeparator = re.compile(r'\s+')
+    vlineSeparator = re.compile(r'\|')
+    if vlineSeparator.search(m.group()):
+        string_generator = createStringGenerator(init_string, vlineSeparator, m)
+        for line in string_generator:
+            yield line
+    elif spaceSeparator.search(m.group()):
+        string_generator = createStringGenerator(init_string, spaceSeparator, m)
+        for line in string_generator:
+            yield line
+    else:
+        # if between bracket one value
+        pass
+
+def createStringGenerator(string, separator, match):
+    splitlist = [s for s in separator.split(match.group()) if s]
+    for s in splitlist:
+        yield (string[:match.start()] + s.strip() + string[match.end():])
+
+
 if __name__ == "__main__":
-    main()
-
-
-    # print('{} is depth {}'.format(value, depth))
+    # main()
+    run()
+            
