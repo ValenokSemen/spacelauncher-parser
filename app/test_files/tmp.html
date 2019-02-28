@@ -93,15 +93,9 @@
                             <div id="topic-content">
                                 <h1 id="jd0e3">address</h1>
                                 <sw-topic-details date="2018-12-05">&nbsp;</sw-topic-details>
-                                <h4 class="Head4">List of Syntax</h4>
-                                <a href="#jd0e47">Syntax MX Series and EX Series
-                                    (dynamic-profiles)</a>
-                                    <br>
-                                </br>
-                                <a href="#jd0e59">Syntax QFX Series and QFabric
-                                    (interfaces)</a>
-                                    <br>
-                                </br>
+                                <h4 class="Head4">List of Syntax</h4><a href="#jd0e47">Syntax MX Series and EX Series
+                                    (dynamic-profiles)</a><br></br><a href="#jd0e59">Syntax QFX Series and QFabric
+                                    (interfaces)</a><br></br>
                                 <h4 id="jd0e47">
                                     <h2 id="jd0e48">Syntax MX Series and EX Series (dynamic-profiles)</h2>
                                 </h4>
@@ -119,55 +113,6 @@
                                             <div class="complex-statement" style="">
                                                 <div class="statement" style="display:block;">address <var v-pre="">address</var>
                                                     {</div>
-                                                <div class="statement ind-statement" style=""><a href="arp-edit-interfaces.html">arp</a>
-                                                    <var v-pre="">ip-address</var> (mac | multicast-mac) <var v-pre="">mac-address</var>
-                                                    &lt;publish&gt;;</div>
-                                                <div class="statement ind-statement" style=""><a href="broadcast-edit-interfaces.html">broadcast</a>
-                                                    <var v-pre="">address</var>;</div>
-                                                <div class="statement ind-statement" style=""><a href="destination-edit-interfaces-unnumbered-address.html">destination</a>
-                                                    <var v-pre="">address</var>;</div>
-                                                <div class="statement ind-statement" style=""><a href="destination-profile-edit-interfaces.html">destination-profile</a>
-                                                    <var v-pre="">name</var>;</div>
-                                                <div class="statement ind-statement" style="">r<a href="eui-64-edit-interfaces.html">eui-64</a>;</div>
-                                                <div class="statement ind-statement" style=""><a href="master-only-edit-interfaces.html">master-only</a>;</div>
-                                                <div class="statement ind-statement" style=""><a href="multipoint-destination-edit-interfaces.html">multipoint-destination</a>
-                                                    <var v-pre="">address</var><a href="dlci-edit-interfaces-ni.html">dlci</a>
-                                                    <var v-pre="">dlci-identifier</var>;</div>
-                                                <div class="complex-statement ind-statement" style="">
-                                                    <div class="statement" style="display:block;"><a href="multipoint-destination-edit-interfaces.html">multipoint-destination</a>
-                                                        <var v-pre="">address</var> {</div>
-                                                    <div class="statement ind-statement" style=""><a href="epd-threshold-edit-interfaces-logical.html">epd-threshold</a>
-                                                        <var v-pre="">cells</var>;</div>
-                                                    <div class="statement ind-statement" style=""><a href="inverse-arp-edit-interfaces.html">inverse-arp</a>;</div>
-                                                    <div class="complex-statement ind-statement" style="">
-                                                        <div class="statement" style="display:block;"><a href="oam-liveness-edit-interfaces.html">oam-liveness</a>
-                                                            {</div>
-                                                        <div class="statement ind-statement" style="">up-count <var
-                                                                v-pre="">cells</var>;</div>
-                                                        <div class="statement ind-statement" style="">down-count <var
-                                                                v-pre="">cells</var>;</div>
-                                                        <div class="statement" style="display:block;">}</div>
-                                                    </div>
-                                                    <div class="statement ind-statement" style=""><a href="oam-period-edit-interfaces.html">oam-period</a>
-                                                        (disable | <var v-pre="">seconds</var>);</div>
-                                                    <div class="complex-statement ind-statement" style="">
-                                                        <div class="statement" style="display:block;"><a href="shaping-edit-interfaces.html">shaping</a>
-                                                            {</div>
-                                                        <div class="statement ind-statement" style="">(<a href="cbr-edit-interfaces.html">cbr</a>
-                                                            <var v-pre="">rate</var>&nbsp;|<a href="rtvbr-edit-interfaces.html">rtvbr</a>
-                                                            peak <var v-pre="">rate</var> sustained <var v-pre="">rate</var>
-                                                            burst <var v-pre="">length</var>&nbsp;|<a href="vbr-edit-interfaces.html">vbr</a>
-                                                            peak <var v-pre="">rate</var> sustained <var v-pre="">rate</var>
-                                                            burst <var v-pre="">length</var>);</div>
-                                                        <div class="statement ind-statement" style=""><a href="queue-length-edit-interfaces.html">queue-length</a>
-                                                            <var v-pre="">number</var>;</div>
-                                                        <div class="statement" style="display:block;">}</div>
-                                                    </div>
-                                                    <div class="statement ind-statement" style=""><a href="vci-edit-interfaces.html">vci</a>
-                                                        <var v-pre="">vpi-identifier</var>.<var v-pre="">vci-identifier</var>;</div>
-                                                    <div class="statement" style="display:block;">}</div>
-                                                </div>
-                                                <div class="statement ind-statement" style=""><a href="primary-edit-interfaces.html">primary</a>;</div>
                                                 <div class="statement ind-statement" style=""><a href="preferred-edit-interfaces.html">preferred</a>;</div>
                                                 <div class="complex-statement ind-statement" style="">
                                                     <div class="statement" style="display:block;">(vrrp-group |
@@ -178,43 +123,6 @@
                                                         <var v-pre="">seconds</var>;</div>
                                                     <div class="statement ind-statement" style="">authentication-type
                                                         <var v-pre="">authentication</var>;</div>
-                                                    <div class="statement ind-statement" style="">authentication-key
-                                                        <var v-pre="">key</var>;</div>
-                                                    <div class="statement ind-statement" style="">fast-interval <var
-                                                            v-pre="">milliseconds</var>;</div>
-                                                    <div class="complex-statement ind-statement" style="">
-                                                        <div class="statement" style="display:block;">(preempt |
-                                                            no-preempt) {</div>
-                                                        <div class="statement ind-statement" style="">hold-time <var
-                                                                v-pre="">seconds</var>;</div>
-                                                        <div class="statement" style="display:block;">}</div>
-                                                    </div>
-                                                    <div class="statement ind-statement" style="">priority-number <var
-                                                            v-pre="">number</var>;</div>
-                                                    <div class="complex-statement ind-statement" style="">
-                                                        <div class="statement" style="display:block;">track {</div>
-                                                        <div class="statement ind-statement" style="">priority-cost
-                                                            seconds;</div>
-                                                        <div class="complex-statement ind-statement" style="">
-                                                            <div class="statement" style="display:block;">priority-hold-time
-                                                                <var v-pre="">interface-name</var> {</div>
-                                                            <div class="statement ind-statement" style="">interface
-                                                                <var v-pre="">priority</var>;</div>
-                                                            <div class="complex-statement ind-statement" style="">
-                                                                <div class="statement" style="display:block;">bandwidth-threshold
-                                                                    <var v-pre="">bits-per-second</var> {</div>
-                                                                <div class="statement ind-statement" style="">priority;</div>
-                                                                <div class="statement" style="display:block;">}</div>
-                                                            </div>
-                                                            <div class="statement" style="display:block;">}</div>
-                                                        </div>
-                                                        <div class="statement ind-statement" style="">route <var v-pre="">ip-address/mask</var>
-                                                            routing-instance <var v-pre="">instance-name</var>
-                                                            priority-cost <var v-pre="">cost</var>;</div>
-                                                        <div class="statement" style="display:block;">}</div>
-                                                    </div>
-                                                    <div class="statement ind-statement" style="">virtual-address [
-                                                        <var v-pre="">addresses</var> ];</div>
                                                     <div class="statement" style="display:block;">}</div>
                                                 </div>
                                                 <div class="statement" style="display:block;">}</div>

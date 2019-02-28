@@ -211,12 +211,13 @@ def main():
         html = BeautifulSoup(html_file, 'lxml')               
         if html.select_one("body > #app") is not None:
             breadcrumbs = NewJuniperBreadcrumbs(html)
-            Syntax = breadcrumbs.createSyntaxStatement()
-            Hierarhy = breadcrumbs.createHierarhyStatement()
-            if Syntax:
-                Syntax.get_breadcrumbs()
-            if Hierarhy:
-                Hierarhy.get_breadcrumbs()
+            syntax = breadcrumbs.createSyntaxStatement()
+            # hierarhy = breadcrumbs.createHierarhyStatement()
+            if syntax:
+                for syn in syntax:
+                    syn.get_breadcrumbs()
+            # if hierarhy:
+            #     hierarhy.get_breadcrumbs()
             if isinstance(breadcrumbs.merge(), list):
                 print('\n'.join(breadcrumbs.merge_list))     
         else:
@@ -228,41 +229,87 @@ def main():
 
 
 def run():
-    my_array = ['vlan (vlan-id | vlan-name);',
-                'file filename <files number> <size test> <world-readable | no-world-readable>;',
-                'flag flag <flag-modifier> <disable>',
-                'flag flag <detail | extensive | terse>;',
-                '(no-world-readable | world-readable);',
-                'arp ip-address (mac | multicast-mac) mac-address <publish> file (notice | verbose) filename (no-world-readable  world-readable)',
-                'arp ip-address (mac | multicast-mac) mac-address (publish | unpublish) ',
-                '(vrrp-group | vrrp-inet6-group) group-number {',
-                '(cbr rate |rtvbr peak rate sustained rate burst length |vbr peak rate sustained rate burst length);',
-                'virtual-address [ addresses peak rate sustained];',
+    my_array = [
+                # 'vlan (vlan-id | vlan-name);',
+                # 'file filename <files number> <size test> <world-readable | no-world-readable>;',
+                # 'flag flag <flag-modifier> <disable>',
+                # 'flag flag <detail | extensive | terse>;',
+                # '(no-world-readable | world-readable);',
+                # 'arp ip-address (mac | multicast-mac) mac-address <publish> file (notice | verbose) filename (no-world-readable  world-readable)',
+                # 'arp ip-address (mac | multicast-mac) mac-address (publish | unpublish) ',
+                # '(vrrp-group | vrrp-inet6-group) group-number {',
+                # '(cbr rate |rtvbr peak rate sustained rate burst length |vbr peak rate sustained rate burst length);',
+                # 'virtual-address [ addresses peak rate sustained];',
                 'flag [rtvbr | peak | rate | sustained rate] vrrp-inet6-group',
                 'level [all | error | info | notice | verbose | warning]',
-                'connect-method https|http;',
-                'connect-method https | http | get | post captive warning-test;',
-                'authentication-order [dot1x | mac-radius | captive-portal];',
-                'tcp [port];',
-                'all <extensive>;'
+                # 'connect-method https|http;',
+                # 'connect-method https | http | get | post captive warning-test;',
+                # 'authentication-order [dot1x | mac-radius | captive-portal];',
+                # 'tcp [port];',
+                # 'all <extensive>;',
+                # 'allow-commands-regexps [ "regular expression 1" "regular expression 2" .... ]',
+                # 'allow-commands "(regular-expression)|(regular-expression1)|(regulare-expression2)..."',
+                # 'interface (all | [interface-names])',
+                # '(ethernet (Alarm) | management-ethernet) {',
+                # "fpcs (NSSU Upgrade Groups) (slot-number | [list-of-slot-numbers]);",
+                # "n-plus-n (Power Management);",
+                # "ethernet (Aggregated Devices) {"
     ]
     
-    cercalBracket = re.compile(r'(?<=\()(.*?)(?=\))')
+    # cercalBracket = re.compile(r'(?<=\()(.*?)(?=\))')
+    cercalBracket = re.compile(r'(?<=\()(?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*(?=\))')
     squareBracket = re.compile(r'(?<=\[)(.*?)(?=\])')
     triangleBracket = re.compile(r'(?<=\<)(.*?)(?=\>)')
+    quote = re.compile(r'"(.*?)"')
+
+    comment = re.compile(r'\(([A-Z].[^)(]*?)\)')
     
     for target_list in my_array:
+        tmplist = []
+        if comment.search(target_list):
+            target_list = deleteComment(comment, target_list)
         if cercalBracket.search(target_list):
-            # get_atribute_list(cercalBracket, target_list)
+            func_res = my_funcname(cercalBracket, target_list, tmplist)
+            if isinstance(func_res, str):
+                tmplist.append(func_res)
+            elif isinstance(func_res, list):
+                tmplist = func_res
+        if squareBracket.search(target_list):
+            func_res = my_funcname(squareBracket, target_list, tmplist)
+            if isinstance(func_res, str):
+                tmplist.append(func_res)
+            elif isinstance(func_res, list):
+                tmplist = func_res
+        if triangleBracket.search(target_list):
+            func_res = my_funcname(triangleBracket, target_list, tmplist)
+            if isinstance(func_res, str):
+                tmplist.append(func_res)
+            elif isinstance(func_res, list):
+                tmplist = func_res
+        if quote.search(target_list):
             pass
-        elif squareBracket.search(target_list):
-            # get_atribute_list(squareBracket, target_list)
-            pass
-        elif triangleBracket.search(target_list):
-            get_atribute_list(triangleBracket, target_list)
-            # pass
+
+        if tmplist:
+            for t in tmplist:
+                print(t)
         else:
-            pass
+            print(target_list)
+
+
+def deleteComment(patern, string):
+    return patern.sub('', string)
+
+def my_funcname(patern, string, arr):
+    if not arr:
+        arr = [attr for attr in get_atribute_list(patern, string)]
+        return arr if arr else string
+    else:
+        new_arr = []
+        for target in arr:
+            for attr in get_atribute_list(patern, target):
+                if attr:
+                    new_arr.append(attr)
+        return new_arr if new_arr else arr
 
 def get_atribute_list(patern, string):
     matches = patern.finditer(string)
@@ -288,30 +335,36 @@ def get_atribute_list(patern, string):
     return tmp
 
 
-# del hierarhyList[:len(tmp)]
-
 def funcname(m, init_string):
+    quoteSeparator = re.compile(r'"(.*?)"')
     spaceSeparator = re.compile(r'\s+')
     vlineSeparator = re.compile(r'\|')
-    if vlineSeparator.search(m.group()):
-        string_generator = createStringGenerator(init_string, vlineSeparator, m)
-        for line in string_generator:
-            yield line
-    elif spaceSeparator.search(m.group()):
-        string_generator = createStringGenerator(init_string, spaceSeparator, m)
+    if quoteSeparator.search(m.group()):
+        string_generator = createStringGenerator(init_string, quoteSeparator, m)
         for line in string_generator:
             yield line
     else:
-        # if between bracket one value
-        pass
+        if vlineSeparator.search(m.group()):
+            string_generator = createStringGenerator(init_string, vlineSeparator, m)
+            for line in string_generator:
+                yield line
+        elif spaceSeparator.search(m.group()):
+            string_generator = createStringGenerator(init_string, spaceSeparator, m)
+            for line in string_generator:
+                yield line
+        else:
+            # if between bracket one value
+            pass
 
 def createStringGenerator(string, separator, match):
     splitlist = [s for s in separator.split(match.group()) if s]
     for s in splitlist:
-        yield (string[:match.start()] + s.strip() + string[match.end():])
-
+        s_wo_space = s.strip()
+        if s_wo_space is not '':
+             yield (string[:match.start()] + s_wo_space + string[match.end():])
+       
 
 if __name__ == "__main__":
-    # main()
-    run()
+    main()
+    # run()
             
