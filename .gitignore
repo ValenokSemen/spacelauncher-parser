@@ -4,3 +4,10 @@ python-debug
 .vscode/settings.json
 .vscode/tasks.json
 docker-compose.yml
+.vscode/launch.json
+.vscode/settings.json
+.vscode/tasks.json
+app/__pycache__/JuniperBreadcrumbs.cpython-37.pyc
+app/constant/__pycache__/__init__.cpython-37.pyc
+app/constant/__pycache__/url_constant.cpython-37.pyc
+docker-compose.yml

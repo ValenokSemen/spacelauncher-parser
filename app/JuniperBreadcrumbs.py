@@ -402,101 +402,66 @@ class newSyntaxStatement(StatementList):
     # def __init__(self, level, name):
     # super(Statement, self).__init__(level)
     # self.name = name
+  
 
-    # def get_breadcrumbs(self):
-    #     for statement_element in self.statementlist:
-    #         self.set_depth(statement_element)
-    #         cleaned_statement = self.clean(statement_element)
-    #         if self.is_match(cleaned_statement):
-    #             if self.is_header(cleaned_statement):
-    #                 for index, value in enumerate(self.split(cleaned_statement), 1):
-    #                     if (index == 2):
-    #                         self.depth += 1
-    #                     self.set_breadcrumbs(value)
-    #             else:
-    #                 for index, value in enumerate(self.split(cleaned_statement), 1):
-    #                     self.set_breadcrumbs(value)
-    #             continue
-    #         elif re.match(r'^}', cleaned_statement) is None:
-    #             self.set_breadcrumbs(cleaned_statement)
-    #     return self.syntax_pathlist 
-    
+    def get_command_depth_path(self, value):
+        self.elem_crumbs[self.depth] = value
+        self.elem_crumbs[self.depth+1:] = ['']*(20-self.depth-1)
+        return str('/'.join([e for e in self.elem_crumbs if e]))
+
     def get_breadcrumbs(self):
         for statement_element in self.statementlist:
             self.set_depth(statement_element)
             cleaned_statement = self.clean(statement_element)
             if re.match(r'^}', cleaned_statement) is None:
-                self.set_breadcrumbs(cleaned_statement)
-            
-        return self.syntax_pathlist    
-        #     if self.is_match(cleaned_statement):
-        #         if self.is_header(cleaned_statement):
-        #             for index, value in enumerate(self.split(cleaned_statement), 1):
-        #                 if (index == 2):
-        #                     self.depth += 1
-        #                 self.set_breadcrumbs(value)
-        #         else:
-        #             for index, value in enumerate(self.split(cleaned_statement), 1):
-        #                 self.set_breadcrumbs(value)
-        #         continue
-        #     elif re.match(r'^}', cleaned_statement) is None:
-        #         self.set_breadcrumbs(cleaned_statement)
-        # return self.syntax_pathlist 
-
-
-    def __get_attributes(self, string):
-        cercalBracket = re.compile(r'(?<=\()(?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*(?=\))')
+                depth_path = self.get_command_depth_path(cleaned_statement)
+                command_list = self.__get_all_command_from_path(depth_path)
+                if isinstance(command_list, list):
+                    for cl_element in command_list:
+                        self.syntax_pathlist.append(cl_element)
+                elif isinstance(command_list, str):
+                    self.syntax_pathlist.append(command_list)
+        return self.syntax_pathlist
+        
+    def __get_all_command_from_path(self, string):
+        cercalBracket = re.compile(r'(?<=\()(?:[^)(]|\((?:[^)(]|\([^)(]*\))*\))*(?=\))')
         squareBracket = re.compile(r'(?<=\[)(.*?)(?=\])')
         triangleBracket = re.compile(r'(?<=\<)(.*?)(?=\>)')
         quote = re.compile(r'"(.*?)"')
         comment = re.compile(r'\(([A-Z].[^)(]*?)\)')
-        
+
+        patterns_list = [
+            cercalBracket,
+            squareBracket,
+            triangleBracket
+        ]
+              
         attributes = []
         if comment.search(string):
             string = comment.sub('', string)
-        
-        if cercalBracket.search(string):
-            func_res = self.my_funcname(cercalBracket, string, attributes)
-            if isinstance(func_res, str):
-                attributes.append(func_res)
-            elif isinstance(func_res, list):
-                attributes = func_res
-        
-        if squareBracket.search(string):
-            func_res = self.my_funcname(squareBracket, string, attributes)
-            if isinstance(func_res, str):
-                attributes.append(func_res)
-            elif isinstance(func_res, list):
-                attributes = func_res
-        
-        if triangleBracket.search(string):
-            func_res = self.my_funcname(triangleBracket, string, attributes)
-            if isinstance(func_res, str):
-                attributes.append(func_res)
-            elif isinstance(func_res, list):
-                attributes = func_res
-        
-        if quote.search(string):
-            pass
+        try:
+            for patern_element in patterns_list:
+                if patern_element.search(string):
+                    if not attributes:
+                        atribute_list = self.get_atribute_list(patern_element, string)
+                        if atribute_list:
+                             attributes.append(string)
+                        else:
+                            attributes = [attr for attr in atribute_list]
+                    else:
+                        new_arr = []
+                        for target in attributes:
+                            for attr in self.get_atribute_list(patern_element, target):
+                                if attr:
+                                    new_arr.append(attr)
+                        if new_arr:
+                            attributes = new_arr
+                        else:
+                            attributes = arr
+        except re.error as exception_object:
+            print("Unexpected exception: ", exception_object)
 
         return attributes if attributes else string
-
-    def set_breadcrumbs(self, value):
-        self.elem_crumbs[self.depth] = value
-        self.elem_crumbs[self.depth+1:] = ['']*(20-self.depth-1)
-        self.syntax_pathlist.append('/'.join([e for e in self.elem_crumbs if e]))
-
-    def my_funcname(self, patern, string, arr):
-        if not arr:
-            arr = [attr for attr in self.get_atribute_list(patern, string)]
-            return arr if arr else string
-        else:
-            new_arr = []
-            for target in arr:
-                for attr in self.get_atribute_list(patern, target):
-                    if attr:
-                        new_arr.append(attr)
-            return new_arr if new_arr else arr
 
     def get_atribute_list(self, patern, string):
         matches = patern.finditer(string)
@@ -507,14 +472,14 @@ class newSyntaxStatement(StatementList):
             if not tmp:
                 for matchNum, match in enumerate(patern.finditer(string), start=0):
                     if matchNum == i:
-                        for s in self.funcname(match, string):
+                        for s in self.separate_atribute(match, string):
                             tmp.append(s)
             else:
                 hh = []
                 for t in tmp:
                     for matchNum, match in enumerate(patern.finditer(t), start=0):
                         if matchNum == i:
-                            for s in self.funcname(match, t):
+                            for s in self.separate_atribute(match, t):
                                 hh.append(s)
                     
                 tmp = hh
@@ -522,7 +487,7 @@ class newSyntaxStatement(StatementList):
         return tmp
 
 
-    def funcname(self, m, init_string):
+    def separate_atribute(self, m, init_string):
         quoteSeparator = re.compile(r'"(.*?)"')
         spaceSeparator = re.compile(r'\s+')
         vlineSeparator = re.compile(r'\|')

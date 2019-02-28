@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml"
-    xmlns:doceng="com.juniper.doceng.util.XSLTExtentions">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml"
+    xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:doceng="com.juniper.doceng.util.XSLTExtentions">
 
 <head>
     <meta charset="utf-8">
@@ -11,22 +11,22 @@
     </meta>
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
     </meta>
-    <title>address - TechLibrary - Juniper Networks</title>
-    <meta name="subject" content="hardwareplatforms,switches,exseries,hardwareplatforms,routers,mxseries,hardwareplatforms,switches,qfxseries,qfabric,hardwareplatforms,switches,qfxseries,software,operatingsystems,junossoftware">
+    <title>access (SNMP) - TechLibrary - Juniper Networks</title>
+    <meta name="subject"
+        content="hardwareplatforms,switches,qfxseries,hardwareplatforms,switches,ocxseries,ocx1100,hardwareplatforms,switches,exseries,ex4600,hardwareplatforms,switches,qfxseries,qfabric">
     </meta>
-    <meta name="description" content="CLI Statement. EX Series,MX Series,QFabric System,QFX Series. Configure the interface address.">
+    <meta name="description" content="CLI Statement. QFX Series,OCX1100,EX4600,QFabric System. Set SNMP access limits.">
     </meta>
     <meta name="feature" content="[]">
     </meta>
     <meta name="branchId" content="1406">
     </meta>
-    <meta name="topicid" content="14694">
+    <meta name="topicid" content="59107">
     </meta>
-    <meta name="relatedtopics" content="25763,25786,25847,25851,25892,26026,26048,25861,25883,25966,26090,26091,26212,25798,26195,26286,26164,26288,26148,26143,14337,12308,12307,12309,19869,25464,31334;">
+    <meta name="relatedtopics" content="21624,21648,21645,21633,21642,21665;">
     </meta>
-    <meta name="platform" content="Hardware Platforms:Switches:EX-series,Hardware Platforms:Routers:MX-series,Hardware Platforms:Switches:QFX Series:QFabric,Hardware Platforms:Switches:QFX Series">
-    </meta>
-    <meta name="software" content="Software:Operating Systems:JUNOS Software">
+    <meta name="platform"
+        content="Hardware Platforms:Switches:QFX Series,Hardware Platforms:Switches:OCX Series:OCX1100,Hardware Platforms:Switches:EX-series:EX4600,Hardware Platforms:Switches:QFX Series:QFabric">
     </meta>
     <meta name="supportedlist" content="true">
     </meta>
@@ -39,7 +39,8 @@
     <link rel="preload" as="script" href="/documentation/webstatic/js/manifest.62d07183115fc2b12f82.js">
     <link rel="preload" as="script" href="/documentation/webstatic/js/vendor.91a9c548f48da22bd953.js">
     <link rel="preload" as="script" href="/documentation/webstatic/js/topic.7ab877d18ba8073a267e.js">
-    <script src="https://assets.adobedtm.com/998b2d6d4944658536fe36266a249b07e626b86d/satelliteLib-6d05b7c7a99e1cbbdcac4fcfe7005e6bee80a0e9.js"></script>
+    <script
+        src="https://assets.adobedtm.com/998b2d6d4944658536fe36266a249b07e626b86d/satelliteLib-6d05b7c7a99e1cbbdcac4fcfe7005e6bee80a0e9.js"></script>
 </head>
 
 <body style="visibility:hidden;">
@@ -47,7 +48,8 @@
 	<div class="message-warning"> You are using unsupported version of Internet Explorer. Please upgrade your browser to latest version.</div>
 <![endif]-->
     <!-- Google Tag Manager -->
-    <noscript><iframe style="display:none;visibility:hidden" width="0" height="0" src="https://www.googletagmanager.com/ns.html?id=GTM-MHNPL3"></iframe></noscript>
+    <noscript><iframe style="display:none;visibility:hidden" width="0" height="0"
+            src="https://www.googletagmanager.com/ns.html?id=GTM-MHNPL3"></iframe></noscript>
     <script>
         (function (w, d, s, l, i) {
         w[l] = w[l] || []; w[l].push({
@@ -83,146 +85,88 @@
                 <sw-header></sw-header>
                 <sw-change-widget v-bind:scroll="fixcw"></sw-change-widget>
                 <section class="main wrapper">
-                    <sw-leftnav v-bind:data-height="leftnavheight" v-bind:data-top="leftnavtop" v-on:menucollapse="menucollapse"></sw-leftnav>
+                    <sw-leftnav v-bind:data-height="leftnavheight" v-bind:data-top="leftnavtop"
+                        v-on:menucollapse="menucollapse"></sw-leftnav>
                     <sw-rightnav>&nbsp;</sw-rightnav>
-                    <div class="l-body" v-bind:style="{'min-height':bodyheight+'px'}" v-bind:class="{'collapsed':isleftnavcollapsed}">
+                    <div class="l-body" v-bind:style="{'min-height':bodyheight+'px'}"
+                        v-bind:class="{'collapsed':isleftnavcollapsed}">
                         <nav class="page-options clearfix">
                             <sw-breadcrumb>&nbsp;</sw-breadcrumb>
                         </nav>
                         <div class="topicBody">
                             <div id="topic-content">
-                                <h1 id="jd0e3">address</h1>
-                                <sw-topic-details date="2018-12-05">&nbsp;</sw-topic-details>
-                                <h4 class="Head4">List of Syntax</h4><a href="#jd0e47">Syntax MX Series and EX Series
-                                    (dynamic-profiles)</a><br></br><a href="#jd0e59">Syntax QFX Series and QFabric
-                                    (interfaces)</a><br></br>
-                                <h4 id="jd0e47">
-                                    <h2 id="jd0e48">Syntax MX Series and EX Series (dynamic-profiles)</h2>
-                                </h4>
-                                <div dir="ltr" id="jd0e50" class="example">
-                                    <sw-code><template v-pre="">
-                                            <div class="statement" style="display:block;">address (<var v-pre="">ip-address</var>
-                                                | <var v-pre="">ipv6-address</var>);</div>
-                                        </template></sw-code>
-                                </div>
-                                <h4 id="jd0e59">
-                                    <h2 id="jd0e60">Syntax QFX Series and QFabric (interfaces)</h2>
-                                </h4>
-                                <div dir="ltr" id="jd0e62" class="example">
+                                <h1 id="jd0e3">access (SNMP)</h1>
+                                <sw-topic-details date="2017-09-13">&nbsp;</sw-topic-details>
+                                <h4 id="jd0e19">Syntax</h4>
+                                <div dir="ltr" id="jd0e20" class="example">
                                     <sw-code><template v-pre="">
                                             <div class="complex-statement" style="">
-                                                <div class="statement" style="display:block;">address <var v-pre="">address</var>
-                                                    {</div>
-                                                <div class="statement ind-statement" style=""><a href="preferred-edit-interfaces.html">preferred</a>;</div>
+                                                <div class="statement" style="display:block;">access {</div>
                                                 <div class="complex-statement ind-statement" style="">
-                                                    <div class="statement" style="display:block;">(vrrp-group |
-                                                        vrrp-inet6-group) <var v-pre="">group-number</var> {</div>
-                                                    <div class="statement ind-statement" style="">(accept-data |
-                                                        no-accept-data);</div>
-                                                    <div class="statement ind-statement" style="">advertise&#8211;interval
-                                                        <var v-pre="">seconds</var>;</div>
-                                                    <div class="statement ind-statement" style="">authentication-type
-                                                        <var v-pre="">authentication</var>;</div>
+                                                    <div class="statement" style="display:block;"><a
+                                                            href="group-edit-snmp-access.html">group</a> <var
+                                                            v-pre="">group-name</var> {</div>
+                                                    <div class="complex-statement ind-statement" style="">
+                                                        <div class="statement" style="display:block;">
+                                                            (default-context-prefix | context-prefix <var
+                                                                v-pre="">context-prefix</var>) {</div>
+                                                        <div class="complex-statement ind-statement" style="">
+                                                            <div class="statement" style="display:block;"><a
+                                                                    href="security-model-edit-snmp-security-to-group.html">security-model</a>
+                                                                (any | usm | v1 | v2c) {</div>
+                                                            <div class="complex-statement ind-statement" style="">
+                                                                <div class="statement" style="display:block;"><a
+                                                                        href="security-level-edit-snmp-vacm.html">security-level</a>
+                                                                    (authentication | none | privacy) {</div>
+                                                                <div class="statement ind-statement" style=""><a
+                                                                        href="notify-view-edit-snmp.html">notify-view</a>
+                                                                    <var v-pre="">view-name</var>;</div>
+                                                                <div class="statement ind-statement" style=""><a
+                                                                        href="read-view-edit-snmp.html">read-view</a>
+                                                                    <var v-pre="">view-name</var>;</div>
+                                                                <div class="statement ind-statement" style=""><a
+                                                                        href="write-view-edit-snmp.html">write-view</a>
+                                                                    <var v-pre="">view-name</var>;</div>
+                                                                <div class="statement" style="display:block;">}</div>
+                                                            </div>
+                                                            <div class="statement" style="display:block;">}</div>
+                                                        </div>
+                                                        <div class="statement" style="display:block;">}</div>
+                                                    </div>
                                                     <div class="statement" style="display:block;">}</div>
                                                 </div>
                                                 <div class="statement" style="display:block;">}</div>
                                             </div>
                                         </template></sw-code>
                                 </div>
-                                <h4>
-                                    <h2 id="jd0e303">MX Series and EX Series (dynamic-profiles)</h2>
-                                </h4>
-                                <div dir="ltr" id="jd0e305" class="example">
+                                <h4>Hierarchy Level</h4>
+                                <div dir="ltr" id="jd0e74" class="example">
                                     <sw-code><template v-pre="">
-                                            <div class="statement" style="display:block;">[edit dynamic-profiles <var
-                                                    v-pre="">profile-name</var> <a href="interfaces-edit-dynamic-profiles-top-access.html">interfaces</a>
-                                                <var v-pre="">interface-name</var> <a href="unit-edit-dynamic-profiles-interfaces-access.html">unit</a>
-                                                <var v-pre="">logical-unit-number</var> <a href="family-edit-dynamic-profiles-interfaces-unit-access.html">family</a>
-                                                <var v-pre="">family</var>],</div>
-                                            <div class="statement" style="display:block;">[edit <a href="dynamic-profiles-edit-top-access.html">dynamic-profiles</a>
-                                                <var v-pre="">profile-name</var> <a href="interfaces-edit-dynamic-profiles-top-access.html">interfaces</a>
-                                                <a href="demux0-edit-dynamic-profiles.html">demux0</a> <a href="unit-edit-dynamic-profiles-interfaces-access.html">unit</a>
-                                                <var v-pre="">logical-unit-number</var> <a href="family-edit-dynamic-profiles-interfaces-unit-access.html">family</a>
-                                                <var v-pre="">family</var>],</div>
-                                            <div class="statement" style="display:block;">[edit <a href="dynamic-profiles-edit-top-access.html">dynamic-profiles</a>
-                                                <var v-pre="">profile-name</var> <a href="interfaces-edit-dynamic-profiles-top-access.html">interfaces</a>
-                                                pp0 <a href="unit-edit-dynamic-profiles-interfaces-access.html">unit</a>
-                                                &#8220;$junos-interface-unit&#8221; <a href="family-edit-dynamic-profiles-interfaces-unit-access.html">family</a>
-                                                <var v-pre="">family</var>],</div>
-                                            <div class="statement" style="display:block;">[edit interfaces <var v-pre="">interface-name</var>
-                                                unit <var v-pre="">logical-unit-number</var> family inet],</div>
-                                            <div class="statement" style="display:block;">[edit logical-systems <var
-                                                    v-pre="">logical-system-name</var> interfaces <var v-pre="">interface-name</var>
-                                                <a href="unit-edit-dynamic-profiles-interfaces-access.html">unit</a>
-                                                <var v-pre="">logical-unit-number</var> <a href="family-edit-dynamic-profiles-interfaces-unit-access.html">family</a>
-                                                <var v-pre="">family</var>]</div>
-                                        </template></sw-code>
-                                </div>
-                                <h4>
-                                    <h2 id="jd0e390">QFX Series and QFabric (interfaces)</h2>
-                                </h4>
-                                <div dir="ltr" id="jd0e392" class="example">
-                                    <sw-code><template v-pre="">
-                                            <div class="statement" style="display:block;">[edit interfaces <var v-pre="">interface-name</var>
-                                                unit <var v-pre="">logical-unit-number</var> family <var v-pre="">family</var>],</div>
-                                            <div class="statement" style="display:block;">[edit logical-systems <var
-                                                    v-pre="">logical-system-name</var> interfaces <var v-pre="">interface-name</var>
-                                                unit <var v-pre="">logical-unit-number</var> family &nbsp;<var v-pre="">family</var>]</div>
+                                            <div class="statement" style="display:block;">[edit snmp v3 vacm]</div>
                                         </template></sw-code>
                                 </div>
                                 <h4>Release Information</h4>
-                                <p formatting-option="none" id="jd0e419">Statement introduced in Junos OS Release
-                                    9.2.</p>
-                                <p formatting-option="none" id="jd0e421">Support at the <span class="cli" v-pre="">[edit
-                                        dynamic-profiles <var v-pre="">profile-name</var> interfaces pp0 unit
-                                        &#8220;$junos-interface-unit&#8221; family <var v-pre="">family</var>]</span>
-                                    hierarchy level introduced in Junos OS Release
-                                    10.1.</p>
-                                <p formatting-option="none" id="jd0e432">Statement introduced before Junos OS Release
-                                    11.1 for QFX Series
-                                    switches.</p>
-                                <p formatting-option="none" id="jd0e434">Support at the <span class="cli" v-pre="">[edit
-                                        interfaces <var v-pre="">interface-name</var> unit <var v-pre="">logical-unit-number</var>
-                                        family <var v-pre="">inet</var>]</span> hierarchy level introduced in Junos OS
-                                    Release 13.2X50-D10
-                                    for EX Series switches. </p>
+                                <p formatting-option="none" id="jd0e78">Statement introduced in Junos OS Release
+                                    11.1 for the QFX Series.</p>
+                                <p formatting-option="none" id="jd0e80">Statement introduced in Junos OS Release
+                                    14.1X53-D20 for the
+                                    OCX Series.</p>
                                 <h4>Description</h4>
-                                <p>Configure the interface address.</p>
-                                <h4>Options</h4>
-                                <p><span class="cli" v-pre=""><var v-pre="">ip-address</var></span>&#8212;IPv4
-                                    address of the interface.</p>
-                                <p><span class="cli" v-pre=""><var v-pre="">ipv6-address</var></span>&#8212;IPv6
-                                    address
-                                    of the interface. When configuring an IPv6 address on a dynamically
-                                    created interface, use the <span class="cli" v-pre=""><var v-pre="">$junos-ipv6&#8211;address</var></span>
-                                    dynamic variable.</p>
+                                <p>Set SNMP access limits.</p>
+                                <p>The remaining statements are explained separately. See <a
+                                        href="https://apps.juniper.net/cli-explorer/">CLI Explorer</a>.</p>
                                 <h4>Required Privilege Level</h4>
-                                <p>interface&#8212;To view this statement
-                                    in the configuration.</p>
-                                <p>interface-control&#8212;To add this statement to
-                                    the configuration.</p>
-                                <div class="l-aside-box">
-                                    <h3>Related Documentation</h3>
-                                    <ul>
-                                        <li style="">
-                                            <p><a href="../../task/configuration/interfaces-configuring-the-protocol-family.html">Configuring
-                                                    the Protocol Family</a></p>
-                                        </li>
-                                        <li style="">
-                                            <p><a href="../../concept/junos-software-formats-ip-address-network-masks.html">Format
-                                                    for Specifying IP Addresses, Network Masks, and Prefixes in Junos
-                                                    OS Configuration Statements</a></p>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <p>snmp&#8212;To view this statement in the configuration.</p>
+                                <p>snmp-control&#8212;To add this statement to the configuration.</p>
                                 <sw-prev-next>&nbsp;</sw-prev-next>
                             </div>
                             <sw-comments>&nbsp;</sw-comments>
                         </div>
                     </div>
                 </section>
-                <sw-pop-over v-bind:head="gterm.head" v-bind:body="gterm.body" v-bind:left="gterm.pos.left" v-bind:top="gterm.pos.top"
-                    v-bind:visible="gterm.visible" v-on:close-popover="closegterm()"></sw-pop-over>
+                <sw-pop-over v-bind:head="gterm.head" v-bind:body="gterm.body" v-bind:left="gterm.pos.left"
+                    v-bind:top="gterm.pos.top" v-bind:visible="gterm.visible" v-on:close-popover="closegterm()">
+                </sw-pop-over>
                 <sw-footer></sw-footer>
             </div>
         </sw-app>
