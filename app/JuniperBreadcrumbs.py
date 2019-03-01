@@ -36,17 +36,22 @@ class JuniperBreadcrumbs(object):
 
     def __init__(self, html):
         self.html = html
+        self.syntax = []
+        self.hierarchy = []
 
     def merge(self):
         self.merge_list = []
         if self.hierarchy is not None:
-            if self.hierarchy.hierarhy_pathlist:
-                for h in self.hierarchy.hierarhy_pathlist:
-                    for s in self.syntax.syntax_pathlist:
-                        self.merge_list.append("{}/{}".format(h, s))
+            for h in self.hierarchy:
+                if h.hierarhy_pathlist:
+                    for h_path in h.hierarhy_pathlist:
+                        for s in self.syntax:
+                            for s_path in s.syntax_pathlist:
+                                self.merge_list.append("{}/{}".format(h_path, s_path))
         elif self.syntax is not None:
-            for s in self.syntax.syntax_pathlist:
-                self.merge_list.append(s)
+            for s in self.syntax:
+                for s_path in s.syntax_pathlist:
+                    self.merge_list.append(s_path)
         else:
             return None       
         return self.merge_list
@@ -64,98 +69,59 @@ class JuniperBreadcrumbs(object):
         raise NotImplementedError
 
 class NewJuniperBreadcrumbs(JuniperBreadcrumbs):
-
-      
-    @property
-    def syntax_line(self):
-        # statement getter
-        return self.__syntax_line
-    
-    @syntax_line.setter
-    def syntax_line(self, syntax_line):
-        # statement setter
-        self.__syntax_line = syntax_line
-    
-    @property
-    def hierarchy_line(self):
-        # statement getter
-        return self.__hierarchy_line
-
-    @hierarchy_line.setter
-    def hierarchy_line(self, hierarchy_line):
-        # statement setter
-        self.__hierarchy_line = hierarchy_line
-    
+   
+  
     def __init__(self, html):
         super().__init__(html)
-        self.tag_p = False
-        self.syntax_line = []
-        self.hierarchy_line = []
-
-    def __add_to_statementList(self, e):
-        statementList = [i for i in e.select('.statement')]
-        return statementList
-    
-    def get_current_headers(self, name):
+   
+    def find_all_statement(self, name):
         headers = self.html.select('#topic-content h4')
         for h4 in headers:
             if h4.text.find(name) > -1:
-                if (h4.find_next_sibling().name == 'div') and (h4.find_next_sibling()['class'][0] == 'example'):
-                    yield h4
-                elif h4.find_next_sibling().select('.example'):
-                    yield h4
-                elif h4.find_next_sibling().name == 'p':
-                    yield h4 
-
-    def find_all_statement(self, name):
-        current_headers_gen = self.get_current_headers(name)
-        length = len(list(current_headers_gen))
-        for h4 in self.html.select('#topic-content h4'):
-            if length != 0:
-                if h4.text.find(name) > -1:                  
-                    if (h4.find_next_sibling().name == 'div') and (h4.find_next_sibling()['class'][0] == 'example'):
-                        for e in self.html.find_all('div', class_='example'):
-                            for i in e.find_previous_siblings("h4", limit=1):
-                                if i.text.find(name) > -1:
-                                    statementList = self.__add_to_statementList(e)
-                                    if name == 'Syntax':
-                                        obj = newSyntaxStatement()
-                                        obj.statementlist = [i for i in statementList]
-                                        self.syntax_line.append(obj)
-                                    elif name == 'Hierarchy Level':
-                                        obj = newHierarhyStatement()
-                                        obj.statementlist = statementList
-                                        self.syntax_line.append(obj)
-                        length = 0
-                    elif h4.find_next_sibling().select('.example'):
-                        statementList = []
-                        for e in h4.find_next_sibling().select('.example'):
-                            statementList = self.__add_to_statementList(e)
-                        obj.statementlist = statementList
-                        self.syntax_line.append(obj)
-                        length = 0
-                    elif h4.find_next_sibling().name == 'p':
-                        tag_p = True
-                        statementList = []
-                        for siblings in h4.find_next_siblings():
-                            if not (siblings.name == 'h4'):
-                                if siblings.name == 'p':
-                                    statementList.append(siblings)
+               yield from self.get_html_statement_after_h4(h4, name)
+  
+    def get_html_statement_after_h4(self, h4, name):
+        for sibling in h4.find_next_siblings():
+            if not (sibling.name == 'h4'):
+                if sibling.select('.example'):
+                    sibling_list = []
+                    for e in sibling.select('.example'):
+                            if sibling_list:
+                                sibling_list.extend([i for i in e.select('.statement')])
                             else:
-                                break 
-                        obj.tag_p = tag_p
-                        obj.statementlist = statementList
-                        self.syntax_line.append(obj)
-                        length = 0
+                                sibling_list = [i for i in e.select('.statement')]
+                    obj = None
+                    if name == 'Syntax':
+                        obj = newSyntaxStatement()
+                    elif name == 'Hierarchy Level':
+                        obj = newHierarhyStatement()
+                    obj.statementlist = [i for i in sibling_list]
+                    yield obj
+                elif (sibling.name == 'div') and (sibling['class'][0] == 'example'):
+                    sibling_list = []
+                    sibling_list = [i for i in sibling.select('.statement')]
+                    obj = None
+                    if name == 'Syntax':
+                        obj = newSyntaxStatement()
+                    elif name == 'Hierarchy Level':
+                        obj = newHierarhyStatement()
+                    obj.statementlist = [i for i in sibling_list]
+                    yield obj
+                elif sibling.name == 'p':
+                    tag_p = True
+                    obj = None
+                    if name == 'Syntax':
+                        obj = newSyntaxStatement(tag_p)
+                    elif name == 'Hierarchy Level':
+                        obj = newHierarhyStatement()
+                    obj.statementlist.append(sibling)
+                    yield obj
             else:
-               return self.syntax_line
-        return self.syntax_line
+                break
     
-
     def createSyntaxStatement(self):
-        self.syntax_line = self.find_all_statement('Syntax')
-        if self.syntax_line:
-            self.syntax = [i for i in self.syntax_line]
+        self.syntax = self.find_all_statement('Syntax')
+        if self.syntax:
             return self.syntax
         else:
             self.syntax = None
@@ -163,10 +129,11 @@ class NewJuniperBreadcrumbs(JuniperBreadcrumbs):
         
     
     def createHierarhyStatement(self):
-        self.hierarchy_line = self.find_all_statement('Hierarchy Level')
-        if self.hierarchy_line:
+        self.hierarchy = self.find_all_statement('Hierarchy Level')
+        if self.hierarchy:
             return self.hierarchy
         else:
+            self.hierarchy = None
             return self.hierarchy
             
 class OldJuniperBreadcrumbs(JuniperBreadcrumbs):
@@ -204,8 +171,7 @@ class StatementList(object):
     def hierarhy_pathlist(self):
         return self.__hierarhy_pathlist
 
-    def __init__(self, tag_p = False):
-        self.tag_p = tag_p
+    def __init__(self):
         self.__syntax_pathlist = []
         self.__hierarhy_pathlist = []
 
@@ -225,17 +191,6 @@ class StatementList(object):
         return regex.sub(lambda match: substitutions[match.group(0)], string)
 
 class newHierarhyStatement(StatementList):
-
-    @property
-    def tag_p(self):
-        # statement getter
-        return self.__tag_p
-
-    @tag_p.setter
-    def tag_p(self, tag_p):
-        # statement setter
-        self.__tag_p = tag_p
-
 
     @property
     def statementlist(self):
@@ -394,8 +349,9 @@ class newSyntaxStatement(StatementList):
         self.__tag_p = tag_p
 
     
-    def __init__(self):
+    def __init__(self, tag_p = False):
         super().__init__()
+        self.tag_p = tag_p
         self.statementlist = []
         self.elem_crumbs = ['']*20
 
@@ -445,9 +401,9 @@ class newSyntaxStatement(StatementList):
                     if not attributes:
                         atribute_list = self.get_atribute_list(patern_element, string)
                         if atribute_list:
-                             attributes.append(string)
-                        else:
                             attributes = [attr for attr in atribute_list]
+                        else:
+                            attributes.append(string)
                     else:
                         new_arr = []
                         for target in attributes:
@@ -456,8 +412,6 @@ class newSyntaxStatement(StatementList):
                                     new_arr.append(attr)
                         if new_arr:
                             attributes = new_arr
-                        else:
-                            attributes = arr
         except re.error as exception_object:
             print("Unexpected exception: ", exception_object)
 

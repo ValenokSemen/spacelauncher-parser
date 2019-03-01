@@ -212,14 +212,25 @@ def main():
         if html.select_one("body > #app") is not None:
             breadcrumbs = NewJuniperBreadcrumbs(html)
             syntax = breadcrumbs.createSyntaxStatement()
-            # hierarhy = breadcrumbs.createHierarhyStatement()
-            if syntax:
-                for syn in syntax:
-                    syn.get_breadcrumbs()
-            # if hierarhy:
-            #     hierarhy.get_breadcrumbs()
-            if isinstance(breadcrumbs.merge(), list):
-                print('\n'.join(breadcrumbs.merge_list))     
+            for syn in syntax:
+                syn.get_breadcrumbs()
+            hierarhy = breadcrumbs.createHierarhyStatement()
+            for hr in hierarhy:
+                hr.get_breadcrumbs()
+            
+            merge_list = []
+            if hierarhy is not None:
+                for target_list in hierarhy:
+                    if (target_list.hierarhy_pathlist):
+                        for h_path in target_list.hierarhy_pathlist:
+                            for s in syntax:
+                                for s_path in s.syntax_pathlist:
+                                    merge_list.append("{}/{}".format(h_path, s_path))
+            elif syntax is not None:
+                for s in syntax:
+                    for s_path in s.syntax_pathlist:
+                        merge_list.append(s_path)           
+            print('\n'.join(merge_list))     
         else:
             breadcrumbs = OldJuniperBreadcrumbs(html)
             breadcrumbs.createSyntaxStatement()
