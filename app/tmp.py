@@ -111,13 +111,13 @@ class JuniperService(JuniperCommand):
         schema = list()
         for target_list in self.getCommandList():
             schema.append(dict(
-                id=target_list.getId,
-                metadata=target_list.getMetadata,
-                path=target_list.getPath,
-                software=target_list.getSoftware,
-                title=target_list.getTitle,
-                page=target_list.getPage,
-                commandPath=target_list.getCommandPath,
+                id=target_list.getId(),
+                metadata=target_list.getMetadata(),
+                path=target_list.getPath(),
+                software=target_list.getSoftware(),
+                title=target_list.getTitle(),
+                page=target_list.getPage(),
+                commandPath=target_list.getCommandPath(),
             ))
         return json.dumps(schema, cls=GenericJSONEncoder, indent=indent)
 
@@ -162,12 +162,13 @@ class Command(object):
             if htmlData.select_one("body > #app") is not None:
                 self.page = 'new'
                 breadcrumbs = NewJuniperBreadcrumbs(htmlData)
+                breadcrumbs.createSyntaxStatement()
+                breadcrumbs.createHierarhyStatement()
+                self.commandPath = [i for i in breadcrumbs.merge_statement()]
             else:
                 self.page = 'old'
-                breadcrumbs = OldJuniperBreadcrumbs(htmlData)
-            breadcrumbs.createSyntaxStatement().get_breadcrumbs()
-            breadcrumbs.createHierarhyStatement().get_breadcrumbs()
-        self.commandPath =  breadcrumbs.merge()
+                self.commandPath = []
+        
         return self.getCommandPath()
 
 
@@ -194,49 +195,38 @@ async def wait_with_progress(coros):
 
 
 def main():
-    # command = JuniperService()
-    # sem = asyncio.Semaphore(6)
-    # loop = asyncio.get_event_loop()
-    # f = [commandlist(cl, sem) for cl in command.getCommandList()]
-    # loop.run_until_complete(wait_with_progress(f))
-    # with open('juniper-command-plus.json', 'w', encoding='utf-8') as outfile:
-    #     outfile.write(command.pretty_print())
-    #     #add trailing newline for POSIX compatibility
-    #     outfile.write('\n')
+    command = JuniperService()
+    sem = asyncio.Semaphore(6)
+    loop = asyncio.get_event_loop()
+    f = [commandlist(cl, sem) for cl in command.getCommandList()]
+    loop.run_until_complete(wait_with_progress(f))
+    with open('juniper-command-plus.json', 'w', encoding='utf-8') as outfile:
+        outfile.write(command.pretty_print())
+        #add trailing newline for POSIX compatibility
+        outfile.write('\n')
 
+def test():
     rel_path = os.path.abspath(os.path.dirname(__file__))
-    abs_path = os.path.join(rel_path, "test_files/tmp.html")
+    abs_path = os.path.join(rel_path, "test_files/old_tmp.html")
 
     with open(abs_path, 'r') as html_file:
         html = BeautifulSoup(html_file, 'lxml')               
         if html.select_one("body > #app") is not None:
             breadcrumbs = NewJuniperBreadcrumbs(html)
             syntax = breadcrumbs.createSyntaxStatement()
-            for syn in syntax:
-                syn.get_breadcrumbs()
-            hierarhy = breadcrumbs.createHierarhyStatement()
-            for hr in hierarhy:
-                hr.get_breadcrumbs()
-            
-            merge_list = []
-            if hierarhy is not None:
-                for target_list in hierarhy:
-                    if (target_list.hierarhy_pathlist):
-                        for h_path in target_list.hierarhy_pathlist:
-                            for s in syntax:
-                                for s_path in s.syntax_pathlist:
-                                    merge_list.append("{}/{}".format(h_path, s_path))
-            elif syntax is not None:
-                for s in syntax:
-                    for s_path in s.syntax_pathlist:
-                        merge_list.append(s_path)           
-            print('\n'.join(merge_list))     
+            hierarhy = breadcrumbs.createHierarhyStatement()                   
+            print('\n'.join(breadcrumbs.merge_statement()))     
         else:
             breadcrumbs = OldJuniperBreadcrumbs(html)
-            breadcrumbs.createSyntaxStatement()
-            breadcrumbs.createHierarhyStatement()
-            tmp = breadcrumbs.merge()
-            print('\n'.join(tmp))
+            syntax = breadcrumbs.createSyntaxStatement()
+            hierarhy = breadcrumbs.createHierarhyStatement()
+            if syntax is not None:
+                for s in syntax:
+                    print('\n'.join(map(str, s.get_breadcrumbs())))                     
+            if hierarhy is not None:
+                for h in hierarhy:
+                    print('\n'.join(map(str, h.statementlist)))                     
+
 
 
 def run():
@@ -376,6 +366,7 @@ def createStringGenerator(string, separator, match):
        
 
 if __name__ == "__main__":
-    main()
+    # main()
+    test()
     # run()
             

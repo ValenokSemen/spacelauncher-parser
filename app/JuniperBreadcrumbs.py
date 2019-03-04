@@ -24,37 +24,11 @@ class JuniperBreadcrumbs(object):
         # statement setter
         self.__hierarchy_statement = hierarchy
     
-    @property
-    def merge_list(self):
-        # statement getter
-        return self.__merge_list
-    
-    @merge_list.setter
-    def merge_list(self, merge_list):
-        # statement setter
-        self.__merge_list = merge_list
-
     def __init__(self, html):
         self.html = html
         self.syntax = []
         self.hierarchy = []
 
-    def merge(self):
-        self.merge_list = []
-        if self.hierarchy is not None:
-            for h in self.hierarchy:
-                if h.hierarhy_pathlist:
-                    for h_path in h.hierarhy_pathlist:
-                        for s in self.syntax:
-                            for s_path in s.syntax_pathlist:
-                                self.merge_list.append("{}/{}".format(h_path, s_path))
-        elif self.syntax is not None:
-            for s in self.syntax:
-                for s_path in s.syntax_pathlist:
-                    self.merge_list.append(s_path)
-        else:
-            return None       
-        return self.merge_list
       
     def createSyntaxStatement(self):
         """
@@ -135,28 +109,80 @@ class NewJuniperBreadcrumbs(JuniperBreadcrumbs):
         else:
             self.hierarchy = None
             return self.hierarchy
-            
-class OldJuniperBreadcrumbs(JuniperBreadcrumbs):
+
+
+    def get_syntax_pathlist(self):
+        if self.syntax:
+            for s in self.syntax:
+                if s.get_breadcrumbs():
+                    for s_path in s.syntax_pathlist:
+                        yield s_path
     
-    def find_all_statement(self, parameter, html):
-        target_list = []
-        for target in html.find_all('div', id='topic-content'):
-            after_h4_links = [i.find_next_sibling() for i in target.select('h4') if i.text.find(parameter) > -1]
-            for example_div in after_h4_links:
-                if len(target_list) > 0:
-                    target_list.extend([i for i in example_div.select('.ExampleInline') if len(list(i.select(i.name))) == 0])
-                else:
-                    target_list = [i for i in example_div.select('.ExampleInline') if len(list(i.select(i.name))) == 0]
-        return target_list
+    def get_hierarchy_pathlist(self):
+        if self.hierarchy:
+            for h in self.hierarchy:
+                if h.get_breadcrumbs():
+                    for h_path in h.hierarhy_pathlist:
+                        yield h_path
+
+    def merge_statement(self):
+        syntax_pathlist = [i for i in self.get_syntax_pathlist()]
+        hierarchy_pathlist = [i for i in self.get_hierarchy_pathlist()]
+        if self.hierarchy is not None:
+            for h_path in hierarchy_pathlist:
+                for s_path in syntax_pathlist:
+                    yield "{}/{}".format(h_path, s_path)
+        elif self.syntax is not None:
+             for s_path in syntax_pathlist:
+                yield s_path
+        else:
+            return None
+        
+class OldJuniperBreadcrumbs(JuniperBreadcrumbs):
+      
+    def find_all_statement(self, name):
+        headers = self.html.select('#topic-content h4')
+        for h4 in headers:
+            if h4.text.find(name) > -1:
+               yield from self.get_html_statement_after_h4(h4, name)
+
+    def get_html_statement_after_h4(self, h4, name):
+         for sibling in h4.find_next_siblings():
+            if not (sibling.name == 'h4'):
+                if sibling.select('.example'):
+                    sibling_list = []
+                    for e in sibling.select('.example'):
+                            if sibling_list:
+                                sibling_list.extend([i for i in e.select('.ExampleInline') if len(list(i.select(i.name))) == 0])
+                            else:
+                                sibling_list = [i for i in e.select('.ExampleInline') if len(list(i.select(i.name))) == 0]
+                    obj = None
+                    if name == 'Syntax':
+                        obj = oldSyntaxStatement()
+                    elif name == 'Hierarchy Level':
+                        obj = oldHierarhyStatement()
+                    obj.statementlist = [i for i in sibling_list]
+                    yield obj
+                elif sibling.name == 'p':
+                    tag_p = True
+                    obj = None
+                    if name == 'Syntax':
+                        obj = oldSyntaxStatement(tag_p)
+                    elif name == 'Hierarchy Level':
+                        obj = oldHierarhyStatement()
+                    obj.statementlist.append(sibling)
+                    yield obj
+            else:
+                break
+
 
     def createSyntaxStatement(self):
-        self.syntax =  oldSyntaxStatement(self.syntax_list)
+        self.syntax = self.find_all_statement('Syntax')
         return self.syntax
 
     def createHierarhyStatement(self):
-        self.hierarchy =  oldHierarhyStatement(self.hierarchy_list)
+        self.hierarchy =  self.find_all_statement('Hierarchy Level')
         return self.hierarchy
-
 
 class StatementList(object):
 
@@ -199,6 +225,10 @@ class newHierarhyStatement(StatementList):
     @statementlist.setter
     def statementlist(self, statementlist):
         self.__statementlist = statementlist
+
+    def __init__(self, tag_p = False):
+        super().__init__()
+        self.statementlist = []
   
     def get_breadcrumbs(self):
         for el in self.statementlist:
@@ -497,15 +527,32 @@ class oldSyntaxStatement(StatementList):
         # statement setter
         self.__depth = depth
 
+    @property
+    def statementlist(self):
+        return self.__statementlist
+
+    @statementlist.setter
+    def statementlist(self, statementlist):
+        self.__statementlist = statementlist
+
+    def __init__(self, tag_p = False):
+        super().__init__()
+        self.tag_p = tag_p
+        self.statementlist = []
+        self.__elem_crumbs = ['']*20
+
     def set_depth(self, statement_element):
-        self.depth = 0
-        pattern = re.compile(r'margin-left: 30pt;')
-        if pattern.search(statement_element['style']):
-            self.depth += 1
-        upper_parent = statement_element.parent
-        while self.to_end(upper_parent):
-            self.depth += 1
-            upper_parent = upper_parent.parent
+        if self.tag_p:
+            self.depth = 1
+        else:
+            self.depth = 0
+            pattern = re.compile(r'margin-left: 30pt;')
+            if pattern.search(statement_element['style']):
+                self.depth += 1
+            upper_parent = statement_element.parent
+            while self.to_end(upper_parent):
+                self.depth += 1
+                upper_parent = upper_parent.parent
         return self.depth
     
 
@@ -528,22 +575,30 @@ class oldSyntaxStatement(StatementList):
             else:
                 return False
             
+    # def get_breadcrumbs(self):
+    #     for element in self.statementlist:
+    #         self.set_depth(element)
+    #         cleaned_statement = self.clean(element)
+    #         if self.is_match(cleaned_statement):
+    #             if self.is_header(cleaned_statement):
+    #                 for index, value in enumerate(self.split(cleaned_statement), 1):
+    #                     if (index == 2):
+    #                         self.depth += 1
+    #                     self.set_breadcrumbs(value)
+    #             else:
+    #                 for index, value in enumerate(self.split(cleaned_statement), 1):
+    #                     self.set_breadcrumbs(value)
+    #             continue
+    #         elif re.match(r'^}', cleaned_statement) is None:
+    #             self.set_breadcrumbs(cleaned_statement)
+    #     return self.syntax_pathlist 
+    
     def get_breadcrumbs(self):
         for element in self.statementlist:
             self.set_depth(element)
             cleaned_statement = self.clean(element)
-            if self.is_match(cleaned_statement):
-                if self.is_header(cleaned_statement):
-                    for index, value in enumerate(self.split(cleaned_statement), 1):
-                        if (index == 2):
-                            self.depth += 1
-                        self.set_breadcrumbs(value)
-                else:
-                    for index, value in enumerate(self.split(cleaned_statement), 1):
-                        self.set_breadcrumbs(value)
-                continue
-            elif re.match(r'^}', cleaned_statement) is None:
-                self.set_breadcrumbs(cleaned_statement)
+            if re.match(r'^}', cleaned_statement) is None:
+                self.syntax_pathlist.append(cleaned_statement)
         return self.syntax_pathlist 
 
     def split(self, statement):
@@ -557,6 +612,19 @@ class oldSyntaxStatement(StatementList):
 
 
 class oldHierarhyStatement(StatementList):
+
+    @property
+    def statementlist(self):
+        return self.__statementlist
+
+    @statementlist.setter
+    def statementlist(self, statementlist):
+        self.__statementlist = statementlist
+
+    def __init__(self):
+        super().__init__()
+        self.statementlist = []
+
     def get_breadcrumbs(self):
         for el in self.statementlist:
             a = list()
@@ -586,4 +654,17 @@ class oldHierarhyStatement(StatementList):
         else:
             substitutions = {'[': '', ',': '', ']': '',}
             return self.replace(result, substitutions)
+
+class newSyntax(object):
+    pass
+
+class oldSyntax(object):
+    pass
+
+class newHierarhy(object):
+    pass
+
+class oldHierarhy(object):
+    pass
+
 
