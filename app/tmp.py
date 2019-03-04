@@ -223,9 +223,7 @@ def test():
             if syntax is not None:
                 for s in syntax:
                     print('\n'.join(map(str, s.get_breadcrumbs())))                     
-            if hierarhy is not None:
-                for h in hierarhy:
-                    print('\n'.join(map(str, h.statementlist)))                     
+                               
 
 
 
