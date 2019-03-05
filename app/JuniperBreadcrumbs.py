@@ -68,7 +68,7 @@ class NewJuniperBreadcrumbs(JuniperBreadcrumbs):
                     if name == 'Syntax':
                         obj = newSyntax()
                     elif name == 'Hierarchy Level':
-                        obj = HierarhyStatement()
+                        obj = newHierarhy()
                     obj.statementlist = [i for i in sibling_list]
                     yield obj
                 elif (sibling.name == 'div') and (sibling['class'][0] == 'example'):
@@ -78,7 +78,7 @@ class NewJuniperBreadcrumbs(JuniperBreadcrumbs):
                     if name == 'Syntax':
                         obj = newSyntax()
                     elif name == 'Hierarchy Level':
-                        obj = HierarhyStatement()
+                        obj = newHierarhy()
                     obj.statementlist = [i for i in sibling_list]
                     yield obj
                 elif sibling.name == 'p':
@@ -87,7 +87,7 @@ class NewJuniperBreadcrumbs(JuniperBreadcrumbs):
                     if name == 'Syntax':
                         obj = newSyntax(tag_p)
                     elif name == 'Hierarchy Level':
-                        obj = HierarhyStatement()
+                        obj = newHierarhy()
                     obj.statementlist.append(sibling)
                     yield obj
             else:
@@ -128,11 +128,11 @@ class NewJuniperBreadcrumbs(JuniperBreadcrumbs):
     def merge_statement(self):
         syntax_pathlist = [i for i in self.get_syntax_pathlist()]
         hierarchy_pathlist = [i for i in self.get_hierarchy_pathlist()]
-        if self.hierarchy is not None:
+        if hierarchy_pathlist:
             for h_path in hierarchy_pathlist:
                 for s_path in syntax_pathlist:
                     yield "{}/{}".format(h_path, s_path)
-        elif self.syntax is not None:
+        elif syntax_pathlist:
              for s_path in syntax_pathlist:
                 yield s_path
         else:
@@ -160,7 +160,7 @@ class OldJuniperBreadcrumbs(JuniperBreadcrumbs):
                     if name == 'Syntax':
                         obj = oldSyntax()
                     elif name == 'Hierarchy Level':
-                        obj = HierarhyStatement()
+                        obj = oldHierarhy()
                     obj.statementlist = [i for i in sibling_list]
                     yield obj
                 elif sibling.name == 'p':
@@ -169,7 +169,7 @@ class OldJuniperBreadcrumbs(JuniperBreadcrumbs):
                     if name == 'Syntax':
                         obj = oldSyntax(tag_p)
                     elif name == 'Hierarchy Level':
-                        obj = HierarhyStatement()
+                        obj = oldHierarhy()
                     obj.statementlist.append(sibling)
                     yield obj
             else:
@@ -178,11 +178,46 @@ class OldJuniperBreadcrumbs(JuniperBreadcrumbs):
 
     def createSyntaxStatement(self):
         self.syntax = self.find_all_statement('Syntax')
-        return self.syntax
+        if self.syntax:
+            return self.syntax
+        else:
+            self.syntax = None
+            return self.syntax
 
     def createHierarhyStatement(self):
         self.hierarchy =  self.find_all_statement('Hierarchy Level')
-        return self.hierarchy
+        if self.hierarchy:
+            return self.hierarchy
+        else:
+            self.hierarchy = None
+            return self.hierarchy
+
+    def get_syntax_pathlist(self):
+        if self.syntax:
+            for s in self.syntax:
+                if s.get_breadcrumbs():
+                    for s_path in s.syntax_pathlist:
+                        yield s_path
+    
+    def get_hierarchy_pathlist(self):
+        if self.hierarchy:
+            for h in self.hierarchy:
+                if h.get_breadcrumbs():
+                    for h_path in h.hierarhy_pathlist:
+                        yield h_path
+
+    def merge_statement(self):
+        syntax_pathlist = [i for i in self.get_syntax_pathlist()]
+        hierarchy_pathlist = [i for i in self.get_hierarchy_pathlist()]
+        if hierarchy_pathlist:
+            for h_path in hierarchy_pathlist:
+                for s_path in syntax_pathlist:
+                    yield "{}/{}".format(h_path, s_path)
+        elif syntax_pathlist:
+             for s_path in syntax_pathlist:
+                yield s_path
+        else:
+            return None
 
 class StatementList(object):
 
@@ -204,9 +239,11 @@ class StatementList(object):
     def get_breadcrumbs(self):
         raise NotImplementedError
 
-    def clean(self, param):
+    def clean(self, param, substitutions=None):
         pattern_newline = re.compile(r'(\n\s+|\n)')
         pattern_dots = re.compile(r'(\.{2,})')
+        pattern_unicode_space = re.compile(u'\u00a0|\xa0')               
+        pattern_unicode_hline = re.compile(u'\u2013')
         
         string = param.text
         if pattern_newline.search(string):
@@ -214,9 +251,18 @@ class StatementList(object):
 
         if pattern_dots.search(string):
             string = pattern_dots.sub(' ', string)
+
+        if pattern_unicode_space.search(string):
+            string = pattern_unicode_space.sub(' ', string)
         
-        substitutions = {'{': '', ';': ''}
-        return self.replace(string, substitutions)
+        if pattern_unicode_hline.search(string):
+            string = pattern_unicode_hline.sub('-', string)
+        
+        if substitutions:
+            return self.replace(string, substitutions)
+        else:
+            return string
+        
    
     def replace(self, string, substitutions):
         substrings = sorted(substitutions, key=len, reverse=True)
@@ -224,7 +270,7 @@ class StatementList(object):
         return regex.sub(lambda match: substitutions[match.group(0)], string).strip()
 
 class SyntaxStatement(StatementList):
-
+   
     @property
     def depth(self):
         # statement getter
@@ -265,20 +311,40 @@ class SyntaxStatement(StatementList):
         return str('/'.join([e for e in self.elem_crumbs if e]))
 
     def get_breadcrumbs(self):
-        for statement_element in self.statementlist:
-            self.set_depth(statement_element)
-            cleaned_statement = self.clean(statement_element)
-            # if string is empty
-            if cleaned_statement:
-                if re.match(r'^}', cleaned_statement) is None:
-                    depth_path = self.get_command_depth_path(cleaned_statement)
-                    command_list = self.__get_all_command_from_path(depth_path)
-                    if isinstance(command_list, list):
-                        for cl_element in command_list:
-                            self.syntax_pathlist.append(cl_element)
-                    elif isinstance(command_list, str):
-                        self.syntax_pathlist.append(command_list)
-        return self.syntax_pathlist
+        pseudo_code = self.pseudo_code_data()
+        if pseudo_code:
+            for statement_element in self.statementlist:
+                if self.set_depth(statement_element) is not None:
+                    substitutions = {'{': '', ';': ''}
+                    cleaned_statement = self.clean(statement_element, substitutions)
+                    # if string is empty
+                    if cleaned_statement:
+                        if re.match(r'^}', cleaned_statement) is None:
+                            depth_path = self.get_command_depth_path(cleaned_statement)
+                            command_list = self.__get_all_command_from_path(depth_path)
+                            if isinstance(command_list, list):
+                                for cl_element in command_list:
+                                    self.syntax_pathlist.append(cl_element)
+                            elif isinstance(command_list, str):
+                                self.syntax_pathlist.append(command_list)
+            return self.syntax_pathlist
+        elif pseudo_code is not None:
+            firstline = self.clean(self.statementlist[:1][0])
+            for statement_element in self.statementlist[1:]:
+                cleaned_statement = self.clean(statement_element)
+                string = '{} {}'.format(firstline, cleaned_statement)
+                command_list = self.__get_all_command_from_path(string)
+                if isinstance(command_list, list):
+                    for cl_element in command_list:
+                        self.syntax_pathlist.append(cl_element)
+                elif isinstance(command_list, str):
+                    self.syntax_pathlist.append(command_list)
+            return self.syntax_pathlist
+        else:
+            return None
+
+
+                
         
     def __get_all_command_from_path(self, string):
         cercalBracket = re.compile(r'(?<=\()(?:[^)(]|\((?:[^)(]|\([^)(]*\))*\))*(?=\))')
@@ -374,6 +440,9 @@ class SyntaxStatement(StatementList):
     def set_depth(self, parameter_list):
         raise NotImplementedError
 
+    def pseudo_code_data(self):
+        raise NotImplementedError
+
 class newSyntax(SyntaxStatement):
     def __init__(self, tag_p = False):
         super().__init__()
@@ -393,6 +462,27 @@ class newSyntax(SyntaxStatement):
                 upper_parent = upper_parent.parent
         return self.depth
 
+    def pseudo_code_data(self):
+        firstline = self.statementlist[:1]
+        lastline = self.statementlist[-1:]
+        
+        if len(self.statementlist) > 1:
+            if not re.search('{', self.clean(firstline[0])):
+                if not re.search('}', self.clean(lastline[0])):
+                    triangle_list = []
+                    for i in self.statementlist[1:]:
+                        triangleBracket = re.compile(r'(?<=\<)(?:[^)(]|\((?:[^)(]|\([^)(]*\))*\))*(?=\>)')
+                        if triangleBracket.search(self.clean(i)):
+                            triangle_list.append(i)
+                    if triangle_list == self.statementlist[1:]:
+                        return False
+                    elif not triangle_list:
+                        return None
+                    else:
+                        return None
+        return True
+        
+
 class oldSyntax(SyntaxStatement):
     def __init__(self, tag_p = False):
         super().__init__()
@@ -405,8 +495,11 @@ class oldSyntax(SyntaxStatement):
         else:
             self.depth = 0
             pattern = re.compile(r'margin-left: 30pt;')
-            if pattern.search(statement_element['style']):
-                self.depth += 1
+            if statement_element.has_attr("style"):
+                if pattern.search(statement_element['style']):
+                    self.depth += 1
+            else:
+                return None
             upper_parent = statement_element.parent
             while self.to_end(upper_parent):
                 self.depth += 1
@@ -420,6 +513,9 @@ class oldSyntax(SyntaxStatement):
             return False
         else:
             return True
+    
+    def pseudo_code_data(self):
+        return True
 
 class HierarhyStatement(StatementList):
 
@@ -431,7 +527,7 @@ class HierarhyStatement(StatementList):
     def statementlist(self, statementlist):
         self.__statementlist = statementlist
 
-    def __init__(self, tag_p = False):
+    def __init__(self):
         super().__init__()
         self.statementlist = []
   
@@ -531,19 +627,19 @@ class HierarhyStatement(StatementList):
         new_str =  re.sub(r'\s{2,}', ' ', new_str).strip()
         return new_str, new_matchList
 
-    def is_var_list(self, val, var_list):
-        for var in var_list.select('var'):
-            if var.text.strip() == val:
-                return True
-        return False
+
+    def is_var_list(self, parametr, parameter_list):
+        raise NotImplementedError
     
+   
     def split(self, param):
         splitlist = [i for i in re.split(r'\s+', param) if i]
         return splitlist
 
     def __get_value_between_brackets(self, param):
-        result = re.sub(r'(\xa0|\n)', ' ', param.text)
-        match =  re.search(r'(?<=\[)(.*)(?=\])', result)
+        substitutions = {',': ''}
+        cleaned_statement = self.clean(param, substitutions)
+        match =  re.search(r'(?<=\[)(.*?)(?=\])', cleaned_statement)
         if match is not None:
             return match.group(0)
         else:
@@ -552,3 +648,26 @@ class HierarhyStatement(StatementList):
             # substitutions = {'[': '', ',': '', ']': '',}
             # return self.replace(result, substitutions)
 
+
+    # def is_var_list(self, val, var_list):
+    #     for var in var_list.select('i'):
+    #         if var.text == val:
+    #     for var in var_list.select('var'):
+    #         if var.text.strip() == val:
+    #             return True
+    #     return False
+
+class oldHierarhy(HierarhyStatement):
+    def is_var_list(self, val, var_list):
+        for var in var_list.select('i'):
+            if var.text == val:
+                return True
+        return False
+
+class newHierarhy(HierarhyStatement):
+
+    def is_var_list(self, val, var_list):
+        for var in var_list.select('var'):
+            if var.text.strip() == val:
+                return True
+        return False

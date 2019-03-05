@@ -103,7 +103,7 @@ class JuniperService(JuniperCommand):
                 if isinstance(commanditems, dict):
                      for target_list in commanditems['cl']:
                          command_obj_list.append(Command(target_list ,self))
-                if index == 4:
+                if index == 6:
                     break
         return command_obj_list
 
@@ -167,8 +167,10 @@ class Command(object):
                 self.commandPath = [i for i in breadcrumbs.merge_statement()]
             else:
                 self.page = 'old'
-                self.commandPath = []
-        
+                breadcrumbs = OldJuniperBreadcrumbs(htmlData)
+                breadcrumbs.createSyntaxStatement()
+                breadcrumbs.createHierarhyStatement()
+                self.commandPath = [i for i in breadcrumbs.merge_statement()]
         return self.getCommandPath()
 
 
@@ -207,7 +209,7 @@ def main():
 
 def test():
     rel_path = os.path.abspath(os.path.dirname(__file__))
-    abs_path = os.path.join(rel_path, "test_files/old_tmp.html")
+    abs_path = os.path.join(rel_path, "test_files/tmp.html")
 
     with open(abs_path, 'r') as html_file:
         html = BeautifulSoup(html_file, 'lxml')               
@@ -220,11 +222,12 @@ def test():
             breadcrumbs = OldJuniperBreadcrumbs(html)
             syntax = breadcrumbs.createSyntaxStatement()
             hierarhy = breadcrumbs.createHierarhyStatement()
-            if syntax is not None:
-                for s in syntax:
-                    print('\n'.join(map(str, s.get_breadcrumbs())))                     
-                               
-
+            print('\n'.join(breadcrumbs.merge_statement()))
+            # if hierarhy is not None:
+            #     for h in hierarhy:
+            #         if h.get_breadcrumbs():
+            #             print('\n'.join(map(str, h.hierarhy_pathlist)))
+                                                                     
 
 
 def run():
@@ -332,7 +335,6 @@ def get_atribute_list(patern, string):
             tmp = hh
         i += 1
     return tmp
-
 
 def funcname(m, init_string):
     quoteSeparator = re.compile(r'"(.*?)"')

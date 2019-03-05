@@ -2,7 +2,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:doceng="com.juniper.doceng.util.XSLTExtentions"><head><meta charset="utf-8"></meta><meta http-equiv="X-UA-Compatible" content="IE=Edge"></meta><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0"></meta><title>authentication-order (Authenticator) - TechLibrary - Juniper Networks</title><meta name="subject" content="hardwareplatforms,switches,exseries,software,operatingsystems,junossoftware"></meta><meta name="description" content="CLI Statement. EX Series. Configure the preferred order of authentication methods that the switch will use when attempting to authenticate a client. If multiple authentication methods are configured on a single interface, when one authentication method fails, the switch falls back to another method."></meta><meta name="feature" content="[7800]"></meta><meta name="branchId" content="1406"></meta><meta name="topicid" content="102239"></meta><meta name="relatedtopics" content="10246,10153,10247,10073,102270;"></meta><meta name="platform" content="Hardware Platforms:Switches:EX-series"></meta><meta name="software" content="Software:Operating Systems:JUNOS Software"></meta><meta name="supportedlist" content="true"></meta><meta name="release" content="junos 18.4"></meta>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:doceng="com.juniper.doceng.util.XSLTExtentions"><head><meta charset="utf-8"></meta><meta http-equiv="X-UA-Compatible" content="IE=Edge"></meta><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0"></meta><title>clear bgp neighbor - TechLibrary - Juniper Networks</title><meta name="subject" content="hardwareplatforms,routers,acxseries,hardwareplatforms,routers,mseries,hardwareplatforms,routers,mxseries,hardwareplatforms,firewalls,srxseries,hardwareplatforms,routers,tseries,hardwareplatforms,switches,exseries,hardwareplatforms,switches,qfxseries,qfabric,hardwareplatforms,switches,qfxseries,hardwareplatforms,switches,ocxseries,ocx1100,hardwareplatforms,routers,ptxseries,software,operatingsystems,junossoftware"></meta><meta name="description" content="CLI Command. ACX Series,M Series,MX Series,SRX Series,T Series,EX Series,QFabric System,QFX Series,OCX1100,PTX Series. Perform one of the following tasks:"></meta><meta name="feature" content="[]"></meta><meta name="branchId" content="1406"></meta><meta name="topicid" content="18926"></meta><meta name="relatedtopics" content="18930;"></meta><meta name="platform" content="Hardware Platforms:Routers:ACX Series,Hardware Platforms:Routers:M-series,Hardware Platforms:Routers:MX-series,Hardware Platforms:Firewalls:SRX-series,Hardware Platforms:Routers:T-series,Hardware Platforms:Switches:EX-series,Hardware Platforms:Switches:QFX Series:QFabric,Hardware Platforms:Switches:QFX Series,Hardware Platforms:Switches:OCX Series:OCX1100,Hardware Platforms:Routers:PTX Series"></meta><meta name="software" content="Software:Operating Systems:JUNOS Software"></meta><meta name="supportedlist" content="true"></meta><meta name="release" content="junos 18.4"></meta>
 								<link rel="preload" href="https://www.juniper.net/assets/styles/global-nav.css" as="style"><link rel="preload" href="https://www.juniper.net/assets/scripts/global-nav.js" as="script"><link rel="preload" href="/documentation/webstatic/fonts/swmaterialicon.woff" as="font" crossorigin="anonymous"><link href="/documentation/webstatic/css/topic.6c81f650385f2a77454f996cdf811d6f.css" rel="stylesheet"><link rel="preload" as="script" href="/documentation/webstatic/js/manifest.62d07183115fc2b12f82.js"><link rel="preload" as="script" href="/documentation/webstatic/js/vendor.91a9c548f48da22bd953.js"><link rel="preload" as="script" href="/documentation/webstatic/js/topic.7ab877d18ba8073a267e.js">
 							<script src="https://assets.adobedtm.com/998b2d6d4944658536fe36266a249b07e626b86d/satelliteLib-6d05b7c7a99e1cbbdcac4fcfe7005e6bee80a0e9.js"></script></head><body style="visibility:hidden;">
 	<!--[if lte IE 9]>
@@ -39,72 +39,43 @@
 <div id="app">
 <sw-app inline-template="">
 <div v-bind:class="{_fixed: isfixed}"><sw-header></sw-header><sw-change-widget v-bind:scroll="fixcw"></sw-change-widget><section class="main wrapper">
-<sw-leftnav v-bind:data-height="leftnavheight" v-bind:data-top="leftnavtop" v-on:menucollapse="menucollapse"></sw-leftnav><sw-rightnav>&nbsp;</sw-rightnav><div class="l-body" v-bind:style="{'min-height':bodyheight+'px'}" v-bind:class="{'collapsed':isleftnavcollapsed}"><nav class="page-options clearfix"><sw-breadcrumb>&nbsp;</sw-breadcrumb></nav><div class="topicBody"><div id="topic-content"><h1 id="jd0e3">authentication-order (Authenticator)</h1><sw-topic-details date="2017-12-14">&nbsp;</sw-topic-details><h4 id="jd0e18">Syntax</h4><div dir="ltr" id="jd0e19" class="example"><sw-code><template v-pre=""><div class="statement" style="display:block;">authentication-order [dot1x | mac-radius | captive-portal];</div></template></sw-code></div><h4>Hierarchy Level</h4><div dir="ltr" id="jd0e23" class="example"><sw-code><template v-pre=""><div class="statement" style="display:block;">[edit protocols <a href="dot1x-802-1x.html">dot1x</a> <a href="authenticator-802-1x.html">authenticator</a> <a href="interface-802-1x.html">interface</a> <var v-pre="">interface-name</var>]</div></template></sw-code></div><h4>Release Information</h4><p formatting-option="none" id="jd0e36">Statement introduced in Junos OS Release
-15.1R3 for EX Series switches.</p><h4>Description</h4><p>Configure the preferred order of authentication
-methods that the switch will use when attempting to authenticate a
-client. If multiple authentication methods are configured on a single
-interface, when one authentication method fails, the switch falls
-back to another method. You can configure the <span class="cli" v-pre="">authentication-order</span> statement to specify whether 802.1X authentication or MAC RADIUS
-authentication must be the first authentication method tried. </p><p>By default, the switch attempts to authenticate a client by
-using 802.1X authentication first. If 802.1X authentication fails
-because there is no response from the client, and MAC RADIUS authentication
-is configured on the interface, the switch falls back to MAC RADIUS
-authentication. If MAC RADIUS fails, and captive portal is configured
-on the switch, the switch falls back to captive portal. </p><p>Configuring MAC RADIUS authentication as the first method can
-help prevent the fallback timeout period which occurs after an 802.1X
-authentication attempt is made for a host that does not support 802.1X
-authentication. If MAC RADIUS authentication is configured as the
-first authentication method on an interface, then on receiving data
-from any client on that interface, the switch attempts to authenticate
-the client by using MAC RADIUS authentication. If MAC RADIUS authentication
-fails, then the switch falls back to 802.1X authentication. If 802.1X
-authentication fails, and captive portal is configured on the interface,
-the switch falls back to captive portal. </p><p>802.1X authentication always has the highest priority, even
-if a client has been authenticated using another method. If the switch
-receives an EAP packet from a client that has been authenticated using
-MAC RADIUS authentication, the switch acknowledges the EAP packet
-and upgrades the authentication using 802.1X authentication credentials.
-Similarly, if a client has been authenticated through fallback to
-captive portal, and the switch receives an EAP packet from that client,
-the switch attempts to authenticate the client by using 802.1X authentication. </p><p>The switch attempts authentication using only methods that are
-configured on the interface. If an authentication method is included
-in the authentication order, but is not configured on the interface,
-the switch ignores that method and attempts authentication using the
-next method in the order that is enabled. However, if a method is
-enabled on the interface, but is not included in the authentication
-order, the switch does not attempt using that method. For example,
-if captive portal is enabled for an interface, but the authentication
-order is configured as <span class="cli" v-pre="">[mac-radius dot1x]</span>, the authentication
-method for that interface does not fall back to captive portal. </p><p>The authentication order can be configured for all interfaces
-by using the <span class="cli" v-pre="">interface all</span> option. If the authentication
-order is configured for an individual interface, and there is also
-an authentication order configured for all interfaces, then the order
-for the individual interface is followed. If there is no authentication
-order configured for an individual interface, and there is an authentication
-order configured for all interfaces, then the configuration for all
-interfaces is followed.</p><div style=""><p>Use the following guidelines when configuring the <span class="cli" v-pre="">authentication-order</span> statement:</p></div><ul><li style=""><p>The authentication order must include at least two methods
-of authentication. </p></li><li style=""><p>802.1X authentication must be one of the methods included
-in the authentication order. </p></li><li style=""><p>If captive portal is included in the authentication order,
-it must be the last method in the order.</p></li><li style=""><p>If <span class="cli" v-pre="">mac-radius-restrict</span> is configured on an
-interface, then the authentication order cannot be configured.</p></li></ul><div style=""><p>The valid combinations for <span class="cli" v-pre="">authentication-order</span> are as follows:</p></div><ul><li style=""><p><span class="cli" v-pre="">[dot1x mac-radius captive-portal]</span></p></li><li style=""><p><span class="cli" v-pre="">[dot1x captive-portal]</span></p></li><li style=""><p><span class="cli" v-pre="">[dot1x mac-radius]</span></p></li><li style=""><p><span class="cli" v-pre="">[mac-radius dot1x captive-portal]</span></p></li></ul><h4>Default</h4><p>If <span class="cli" v-pre="">authentication-order </span>is not configured,
-the switch attempts to authenticate the client by using 802.1X authentication
-first, followed by MAC RADIUS authentication, and then captive portal,
-as follows: </p><ol type="1"><li id="jd0e112" style="">802.1X authentication&#8212;If 802.1X is configured on
-the interface, the switch sends EAPoL requests to the end device and
-attempts to authenticate the end device through 802.1X authentication.
-If the end device does not respond to the EAP requests, the switch
-checks whether MAC RADIUS authentication is configured on the interface.</li><li id="jd0e115" style="">MAC RADIUS authentication&#8212;If MAC RADIUS authentication
-is configured on the interface, the switch sends the MAC RADIUS address
-of the end device to the authentication server. If MAC RADIUS authentication
-is not configured, the switch checks whether captive portal is configured
-on the interface.</li><li id="jd0e118" style="">Captive portal authentication&#8212;If captive portal
-is configured on the interface, the switch attempts to authenticate
-the end device by using this method after attempting any other configured
-authentication methods. </li></ol><h4>Options</h4><p><span class="cli" v-pre="">captive-portal</span>&#8212;Configure captive
-portal authentication in the order of authentication methods on the
-interface.</p><p><span class="cli" v-pre="">dot1x</span>&#8212;Configure 802.1X authentication in the
-order of authentication methods on the interface.</p><p><span class="cli" v-pre="">mac-radius</span>&#8212;Configure MAC RADIUS authentication
-in the order of authentication methods on the interface.</p><h4>Required Privilege Level</h4><p>admin&#8212;To view this statement in the configuration.<br></br>admin-control&#8212;To add this statement to the configuration.</p><div class="l-aside-box"><h3>Related Documentation</h3><ul><li style=""><p> <a href="../../concept/authentication-understanding-ex-series-switches.html">Understanding Authentication on Switches</a></p></li><li style=""><p><a href="../../task/configuration/authentication-order-ex-series-cli.html">Configuring Flexible Authentication Order</a></p></li></ul></div><sw-prev-next>&nbsp;</sw-prev-next></div><sw-comments>&nbsp;</sw-comments></div>
+<sw-leftnav v-bind:data-height="leftnavheight" v-bind:data-top="leftnavtop" v-on:menucollapse="menucollapse"></sw-leftnav><sw-rightnav>&nbsp;</sw-rightnav><div class="l-body" v-bind:style="{'min-height':bodyheight+'px'}" v-bind:class="{'collapsed':isleftnavcollapsed}"><nav class="page-options clearfix"><sw-breadcrumb>&nbsp;</sw-breadcrumb></nav><div class="topicBody"><div id="topic-content"><h1 id="jd0e3">clear bgp neighbor</h1><sw-topic-details date="2018-08-30">&nbsp;</sw-topic-details><h4 class="Head4">List of Syntax</h4><a href="#jd0e42">Syntax</a><br></br><a href="#jd0e80">Syntax (EX Series Switch and QFX Series)</a><br></br><h4 id="jd0e42"><h2 id="jd0e43">Syntax</h2></h4><div dir="ltr" id="jd0e45" class="example"><sw-code><template v-pre=""><div class="statement" style="display:block;">clear bgp neighbor </div><div class="statement" style="display:block;">&lt;all&gt;</div><div class="statement" style="display:block;">&lt;as&nbsp;<var v-pre="">as-number</var>&gt;</div><div class="statement" style="display:block;">&lt;gracefully&gt;</div><div class="statement" style="display:block;">&lt;instance&nbsp;<var v-pre="">instance-name</var>&gt;</div><div class="statement" style="display:block;">&lt;logical-system&nbsp;(all&nbsp;|&nbsp;<var v-pre="">logical-system-name</var>)&gt;</div><div class="statement" style="display:block;">&lt;malformed-route&gt;</div><div class="statement" style="display:block;">&lt;<var v-pre="">neighbor</var>&gt;</div><div class="statement" style="display:block;">&lt;soft | soft-inbound&gt;</div><div class="statement" style="display:block;">&lt;soft-minimum-igp&gt;</div><div class="statement" style="display:block;">&lt;stale-routes&gt;</div></template></sw-code></div><h4 id="jd0e80"><h2 id="jd0e81">Syntax (EX Series Switch and QFX Series)</h2></h4><div dir="ltr" id="jd0e83" class="example"><sw-code><template v-pre=""><div class="statement" style="display:block;">clear bgp neighbor </div><div class="statement" style="display:block;">&lt;all&gt;</div><div class="statement" style="display:block;">&lt;as&nbsp;<var v-pre="">as-number</var>&gt;</div><div class="statement" style="display:block;">&lt;instance&nbsp;<var v-pre="">instance-name</var>&gt;</div><div class="statement" style="display:block;">&lt;malformed-route&gt;</div><div class="statement" style="display:block;">&lt;<var v-pre="">neighbor</var>&gt;</div><div class="statement" style="display:block;">&lt;soft | soft-inbound&gt;</div><div class="statement" style="display:block;">&lt;soft-minimum-igp&gt;</div></template></sw-code></div><h4>Release Information</h4><p formatting-option="none" id="jd0e110">Command introduced before Junos OS Release
+7.4.</p><p formatting-option="none" id="jd0e112">Command introduced in Junos OS Release 9.0 for EX Series switches.</p><p formatting-option="none" id="jd0e114">Command introduced in Junos OS Release 11.3 for the QFX Series.</p><p formatting-option="none" id="jd0e116">Command introduced in Junos OS Release 14.1X53-D20 for the OCX
+Series.</p><p formatting-option="none" id="jd0e118"><span class="cli" v-pre="">malformed-route</span> option introduced in Junos OS Release
+13.2.</p><p formatting-option="none" id="jd0e122"><span class="cli" v-pre="">all</span> option introduced in Junos OS Release 14.2.</p><p formatting-option="none" id="jd0e126"><span class="cli" v-pre="">gracefully</span> and <span class="cli" v-pre="">stale-routes</span> options introduced
+in Junos OS Release 15.1.</p><h4>Description</h4><p>Perform one of the following tasks:</p><ul><li style=""><p>Change the state of one or more BGP neighbors to <span class="cli" v-pre="">IDLE</span>. For neighbors in the <span class="cli" v-pre="">ESTABLISHED</span> state, this
+command drops the TCP connection to the neighbors and then reestablishes
+the connection.</p></li><li style=""><p>(<span class="cli" v-pre="">soft</span> keyword only) Reapply export policies and send refresh updates to one or more BGP neighbors without changing their state.</p></li><li style=""><p>(<span class="cli" v-pre="">soft-inbound</span> keyword only) Send a route-refresh message to one or more BGP neighbors without changing their state, and reapply import policies on the
+received updates.</p></li></ul><h4>Options</h4><div class="definitionList"><div class="defEntryDiv" style=""><div><span class="ExampleInline defTerm" style="">all</span><span class="defSep">&#8212;</span><span class="defItem" style="">Change the
+state of all BGP neighbors to <span class="cli" v-pre="">IDLE</span>.</span></div></div><div class="defEntryDiv" style=""><div><span class="ExampleInline defTerm" style="">as&nbsp;<var v-pre="">as-number</var></span><span class="defSep">&#8212;</span><span class="defItem" style="">(Optional) Apply this command only to neighbors in
+the specified autonomous system (AS).</span></div></div><div class="defEntryDiv" style=""><div><span class="ExampleInline defTerm" style="">gracefully</span><span class="defSep">&#8212;</span><span class="defItem" style="">(Optional) Enable the
+BGP peer to start graceful-restart receiving-speaker mode. The receiving
+speaker also sends its own routes to the restarted speaker, and  sends
+an End-of-RIB marker when it completes the update. The <span class="cli" v-pre="">clear
+bgp neighbor <var v-pre="">neighbor-address</var> gracefully</span>  command is the same as <span class="cli" v-pre="">clear bgp neighbor hard</span> (the
+default for <span class="cli" v-pre="">clear bgp neighbor</span>), but it does not use the
+new Hard Reset subcode on the Notify and Cease  messages that are
+sent. This allows the neighbor to enter GR or LLGR helper mode, if
+negotiated. The session is still cleared on this router, and this
+router does  not enter GR or LLGR helper mode. </span></div></div><div class="defEntryDiv" style=""><div><span class="ExampleInline defTerm" style="">instance<var v-pre="">&nbsp;instance-name</var></span><span class="defSep">&#8212;</span><span class="defItem" style="">(Optional) Apply this command only to
+neighbors for the specified routing instance.</span></div></div><div class="defEntryDiv" style=""><div><span class="ExampleInline defTerm" style="">logical-system (all |<var v-pre=""> logical-system-name</var>)</span><span class="defSep">&#8212;</span><span class="defItem" style="">(Optional) Perform this operation on
+all logical systems or on a particular logical system.</span></div></div><div class="defEntryDiv" style=""><div><span class="ExampleInline defTerm" style="">malformed-route</span><span class="defSep">&#8212;</span><span class="defItem" style="">(Optional) Remove
+malformed routes. If a specific neighbor is provided, Junos OS removes
+malformed routes for that particular neighbor. Otherwise, Junos OS
+removes malformed routes for all BGP neighbors. To find routes that
+have malformed attributes, run the <span class="cli" v-pre="">show route hidden</span> command,
+and look for routes marked with <span class="screenout" v-pre="">MalformedAttr</span> in the AS path field.</span></div></div><div class="defEntryDiv" style=""><div><span class="ExampleInline defTerm" style=""><var v-pre="">neighbor</var></span><span class="defSep">&#8212;</span><span class="defItem" style="">(Optional) IP address of a BGP peer. Apply this command only
+to the specified neighbor.</span></div></div><div class="defEntryDiv" style=""><div><span class="ExampleInline defTerm" style="">soft</span><span class="defSep">&#8212;</span><span class="defItem" style="">(Optional) Reapply
+any export policies and send refresh updates to neighbors without
+clearing the state.</span></div></div><div class="defEntryDiv" style=""><div><span class="ExampleInline defTerm" style="">soft-inbound</span><span class="defSep">&#8212;</span><span class="defItem" style="">(Optional) Send a
+route-refresh message to BGP neighbors and reapply import policies on the route updates received from
+the BGP neighbors without clearing the BGP state.</span></div></div><div class="defEntryDiv" style=""><div><span class="ExampleInline defTerm" style="">soft-minimum-igp</span><span class="defSep">&#8212;</span><span class="defItem" style="">(Optional)
+Provide soft refresh of the outbound state when the interior gateway
+protocol (IGP) metric is reset.</span></div></div><div class="defEntryDiv" style=""><div><span class="ExampleInline defTerm" style="">stale-routes</span><span class="defSep">&#8212;</span><span class="defItem" style="">(Optional) Any stale
+route currently being held for the specified neighbor because of BGP
+graceful restart (GR) or long-lived graceful restart (LLGR) receiver
+mode operations.</span></div></div></div><h4>Required Privilege Level</h4><p>clear</p><div class="l-aside-box"><h3>Related Documentation</h3><ul><li style=""><p><a href="show-bgp-neighbor.html">show bgp neighbor</a></p></li></ul></div><h4>List of Sample Output</h4><a href="#jd0e268">clear bgp neighbor</a><br></br><h4>Output Fields</h4><p>When you enter this command, you are provided
+feedback on the status of your request.</p><h4>Sample Output</h4><div id="jd0e267"><div id="jd0e268" style=""><p id="jd0e268"><b>clear bgp neighbor</b></p><code>user@host&gt; <kbd class="user-typing" v-pre="">clear bgp neighbor</kbd> </code></div></div><sw-prev-next>&nbsp;</sw-prev-next></div><sw-comments>&nbsp;</sw-comments></div>
 </div>
 </section>
 <sw-pop-over v-bind:head="gterm.head" v-bind:body="gterm.body" v-bind:left="gterm.pos.left" v-bind:top="gterm.pos.top" v-bind:visible="gterm.visible" v-on:close-popover="closegterm()"></sw-pop-over>
