@@ -1,6 +1,6 @@
 #!/usr/local/bin/python3
 import re
-          
+from filters.conttentfilter import *         
 
 class JuniperBreadcrumbs(object):
 
@@ -321,122 +321,41 @@ class SyntaxStatement(StatementList):
                     if cleaned_statement:
                         if re.match(r'^}', cleaned_statement) is None:
                             depth_path = self.get_command_depth_path(cleaned_statement)
-                            command_list = self.__get_all_command_from_path(depth_path)
-                            if isinstance(command_list, list):
-                                for cl_element in command_list:
+                            filter = ContentFilter([
+                                        Comment(),
+                                        CircleBracket([VlineSeparator()]),
+                                        SquareBracket([VlineSeparator(), SpaceSeparator()]),
+                                        TriangleBracket([VlineSeparator()])
+                                        ])
+                            filtered_content = filter.filter(depth_path)
+                            if isinstance(filtered_content, list):
+                                for cl_element in filtered_content:
                                     self.syntax_pathlist.append(cl_element)
-                            elif isinstance(command_list, str):
-                                self.syntax_pathlist.append(command_list)
+                            elif isinstance(filtered_content, str):
+                                self.syntax_pathlist.append(filtered_content)
             return self.syntax_pathlist
         elif pseudo_code is not None:
             firstline = self.clean(self.statementlist[:1][0])
             for statement_element in self.statementlist[1:]:
                 cleaned_statement = self.clean(statement_element)
                 string = '{} {}'.format(firstline, cleaned_statement)
-                command_list = self.__get_all_command_from_path(string)
-                if isinstance(command_list, list):
-                    for cl_element in command_list:
+                filter = ContentFilter([
+                            Comment(),
+                            CircleBracket([VlineSeparator()]),
+                            SquareBracket([VlineSeparator(), SpaceSeparator()]),
+                            TriangleBracket([VlineSeparator()])
+                            ])
+                filtered_content = filter.filter(string)
+                if isinstance(filtered_content, list):
+                    for cl_element in filtered_content:
                         self.syntax_pathlist.append(cl_element)
-                elif isinstance(command_list, str):
-                    self.syntax_pathlist.append(command_list)
+                elif isinstance(filtered_content, str):
+                    self.syntax_pathlist.append(filtered_content)
             return self.syntax_pathlist
         else:
             return None
-
-
-                
+           
         
-    def __get_all_command_from_path(self, string):
-        cercalBracket = re.compile(r'(?<=\()(?:[^)(]|\((?:[^)(]|\([^)(]*\))*\))*(?=\))')
-        squareBracket = re.compile(r'(?<=\[)(.*?)(?=\])')
-        triangleBracket = re.compile(r'(?<=\<)(.*?)(?=\>)')
-        quote = re.compile(r'"(.*?)"')
-        comment = re.compile(r'\(([A-Z].[^)(]*?)\)')
-
-        patterns_list = [
-            cercalBracket,
-            squareBracket,
-            triangleBracket
-        ]
-              
-        attributes = []
-        if comment.search(string):
-            string = comment.sub('', string)
-        try:
-            for patern_element in patterns_list:
-                if patern_element.search(string):
-                    if not attributes:
-                        atribute_list = self.get_atribute_list(patern_element, string)
-                        if atribute_list:
-                            attributes = [attr for attr in atribute_list]
-                        else:
-                            attributes.append(string)
-                    else:
-                        new_arr = []
-                        for target in attributes:
-                            for attr in self.get_atribute_list(patern_element, target):
-                                if attr:
-                                    new_arr.append(attr)
-                        if new_arr:
-                            attributes = new_arr
-        except re.error as exception_object:
-            print("Unexpected exception: ", exception_object)
-
-        return attributes if attributes else string
-
-    def get_atribute_list(self, patern, string):
-        matches = patern.finditer(string)
-        length = len(list(matches))  
-        tmp = []
-        i = 0
-        while i < length:
-            if not tmp:
-                for matchNum, match in enumerate(patern.finditer(string), start=0):
-                    if matchNum == i:
-                        for s in self.separate_atribute(match, string):
-                            tmp.append(s)
-            else:
-                hh = []
-                for t in tmp:
-                    for matchNum, match in enumerate(patern.finditer(t), start=0):
-                        if matchNum == i:
-                            for s in self.separate_atribute(match, t):
-                                hh.append(s)
-                    
-                tmp = hh
-            i += 1
-        return tmp
-
-
-    def separate_atribute(self, m, init_string):
-        quoteSeparator = re.compile(r'"(.*?)"')
-        spaceSeparator = re.compile(r'\s+')
-        vlineSeparator = re.compile(r'\|')
-        if quoteSeparator.search(m.group()):
-            string_generator = self.createStringGenerator(init_string, quoteSeparator, m)
-            for line in string_generator:
-                yield line
-        else:
-            if vlineSeparator.search(m.group()):
-                string_generator = self.createStringGenerator(init_string, vlineSeparator, m)
-                for line in string_generator:
-                    yield line
-            elif spaceSeparator.search(m.group()):
-                string_generator = self.createStringGenerator(init_string, spaceSeparator, m)
-                for line in string_generator:
-                    yield line
-            else:
-                # if between bracket one value
-                pass
-
-    def createStringGenerator(self, string, separator, match):
-        splitlist = [s for s in separator.split(match.group()) if s]
-        for s in splitlist:
-            s_wo_space = s.strip()
-            if s_wo_space is not '':
-                yield (string[:match.start()] + s_wo_space + string[match.end():])
-
-
     def set_depth(self, parameter_list):
         raise NotImplementedError
 
@@ -471,7 +390,7 @@ class newSyntax(SyntaxStatement):
                 if not re.search('}', self.clean(lastline[0])):
                     triangle_list = []
                     for i in self.statementlist[1:]:
-                        triangleBracket = re.compile(r'(?<=\<)(?:[^)(]|\((?:[^)(]|\([^)(]*\))*\))*(?=\>)')
+                        triangleBracket = re.compile(r'(?<=^\<)(.*?)(?=\>)')
                         if triangleBracket.search(self.clean(i)):
                             triangle_list.append(i)
                     if triangle_list == self.statementlist[1:]:
@@ -482,7 +401,6 @@ class newSyntax(SyntaxStatement):
                         return None
         return True
         
-
 class oldSyntax(SyntaxStatement):
     def __init__(self, tag_p = False):
         super().__init__()
