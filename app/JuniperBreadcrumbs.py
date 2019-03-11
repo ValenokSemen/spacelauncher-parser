@@ -131,7 +131,7 @@ class NewJuniperBreadcrumbs(JuniperBreadcrumbs):
         if hierarchy_pathlist:
             for h_path in hierarchy_pathlist:
                 for s_path in syntax_pathlist:
-                    yield "{}/{}".format(h_path, s_path)
+                    yield "{} {}".format(h_path, s_path)
         elif syntax_pathlist:
              for s_path in syntax_pathlist:
                 yield s_path
@@ -212,7 +212,7 @@ class OldJuniperBreadcrumbs(JuniperBreadcrumbs):
         if hierarchy_pathlist:
             for h_path in hierarchy_pathlist:
                 for s_path in syntax_pathlist:
-                    yield "{}/{}".format(h_path, s_path)
+                    yield "{} {}".format(h_path, s_path)
         elif syntax_pathlist:
              for s_path in syntax_pathlist:
                 yield s_path
@@ -308,7 +308,7 @@ class SyntaxStatement(StatementList):
     def get_command_depth_path(self, value):
         self.elem_crumbs[self.depth] = value
         self.elem_crumbs[self.depth+1:] = ['']*(20-self.depth-1)
-        return str('/'.join([e for e in self.elem_crumbs if e]))
+        return str(' '.join([e for e in self.elem_crumbs if e]))
 
     def get_breadcrumbs(self):
         pseudo_code = self.pseudo_code_data()
@@ -325,7 +325,8 @@ class SyntaxStatement(StatementList):
                                         Comment(),
                                         CircleBracket([VlineSeparator()]),
                                         SquareBracket([VlineSeparator(), SpaceSeparator()]),
-                                        TriangleBracket([VlineSeparator()])
+                                        TriangleBracket([VlineSeparator()]),
+                                        NoBracket([VlineSeparator()])
                                         ])
                             filtered_content = filter.filter(depth_path)
                             if isinstance(filtered_content, list):
@@ -391,7 +392,7 @@ class newSyntax(SyntaxStatement):
                     triangle_list = []
                     for i in self.statementlist[1:]:
                         triangleBracket = re.compile(r'(?<=^\<)(.*?)(?=\>)')
-                        if triangleBracket.search(self.clean(i)):
+                        if triangleBracket.search(self.clean(i).strip()):
                             triangle_list.append(i)
                     if triangle_list == self.statementlist[1:]:
                         return False
@@ -457,10 +458,10 @@ class HierarhyStatement(StatementList):
                 if isinstance(list_attribute, list):
                     for attribute in list_attribute:
                         mygenerator = self.__createGenerator(attribute, el)
-                        self.hierarhy_pathlist.append('/'.join([e for e in mygenerator]))
+                        self.hierarhy_pathlist.append(' '.join([e for e in mygenerator]))
                 elif isinstance(list_attribute, str):
                     mygenerator = self.__createGenerator(list_attribute, el)
-                    self.hierarhy_pathlist.append('/'.join([e for e in mygenerator]))
+                    self.hierarhy_pathlist.append(' '.join([e for e in mygenerator]))
         return self.hierarhy_pathlist
 
     
