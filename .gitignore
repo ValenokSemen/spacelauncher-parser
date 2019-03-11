@@ -11,3 +11,6 @@ app/__pycache__/JuniperBreadcrumbs.cpython-37.pyc
 app/constant/__pycache__/__init__.cpython-37.pyc
 app/constant/__pycache__/url_constant.cpython-37.pyc
 docker-compose.yml
+.vscode/settings.json
+app/__pycache__/JuniperBreadcrumbs.cpython-37.pyc
+app/__pycache__/JuniperBreadcrumbs.cpython-37.pyc
