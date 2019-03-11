@@ -25,6 +25,7 @@ from simhash.simhash import Simhash, SimhashTwo
 # https://github.com/jinchuuriki91/challenge-json-restructure/blob/master/script.py
 # https://github.com/ctaylr13/shoppingCartJson
 # https://compiletoi.net/fast-scraping-in-python-with-asyncio/
+# https://github.com/dtrckd/simhash
 
 try:
     import ptvsd
@@ -270,12 +271,15 @@ def run():
     
 
 def simhash():
-    sh = Simhash('authentication-order [get | mac-radius | captive-portal];')
-    sh2 = Simhash('authentication-order [dot1x | mac-radius | captive-portal];')
+    s1 = 'clear network-access aaa statistics statistics-type accounting'
+    s2 = 'clear network-access aaa statistics <accounting>'
+    
+    sh = Simhash(s1)
+    sh2 = Simhash(s2)
     print(sh.distance(sh2))
     
-    sim = SimhashTwo('authentication-order [get | mac-radius | captive-portal];')
-    sim2 = SimhashTwo('authentication-order [dot1x | mac-radius | captive-portal];')
+    sim = SimhashTwo(s1)
+    sim2 = SimhashTwo(s2)
     print(sim.similarity(sim2))
 
 if __name__ == "__main__":
