@@ -4,6 +4,7 @@
     "python.linting.pylintPath": "C:\\Users\\root\\Documents\\GitHub\\spacelauncher-parser\\python-debug\\WPy-3710\\python-3.7.1.amd64\\Scripts\\pylint.exe",
     "python.linting.pylintArgs": [
         "--disable=W0312"
-    ]
+    ],
+    "python.linting.pylintEnabled": true
 }
 

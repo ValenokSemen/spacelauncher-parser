@@ -91,9 +91,9 @@ class CircleBracket(Handler):
         elif isinstance(content, list):
             new_arr = []
             for target in content:
-              for attr in self.atribute_list(target):
-                  if attr:
-                      new_arr.append(attr)
+                for attr in self.atribute_list(target):
+                    if attr:
+                        new_arr.append(attr)
             if new_arr:
                 attributes = new_arr
         return attributes if attributes else content
@@ -111,7 +111,7 @@ class Comment(Handler):
 
 class TriangleBracket(Handler):
     """Обработчик для <>"""
-    __pattern = re.compile(r'(?<=\<)(?:[^><]|\((?:[^><]|\([^><]*\))*\))*(?=\>)')
+    __pattern = re.compile(r'(?<=\<)(?:[^><]|\<(?:[^><]|\<[^><]*\>)*\>)*(?=\>)')
 
     def __init__(self, separates = None):
         super().__init__()
@@ -137,9 +137,9 @@ class TriangleBracket(Handler):
         elif isinstance(content, list):
             new_arr = []
             for target in content:
-              for attr in self.atribute_list(target):
-                  if attr:
-                      new_arr.append(attr)
+                for attr in self.atribute_list(target):
+                    if attr:
+                        new_arr.append(attr)
             if new_arr:
                 attributes = new_arr
         return attributes if attributes else content
@@ -173,12 +173,81 @@ class SquareBracket(Handler):
             new_arr = []
             for target in content:
               for attr in self.atribute_list(target):
-                  if attr:
-                      new_arr.append(attr)
+                    if attr:
+                        new_arr.append(attr)
             if new_arr:
                 attributes = new_arr
         return attributes if attributes else content
 
+
+class NoBracket(Handler):
+    """
+    Обработчик для строк которые не содержат каких-либо скобок, 
+    а содержит лишь символ логического или
+    
+    Arguments:
+        Handler {[class]} -- [обработчик абстрактного класса]
+    """
+
+    __pattern = re.compile(r'(\S+\|{1,}\S+)|\|')
+
+    def __init__(self, separates = None):
+        super().__init__()
+        self.__separates = []
+        if separates is not None:
+            self.__separates += separates
+    
+    def get_separates(self):
+        return self.__separates
+    
+    def get_pattern(self):
+        return self.__pattern
+
+    def handle(self, content):
+        attributes = []
+        if isinstance(content, str):
+            content = re.sub(r'\|\s+', '|', content)
+            content = re.sub(r'\s+\|', '|', content)
+            if not attributes:
+                atribute_list = self.atribute_list(content)
+                if atribute_list:
+                    attributes = [attr for attr in atribute_list]
+                else:
+                    attributes.append(content)
+        elif isinstance(content, list):
+            new_arr = []
+            for target in content:
+                target = re.sub(r'\|\s+', '|', target)
+                target = re.sub(r'\s+\|', '|', target)
+                for attr in self.atribute_list(target):
+                    if attr:
+                        new_arr.append(attr)
+            if new_arr:
+                attributes = new_arr
+        return attributes if attributes else content
+
+
+    def atribute_list(self, content):
+        tmp = []
+        matches = self.get_pattern().finditer(content)
+        for i in range(len(list(matches))):
+            if not tmp:
+                for num, match in enumerate(self.get_pattern().finditer(content), start=0):
+                    if num == 0:
+                        for s in self.separate_atribute(match, content):
+                            tmp.append(s)
+            else:
+                hh = []
+                for t in tmp:
+                    for num, match in enumerate(self.get_pattern().finditer(t), start=0):
+                        if num == 0:
+                            for s in self.separate_atribute(match, t):
+                                hh.append(s)
+                if hh:    
+                    tmp = hh
+        return tmp
+
+                       
 class ContentFilter(object):
     def __init__(self, filters=None):
         self._filters = []

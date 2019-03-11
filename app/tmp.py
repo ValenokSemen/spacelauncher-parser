@@ -13,7 +13,8 @@ import aiohttp
 import tqdm
 from filters.conttentfilter import *
 from juniperbreadcrumbs import NewJuniperBreadcrumbs, OldJuniperBreadcrumbs
-from constant import url_constant 
+from constant import url_constant
+from simhash.simhash import Simhash, SimhashTwo
 
 # https://github.com/pkolt/design_patterns/blob/master/generating/builder.py
 # https://www.giacomodebidda.com/factory-method-and-abstract-factory-in-python/
@@ -202,7 +203,7 @@ def main():
     loop = asyncio.get_event_loop()
     f = [commandlist(cl, sem) for cl in command.getCommandList()]
     loop.run_until_complete(wait_with_progress(f))
-    with open('juniper-command-plus-2.json', 'w', encoding='utf-8') as outfile:
+    with open('juniper-command-plus.json', 'w', encoding='utf-8') as outfile:
         outfile.write(command.pretty_print())
         #add trailing newline for POSIX compatibility
         outfile.write('\n')
@@ -256,9 +257,11 @@ def run():
                 Comment(),
                 CircleBracket([VlineSeparator()]),
                 SquareBracket([VlineSeparator(), SpaceSeparator()]),
-                TriangleBracket([VlineSeparator()])
+                TriangleBracket([VlineSeparator()]),
+                NoBracket([VlineSeparator()])
                 ])
-    content = "as-path <as-path> <aggregator as-number ip-address> <atomic-aggregate> <origin (egp | igp | incomplete)>;"
+    # content = "fpcs (NSSU Upgrade Groups) (slot-number | [list-of-slot-numbers]);"
+    content = "fghf fghfg primary | backup"
     filtered_content = filter.filter(content)
     if isinstance(filtered_content, str):
         print(filtered_content)
@@ -266,8 +269,17 @@ def run():
         print('\n'.join(filtered_content))
     
 
+def simhash():
+    sh = Simhash('authentication-order [get | mac-radius | captive-portal];')
+    sh2 = Simhash('authentication-order [dot1x | mac-radius | captive-portal];')
+    print(sh.distance(sh2))
+    
+    sim = SimhashTwo('authentication-order [get | mac-radius | captive-portal];')
+    sim2 = SimhashTwo('authentication-order [dot1x | mac-radius | captive-portal];')
+    print(sim.similarity(sim2))
 
 if __name__ == "__main__":
-    main()
+    # main()
+    simhash()
     # test()
     # run()
