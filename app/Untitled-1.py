@@ -1,89 +1,94 @@
-   def __get_all_command_from_path(self, string):
-        cercalBracket = re.compile(r'(?<=\()(?:[^)(]|\((?:[^)(]|\([^)(]*\))*\))*(?=\))')
-        squareBracket = re.compile(r'(?<=\[)(.*?)(?=\])')
-        triangleBracket = re.compile(r'(?<=\<)(.*?)(?=\>)')
-        quote = re.compile(r'"(.*?)"')
-        comment = re.compile(r'\(([A-Z].[^)(]*?)\)')
+import json
 
-        patterns_list = [
-            cercalBracket,
-            squareBracket,
-            triangleBracket
-        ]
-              
-        attributes = []
-        if comment.search(string):
-            string = comment.sub('', string)
+class Export(object):
+    def export(self, parameter_list):
+        raise NotImplementedError
+
+class ExportToJSON(Export):
+    def export(self, parameter_list):
+        return 'json: name={0}, bleed={1}'.format(parameter_list.name, parameter_list.bleed)
+
+class ExportToXML(Export):
+    def export(self, parameter_list):
+        return 'xml: name={0}, bleed={1}'.format(parameter_list.name, parameter_list.bleed)
+
+
+class Pet(object):
+    def __init__(self, name):
+        self.name = name
+
+class Cat(Pet):
+    def __init__(self, name, bleed = None):
+        super().__init__(name)
+        self.bleed = bleed
+
+class ExCat(Cat):
+    def __init__(self, name, bleed = None, export = None):
+        super().__init__(name, bleed)
+        self._export = export or ExportToXML()
+        if not isinstance(self._export, Export):
+            raise ValueError('bad export', export)
+    
+    def export(self):
+        return self._export.export(self)
+
+
+cat = ExCat("Тимоха", "МейнКун")
+result = cat.export()
+print(result)
+
+
+
+class HumanExport(object):
+    def save(self, param):
+        raise NotImplementedError
+
+class ExToJson(HumanExport):
+    def save(self, param):
+        param.data['people'].append({'name': param.name, 'surname': param.surname, 'number': param.mobile_number})
+        with open(param.file_path, 'w') as f:
+            f.seek(0)
+            json.dump(param.data, f)
+
+class ExToXml(HumanExport):
+    def save(self, param):
+        return 'xml: name={0}, bleed={1}'.format(parameter_list.name, parameter_list.bleed)
+
+  
+class Creatures:
+    def __init__(self, name):
+        self.name = name
+  
+  
+class Human(Creatures):
+    def __init__(self, name, surname, mobile_number):
+        super().__init__(name)
+        self.surname = surname
+        self.mobile_number = mobile_number
+  
+  
+class Editor:
+    def __init__(self, file_path):
+        self.file_path = file_path
+        self.data = self._get()
+  
+    def _get(self):
         try:
-            for patern_element in patterns_list:
-                if patern_element.search(string):
-                    if not attributes:
-                        atribute_list = self.get_atribute_list(patern_element, string)
-                        if atribute_list:
-                            attributes = [attr for attr in atribute_list]
-                        else:
-                            attributes.append(string)
-                    else:
-                        new_arr = []
-                        for target in attributes:
-                            for attr in self.get_atribute_list(patern_element, target):
-                                if attr:
-                                    new_arr.append(attr)
-                        if new_arr:
-                            attributes = new_arr
-        except re.error as exception_object:
-            print("Unexpected exception: ", exception_object)
+            with open(self.file_path, 'r') as f:
+                return json.load(f)
+        except FileNotFoundError:
+            print("Ошибка, файл {0} не найден!".format(self.file_path))
 
-        return attributes if attributes else string
+class ExEditor(Editor):
+    def __init__(self, file_path, employer = None, export = None):
+        super().__init__(file_path)
+        self.employer = employer
+        self._export = export or ExToJson()
 
-    def get_atribute_list(self, patern, string):
-        matches = patern.finditer(string)
-        length = len(list(matches))  
-        tmp = []
-        i = 0
-        while i < length:
-            if not tmp:
-                for matchNum, match in enumerate(patern.finditer(string), start=0):
-                    if matchNum == i:
-                        for s in self.separate_atribute(match, string):
-                            tmp.append(s)
-            else:
-                hh = []
-                for t in tmp:
-                    for matchNum, match in enumerate(patern.finditer(t), start=0):
-                        if matchNum == i:
-                            for s in self.separate_atribute(match, t):
-                                hh.append(s)
-                    
-                tmp = hh
-            i += 1
-        return tmp
+    def save(self):
+        self._export.save(self)
 
 
-    def separate_atribute(self, m, init_string):
-        quoteSeparator = re.compile(r'"(.*?)"')
-        spaceSeparator = re.compile(r'\s+')
-        vlineSeparator = re.compile(r'\|')
-        if quoteSeparator.search(m.group()):
-            string_generator = self.createStringGenerator(init_string, quoteSeparator, m)
-            for line in string_generator:
-                yield line
-        else:
-            if vlineSeparator.search(m.group()):
-                string_generator = self.createStringGenerator(init_string, vlineSeparator, m)
-                for line in string_generator:
-                    yield line
-            elif spaceSeparator.search(m.group()):
-                string_generator = self.createStringGenerator(init_string, spaceSeparator, m)
-                for line in string_generator:
-                    yield line
-            else:
-                # if between bracket one value
-                pass
-
-    def createStringGenerator(self, string, separator, match):
-        splitlist = [s for s in separator.split(match.group()) if s]
-        for s in splitlist:
-            s_wo_space = s.strip()
-            if s_wo_space is not '':
-                yield (string[:match.start()] + s_wo_space + string[match.end():])
+human = Human("Ivan", "Testov", '79516506401')
+exeditor = ExEditor('path', employer = human, export = ExToJson())
+exeditor.save()
