@@ -16,17 +16,6 @@ from juniperbreadcrumbs import NewJuniperBreadcrumbs, OldJuniperBreadcrumbs
 from constant import url_constant
 from simhash.simhash import Simhash, SimhashTwo
 
-# https://github.com/pkolt/design_patterns/blob/master/generating/builder.py
-# https://www.giacomodebidda.com/factory-method-and-abstract-factory-in-python/
-# https://www.juniper.net/documentation/en_US/junos/topics/reference/configuration-statement/aggregated-ether-options-interfaces-ex-series.html
-# https://github.com/Patreon/patreon-python/blob/master/patreon/jsonapi/parser.py
-# https://www.dev2qa.com/python-json-dump-to-or-load-from-file-example/
-# https://github.com/rchristilaw/nhlapi/blob/develop/nhlapi/data_source/api.py
-# https://github.com/jinchuuriki91/challenge-json-restructure/blob/master/script.py
-# https://github.com/ctaylr13/shoppingCartJson
-# https://compiletoi.net/fast-scraping-in-python-with-asyncio/
-# https://github.com/dtrckd/simhash
-
 try:
     import ptvsd
     ptvsd.enable_attach(address=('0.0.0.0', 5678), redirect_output=True)
